@@ -1,0 +1,62 @@
+FOUR-TWELVE — script for ToonBee (English)
+MyEZToll · 14 scenes, one line each
+
+Paste the fourteen lines below and nothing else — anything else on this page would
+be read out by the narrator. Scene count 14, style Isometric, and Square 1:1 if the
+cut is for the LinkedIn feed.
+
+One line per scene on purpose: left to itself the generator merges whichever lines
+it likes, and the one place that must not be merged is the price list in lines
+10-12 — "no subscription, no set-up fee, nothing per vehicle" only works said one
+at a time.
+
+THE FOURTEEN LINES
+
+Tuesday. Four-twelve in the afternoon. One of your cars goes through a toll. Nobody pays. Not yet.
+The bill shows up three weeks later. With your name on it.
+By then the renter is gone. Deposit refunded. Rental closed.
+So you pay. And you call it the cost of doing business.
+Same with the camera ticket. The fuel. The dent.
+But the car knew. Its GPS was at that gantry, at that second.
+And the booking knew who was driving. MyEZToll puts those two together and collects, from the renter's card.
+One small fleet. One week. Four hundred twelve dollars — and it was going to be yours to swallow.
+So what does the platform cost you? Nothing.
+No subscription. No set-up fee. No charge per vehicle.
+Connecting the GPS you already run is free as well.
+The only paid option is our own telematics hardware.
+You pay nothing. And you get a share of everything that comes back.
+Stop losing. Start earning.
+
+
+WHAT EACH SCENE SHOWS — optional, if the generator asks
+
+1. Late afternoon. A rental car passes under a toll gantry; the sensor blinks.
+2. A calendar turning three weeks; an envelope landing on the owner's desk, his name on it.
+3. The renter driving away, the deposit handed back, the rental folder closing.
+4. The owner at his desk, paying a bill he did not incur.
+5. More arriving: a camera ticket, a fuel receipt, a dented panel.
+6. The same crossing replayed — a GPS pin dropping on the car at the gantry, with a timestamp.
+7. A booking record lighting up with the driver's name; the two facts snap together and the charge turns around onto the renter's card.
+8. One number, large: $412.68. One small fleet, one week.
+9. The price-tag question, asked plainly.
+10. Three empty price tags: no subscription, no set-up fee, nothing per vehicle.
+11. A GPS unit he already owns, plugging in for free.
+12. Beside it, one small paid box: the telematics hardware, clearly the exception.
+13. Money flowing toward the owner instead of away from him.
+14. End card, still: the MyEZToll wordmark and "Stop losing. Start earning."
+
+
+THINGS THAT MUST STAY TRUE
+
+- $412.68 over 39 crossings is one real week of one real small fleet.
+- Free means free for the fleet owner: no subscription, no set-up fee, no charge
+  per vehicle, and connecting an existing GPS costs nothing either. Charges are
+  collected from the renter who incurred them, and the owner receives a share of
+  everything recovered.
+- The one exception is our own telematics hardware, an optional paid module. It is
+  named out loud in line twelve and must stay named — a "free" claim with the
+  exception quietly removed is the one thing here that would be a lie.
+- "Four-twelve" in line one and "four hundred twelve" in line eight are the same
+  number returning as a bill. Keep both or neither.
+- This is a business owner losing money, not a children's story: isometric or
+  another flat, adult style, never storybook or Pixar-like.

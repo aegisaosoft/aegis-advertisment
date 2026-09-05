@@ -1,0 +1,72 @@
+<meta charset="utf-8">
+<title>End card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Mono:wght@500;700&family=Source+Sans+3:wght@700;900&display=swap">
+
+<style>
+/*
+ * The closing card the generator cannot be trusted to draw.
+ *
+ * Everything else in the ToonBee cut is generated, and generated lettering drifts —
+ * the money figure counted itself down mid-shot, the price discs came out reading
+ * "5tv" and "3s". This is the one frame whose wording has to be exact, so it is drawn
+ * here: the real logo file from the site, the campaign line, and the address.
+ *
+ * Light ground on purpose. The logo is black line art on white with no alpha channel,
+ * and the film itself lives in a bright warm world — dropping to navy at the very end
+ * would look like a different piece of film had been stapled on.
+ */
+:root{
+  --paper:#eef2f7;
+  --paper-hi:#ffffff;
+  --ink:#0a1628;
+  --muted:#5b6f8a;
+  --accent-hot:#ef6c1f;
+  --accent:#f5a524;
+  --gain:#0b8f63;
+  --display:'Anton',"Arial Narrow",Impact,sans-serif;
+  --body:'Source Sans 3',"Segoe UI",system-ui,sans-serif;
+  --mono:'Roboto Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:radial-gradient(120% 90% at 50% 6%, var(--paper-hi) 0%, var(--paper) 58%, #dfe6ef 100%);
+  color:var(--ink);font-family:var(--body);
+  display:flex;align-items:center;justify-content:center;
+  -webkit-font-smoothing:antialiased;
+}
+.card{width:100vw;height:100vh;container-type:size;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6cqh}
+
+/* The logo file ships on its own near-white ground with no alpha channel, which sat
+   on the card as a visible rectangle. logo-alpha.png is the same mark with that ground
+   keyed out (ffmpeg lumakey), so only the line art lands here. */
+.logo{width:46cqh}
+
+.rule{width:11cqh;height:.5cqh;border-radius:.3cqh;margin:1.2cqh 0 .4cqh;
+  background:linear-gradient(90deg,var(--accent),var(--accent-hot))}
+
+.slogan{font-family:var(--display);font-size:11.5cqh;line-height:.94;text-align:center;letter-spacing:-.01em}
+.slogan em{font-style:normal;color:var(--accent-hot)}
+
+/* "Start earning" is not a figure of speech, so the card says what actually happens:
+   the owner is paid the toll in full and a share of the fee charged to the renter.
+   Verified against production — 136 toll charges, $2,648 of tolls, $4,242 paid out. */
+.free{font-size:2.9cqh;font-weight:700;color:var(--muted);margin-top:1.4cqh;text-align:center;line-height:1.5}
+.free b{color:var(--ink);font-weight:900}
+.free i{font-style:normal;color:var(--gain);font-weight:900}
+
+.url{font-family:var(--mono);font-size:2.8cqh;letter-spacing:.24em;color:var(--muted);
+  text-transform:uppercase;margin-top:1.8cqh}
+</style>
+
+<div class="card">
+  <img class="logo" src="logo-alpha.png" alt="MyEZToll">
+  <div class="rule"></div>
+  <div class="slogan">Stop losing.<br><em>Start earning.</em></div>
+  <div class="free">Free for fleet owners.<br>
+    You keep the <b>whole toll</b> — plus <i>a share of our fee</i>.</div>
+  <div class="url">myeztoll.com</div>
+</div>

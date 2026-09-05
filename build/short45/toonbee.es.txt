@@ -1,0 +1,61 @@
+CUATRO Y DOCE — guion para ToonBee (español, EE. UU. / Latinoamérica)
+MyEZToll · 14 escenas, una línea cada una
+
+Pegue solo las catorce líneas: cualquier otra cosa de esta página la leería el
+narrador. Escenas 14, estilo Isometric, y Square 1:1 si el corte es para el feed
+de LinkedIn.
+
+Ojo: esta versión usa las cifras del corte en inglés ($412.68, 39 cruces), no las
+del corte español del sitio ($100.89, 15 cruces). Es a propósito: aquí no hay una
+captura española detrás que pueda contradecir al narrador, y así vuelve a
+funcionar el eco "cuatro y doce" → "cuatrocientos doce".
+
+LAS CATORCE LÍNEAS
+
+Martes. Cuatro y doce de la tarde. Uno de sus carros cruza un peaje. Nadie lo paga. Todavía no.
+La factura llega tres semanas después. Con su nombre.
+Para entonces el cliente ya se fue. Depósito devuelto. Renta cerrada.
+Así que paga usted. Y lo llama el costo de hacer negocio.
+Lo mismo con la multa de la cámara. La gasolina. El golpe.
+Pero el carro sí lo sabía. Su GPS estaba en ese peaje, en ese segundo.
+Y la reserva sabía quién manejaba. MyEZToll junta las dos cosas y cobra, a la tarjeta del cliente.
+Una flota pequeña. Una semana. Cuatrocientos doce dólares que usted iba a pagar.
+¿Y cuánto le cuesta la plataforma? Nada.
+Sin suscripción. Sin costo de instalación. Sin cargo por vehículo.
+Conectar el GPS que ya usa también es gratis.
+Lo único de pago es nuestro propio equipo de telemática.
+A usted no le cuesta nada. Y recibe parte de todo lo que se recupera.
+Deje de perder. Empiece a ganar.
+
+
+QUÉ MUESTRA CADA ESCENA — opcional, si el generador lo pide
+
+1. Media tarde. Un carro de renta cruza bajo un peaje; el sensor parpadea.
+2. Un calendario que avanza tres semanas; un sobre cae en el escritorio del dueño, con su nombre.
+3. El cliente se va, le devuelven el depósito, se cierra la carpeta de la renta.
+4. El dueño en su escritorio, pagando una cuenta que no generó.
+5. Llegan más: una multa de cámara, un recibo de gasolina, una puerta golpeada.
+6. El mismo cruce otra vez: un pin de GPS marca el carro en el peaje, con la hora exacta.
+7. La reserva se ilumina con el nombre de quien manejaba; las dos cosas encajan y el cobro se da la vuelta hacia la tarjeta del cliente.
+8. Un número, grande: $412.68. Una flota pequeña, una semana.
+9. La pregunta del precio, hecha sin rodeos.
+10. Tres etiquetas de precio vacías: sin suscripción, sin costo de instalación, nada por vehículo.
+11. Un GPS que ya tiene, conectándose gratis.
+12. Al lado, una sola caja de pago: el equipo de telemática, claramente la excepción.
+13. El dinero yendo hacia el dueño en lugar de salir de él.
+14. Cierre fijo: el logo de MyEZToll y "Deje de perder. Empiece a ganar."
+
+
+LO QUE NO SE PUEDE CAMBIAR
+
+- Español de Estados Unidos, no de España: carro, renta, manejar, costo, gasolina.
+  Y voz latinoamericana, nunca castellana.
+- Gratis significa gratis para el dueño de la flota: sin suscripción, sin costo de
+  instalación, sin cargo por vehículo, y conectar un GPS que ya tiene tampoco
+  cuesta nada. Se cobra al cliente que generó el cargo, y el dueño recibe una
+  parte de todo lo recuperado.
+- La única excepción es nuestro propio equipo de telemática, un módulo de pago
+  opcional. La línea doce lo dice en voz alta y tiene que seguir diciéndolo: un
+  "gratis" al que le quitan la excepción es lo único aquí que sería mentira.
+- "Cuatro y doce" en la línea uno y "cuatrocientos doce" en la línea ocho son el
+  mismo número que vuelve como factura. Van juntos o no van.

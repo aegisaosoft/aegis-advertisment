@@ -1,0 +1,51 @@
+﻿1
+00:00:00,350 --> 00:00:06,582
+Martes. Las tres y quince de la tarde. Uno de sus carros cruza un peaje.
+
+2
+00:00:06,882 --> 00:00:08,804
+Nadie lo paga. Todavía no.
+
+3
+00:00:09,104 --> 00:00:13,246
+La factura llega tres semanas después. Con su nombre.
+
+4
+00:00:14,396 --> 00:00:20,079
+Para entonces el cliente ya se fue. Depósito devuelto. Renta cerrada.
+
+5
+00:00:20,380 --> 00:00:24,470
+Así que paga usted. Y lo llama el costo de hacer negocio.
+
+6
+00:00:24,770 --> 00:00:28,677
+Lo mismo con la multa de la cámara. La gasolina. El golpe.
+
+7
+00:00:29,827 --> 00:00:35,693
+Pero el carro sí lo sabía. Su GPS estaba en ese peaje, en ese segundo.
+
+8
+00:00:35,993 --> 00:00:38,594
+Y la reserva sabía quién manejaba.
+
+9
+00:00:38,894 --> 00:00:44,003
+MyEZToll junta las dos cosas. Y cobra, a la tarjeta del cliente.
+
+10
+00:00:45,153 --> 00:00:51,150
+Una semana. Quince cruces. Cien dólares con ochenta y nueve centavos.
+
+11
+00:00:51,450 --> 00:00:53,502
+Eso lo iba a pagar usted.
+
+12
+00:00:53,802 --> 00:00:59,015
+A usted no le cuesta nada. Y recibe parte de todo lo que se recupera.
+
+13
+00:00:59,316 --> 00:01:02,100
+Deje de perder. Empiece a ganar.

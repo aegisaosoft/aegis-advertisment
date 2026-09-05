@@ -1,0 +1,387 @@
+<meta charset="utf-8">
+<title>__TITLE__</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Mono:wght@400;500;700&family=Source+Sans+3:wght@400;600;700;900&display=swap">
+
+<style>
+/* ============================================================
+   Four-Twelve — MyEZToll's 55-second cut.
+
+   Every pixel of motion is a pure function of one number: the time t held in
+   the player below. Nothing moves on a CSS animation, nothing waits on a
+   transition. That is not stylistic — it is what lets render.js ask for the
+   frame at t = 12.4333s and get exactly the frame the viewer would see, so the
+   mp4 is the film rather than a recording of it.
+   ============================================================ */
+
+:root{
+  /* The two-minute film's own palette. One campaign, one world: daylight, with the
+     product's screens sitting in it as they do on a real desk. */
+  --paper:#e9eef5;
+  --paper-hi:#ffffff;
+  --card:#ffffff;
+  --ink:#0a1628;
+  --muted:#5b6f8a;
+  --line:#cfdae8;
+  --loss:#d92d4b;
+  --gain:#0b8f63;
+  --accent:#f5a524;
+  --accent-hot:#ef6c1f;
+  --display:'Anton',"Arial Narrow",Impact,sans-serif;
+  --body:'Source Sans 3',"Segoe UI",system-ui,sans-serif;
+  --mono:'Roboto Mono',ui-monospace,"Cascadia Mono",monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:#c9d5e6;color:var(--ink);font-family:var(--body);
+  display:flex;align-items:center;justify-content:center;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* The stage is the exported frame. 16:9 by default, square when the body carries
+   .square — the content column is 1:1 in both, so one layout serves the feed and the
+   widescreen cut without a second design. */
+.stage{
+  position:relative;width:100vw;height:56.25vw;max-height:100vh;max-width:177.78vh;
+  overflow:hidden;
+  background:radial-gradient(115% 85% at 50% 8%, var(--paper-hi) 0%, var(--paper) 46%, #d7e0ee 100%);
+}
+body.square .stage{width:100vw;height:100vw;max-height:100vh;max-width:100vh}
+
+.content{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(100%,100vh);aspect-ratio:1;container-type:inline-size;
+}
+body.square .content{width:100%}
+
+/* Everything below sizes in cqw, so the film is resolution-independent: the renderer
+   just makes the window bigger. Vertical placement assumes the full square — the
+   widescreen cut gets the same composition with air at the sides. */
+.layer{position:absolute;inset:0}
+
+.eyebrow{
+  position:absolute;top:9cqw;left:8cqw;
+  font-family:var(--mono);font-weight:700;font-size:1.8cqw;letter-spacing:.34em;
+  text-transform:uppercase;color:var(--accent-hot);
+}
+.eyebrow::after{content:"";display:block;width:6cqw;height:.35cqw;margin-top:1.2cqw;
+  background:linear-gradient(90deg,var(--accent),var(--accent-hot));border-radius:.2cqw}
+
+/* ---------- scene 1: the clock and the road ---------- */
+
+.clock{
+  position:absolute;top:20cqw;left:8cqw;
+  font-family:var(--display);font-size:27cqw;line-height:.84;letter-spacing:-.02em;
+  color:var(--ink);
+}
+.clock small{display:block;font-family:var(--mono);font-size:2cqw;letter-spacing:.3em;
+  color:var(--muted);margin-top:2.2cqw;font-weight:600}
+
+.road{position:absolute;left:0;right:0;top:70cqw;height:.45cqw;background:#b9c8dd}
+.gantry{position:absolute;top:60cqw;width:.9cqw;height:10.4cqw;background:#8ea4c0;left:63cqw;border-radius:.2cqw}
+.gantry::before{content:"";position:absolute;top:0;left:-6.6cqw;width:14cqw;height:.9cqw;background:#8ea4c0;border-radius:.2cqw}
+.gantry::after{content:"";position:absolute;top:1.7cqw;left:-4cqw;width:1.8cqw;height:1.8cqw;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 2.8cqw rgba(245,165,36,.7)}
+.car{
+  position:absolute;top:67.4cqw;width:6.4cqw;height:2.5cqw;border-radius:.6cqw 1.1cqw .4cqw .4cqw;
+  background:linear-gradient(180deg,#22364f,#0e1d31);
+  box-shadow:0 .7cqw 1.8cqw rgba(10,22,40,.28);
+}
+.car::before{content:"";position:absolute;top:-1.4cqw;left:1.3cqw;width:3.5cqw;height:1.6cqw;
+  border-radius:.8cqw .8cqw 0 0;background:linear-gradient(180deg,#3c5573,#22364f)}
+
+/* ---------- the bill ---------- */
+
+.bill{
+  position:absolute;left:8cqw;top:26cqw;width:84cqw;
+  background:var(--card);border-radius:1.6cqw;padding:3.4cqw 3.8cqw;
+  box-shadow:0 3cqw 7cqw -2.4cqw rgba(10,22,40,.28);border:1px solid var(--line);
+}
+.bill h4{font-family:var(--mono);font-size:1.7cqw;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;margin-bottom:1.8cqw}
+.bill .who{font-size:3.6cqw;font-weight:900;letter-spacing:-.01em;margin-bottom:1cqw}
+.bill .row{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:2.7cqw;font-weight:600;padding:1.5cqw 0;border-top:1px solid #e6ecf4}
+.bill .row span:last-child{font-family:var(--mono);font-weight:700}
+.bill .row.loss span:last-child{color:var(--loss)}
+/* The rows nobody can put a number to yet. */
+.bill .row.unknown{color:#93a4ba}
+.bill .row.unknown span:last-child{font-family:var(--mono);font-weight:700;color:#93a4ba}
+
+/* ---------- scene 3: the two facts snapping together ---------- */
+
+.fact{
+  position:absolute;left:8cqw;width:84cqw;border-radius:1.6cqw;padding:3cqw 3.4cqw;
+  background:var(--card);border:1px solid var(--line);
+  box-shadow:0 2.4cqw 5cqw -2.4cqw rgba(10,22,40,.22);
+}
+.fact h5{font-family:var(--mono);font-size:1.6cqw;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--accent-hot);font-weight:700;margin-bottom:1.4cqw}
+.fact p{font-size:3.2cqw;font-weight:800;line-height:1.2;letter-spacing:-.01em}
+.fact .mono{font-family:var(--mono);font-size:2cqw;color:var(--muted);margin-top:1.2cqw;font-weight:500}
+#factGps{top:22cqw}
+#factBooking{top:50cqw}
+.snap{
+  position:absolute;left:44cqw;top:43cqw;width:12cqw;height:.55cqw;
+  background:linear-gradient(90deg,var(--accent),var(--gain));border-radius:.3cqw;
+}
+
+/* ---------- scene 4: the number and the real screen ---------- */
+
+.total{
+  position:absolute;left:8cqw;top:18cqw;
+  font-family:var(--display);font-size:21cqw;line-height:.9;color:var(--ink);letter-spacing:-.01em;
+}
+.total small{display:block;font-family:var(--mono);font-size:1.9cqw;letter-spacing:.28em;
+  color:var(--accent-hot);margin-bottom:2cqw;font-weight:700}
+.shot{
+  position:absolute;left:8cqw;top:46cqw;width:84cqw;height:32cqw;border-radius:1.2cqw;overflow:hidden;
+  border:1px solid var(--line);box-shadow:0 3.4cqw 7cqw -2.6cqw rgba(10,22,40,.4);
+}
+.shot img{display:block;width:100%}
+/* The screen is taller than the space it gets, so it is cut off — faded rather than
+   sliced, which reads as a screen continuing rather than a mistake in the crop. */
+.shot::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:8cqw;
+  background:linear-gradient(180deg,rgba(233,238,245,0),rgba(233,238,245,.96));
+}
+
+.freeline{
+  position:absolute;left:8cqw;top:30cqw;width:84cqw;
+  font-size:5.4cqw;font-weight:900;line-height:1.16;letter-spacing:-.015em;
+}
+.freeline b{color:var(--gain)}
+
+.wordmark{
+  position:absolute;left:8cqw;top:26cqw;
+  font-size:8cqw;font-weight:900;letter-spacing:-.03em;display:flex;align-items:center;gap:1.4cqw;
+}
+.wordmark i{font-style:normal;color:var(--accent-hot)}
+.slogan{
+  position:absolute;left:8cqw;top:39cqw;
+  font-family:var(--display);font-size:13cqw;line-height:.94;letter-spacing:-.01em;
+}
+.slogan em{font-style:normal;color:var(--accent-hot)}
+.url{
+  position:absolute;left:8cqw;top:70cqw;
+  font-family:var(--mono);font-size:2.4cqw;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;
+}
+
+/* ---------- the spoken line, always on screen ---------- */
+
+.caption{
+  position:absolute;left:8cqw;right:8cqw;bottom:7cqw;
+  font-size:3.5cqw;line-height:1.3;font-weight:800;text-align:left;
+  letter-spacing:-.01em;text-wrap:balance;color:var(--ink);
+}
+.caption::before{
+  content:"";position:absolute;left:-2.8cqw;top:.7cqw;bottom:.7cqw;width:.5cqw;
+  background:linear-gradient(180deg,var(--accent),var(--accent-hot));border-radius:.25cqw;
+}
+
+/* The poster is what a still of the film looks like before anyone presses play;
+   the renderer hides it, a viewer clicks through it. */
+.poster{
+  position:absolute;inset:0;z-index:40;
+  background:radial-gradient(110% 80% at 50% 10%, var(--paper-hi), var(--paper) 55%, #d3ddec);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3cqw;
+  cursor:pointer;
+}
+.poster.gone{display:none}
+.poster .play{
+  width:11cqw;height:11cqw;border-radius:50%;background:var(--accent-hot);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2cqw 4cqw -1cqw rgba(239,108,31,.5);
+}
+.poster .play svg{width:4cqw;height:4cqw;fill:#fff;margin-left:.7cqw}
+.poster h1{font-family:var(--display);font-size:9cqw;line-height:.96;text-align:center;max-width:80cqw;color:var(--ink)}
+.poster p{font-family:var(--mono);font-size:1.8cqw;letter-spacing:.28em;color:var(--muted);text-transform:uppercase}
+</style>
+
+<div class="stage" id="stage">
+  <div class="content" id="content">
+
+    <div class="layer">
+      <div class="eyebrow" id="eyebrow">__EYEBROW__</div>
+
+      <!-- scene 1 -->
+      <div class="clock" id="clock">__CLOCK__<small>__PM__</small></div>
+      <div class="road" id="road"></div>
+      <div class="gantry" id="gantry"></div>
+      <div class="car" id="car"></div>
+
+      <!-- scene 2 -->
+      <div class="bill" id="bill">
+        <h4>__BILL_TITLE__</h4>
+        <div class="who" id="billWho">__BILL_WHO__</div>
+        <div class="row loss" id="billRow0"><span>__ITEM_TOLL__</span><span>__TOLL_AMOUNT__</span></div>
+        <div class="row loss" id="billRow1"><span>__ITEM_CAMERA__</span><span>__VIOL_AMOUNT__</span></div>
+        <!-- Fuel and damage carry no figure on purpose: there is no real one to carry.
+             The platform does create bookings and can price additional services, but no
+             customer is using that side yet, so AdditionalServices and BookingServices
+             are both empty in production and nothing here could be sourced. The blank is
+             also the better answer — on the day the car comes back the owner does not
+             know these numbers either, and not knowing is the whole complaint. -->
+        <div class="row unknown" id="billRow2"><span>__ITEM_FUEL__</span><span>—</span></div>
+        <div class="row unknown" id="billRow3"><span>__ITEM_DENT__</span><span>—</span></div>
+      </div>
+
+      <!-- scene 3 -->
+      <div class="fact" id="factGps">
+        <h5>__F_GPS__</h5>
+        <p>__F_GPS_P__</p>
+        <div class="mono">40.7128, -74.0060 · 16:12:07</div>
+      </div>
+      <div class="fact" id="factBooking">
+        <h5>__F_BOOKING__</h5>
+        <p>__F_BOOKING_P__</p>
+        <div class="mono">#RB-40218 · VISA ···· 4417</div>
+      </div>
+      <div class="snap" id="snap"></div>
+
+      <!-- scene 4 -->
+      <div class="total" id="total"><small>__TOTAL_LABEL__</small><span id="totalNum">$0</span></div>
+      <div class="shot" id="shot"><img src="__SHOT__" alt=""></div>
+      <div class="freeline" id="freeline">__FREELINE__</div>
+      <div class="wordmark" id="wordmark">My<i>EZ</i>Toll</div>
+      <div class="slogan" id="slogan">__SLOGAN__</div>
+      <div class="url" id="url">myeztoll.com</div>
+
+      <div class="caption" id="caption"></div>
+    </div>
+
+    <div class="poster" id="poster">
+      <p>__KICKER__</p>
+      <h1>__POSTER_TITLE__</h1>
+      <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    </div>
+
+  </div>
+</div>
+
+<audio id="track" preload="auto" src="__AUDIO__"></audio>
+
+<script>
+(function(){
+  "use strict";
+
+  /* The timeline, resolved from the recorded clips by build.py: every cue's real
+     start and length, and every visual beat already in absolute seconds. */
+  var FILM = __TIMELINE__;
+
+  var content = document.getElementById('content');
+  var caption = document.getElementById('caption');
+  var poster  = document.getElementById('poster');
+  var track   = document.getElementById('track');
+
+  /* ---------------- the only clock ---------------- */
+
+  var t = 0, playing = false, raf = 0, wall = 0;
+
+  function clamp(v, a, b){ return v < a ? a : v > b ? b : v; }
+  function ease(u){ u = clamp(u, 0, 1); return 1 - Math.pow(1 - u, 3); }
+  /* 0 before `from`, 1 after `to`, eased in between. */
+  function ramp(time, from, to){ return to <= from ? (time >= to ? 1 : 0) : ease((time - from) / (to - from)); }
+
+  /* An element that rises into place and later sinks out. `beat` is
+     [in_start, in_end, out_start, out_end] in seconds. */
+  function beat(id, b, rise){
+    var el = document.getElementById(id);
+    if (!el) return;
+    var appear = ramp(t, b[0], b[1]);
+    var leave  = b.length > 2 ? ramp(t, b[2], b[3]) : 0;
+    var o = appear * (1 - leave);
+    var y = (1 - appear) * (rise === undefined ? 2.2 : rise) - leave * 1.6;
+    el.style.opacity = o;
+    el.style.transform = 'translateY(' + y + 'cqw)';
+    el.style.visibility = o < 0.004 ? 'hidden' : 'visible';
+  }
+
+  function money(v){
+    return '$' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function paint(){
+    var beats = FILM.beats;
+    for (var id in beats) if (beats.hasOwnProperty(id)) beat(id, beats[id]);
+
+    /* The car crosses the gantry exactly on the word "toll". */
+    var car = document.getElementById('car');
+    if (car){
+      var u = clamp((t - FILM.car[0]) / (FILM.car[1] - FILM.car[0]), 0, 1);
+      car.style.left = (-8 + u * 108) + 'cqw';
+    }
+
+    /* The total counts up rather than appearing: the number is the point. It is the
+       figure on this language's own screenshot — the English and Spanish captures
+       were taken on different days and genuinely differ. */
+    var num = document.getElementById('totalNum');
+    if (num){
+      var c = ramp(t, FILM.count[0], FILM.count[1]);
+      num.textContent = money(FILM.money * c);
+    }
+
+    /* The spoken line, and only the one being spoken. */
+    var cue = null;
+    for (var i = 0; i < FILM.cues.length; i++){
+      if (t >= FILM.cues[i].t - 0.18) cue = FILM.cues[i];
+    }
+    if (cue){
+      if (caption.textContent !== cue.text) caption.textContent = cue.text;
+      // A cue marked `mute` is one the closing card already prints in display type;
+      // saying it twice on one frame reads as a mistake.
+      var fade = ramp(t, cue.t - 0.18, cue.t + 0.12);
+      caption.style.opacity = cue.mute ? 0 : fade;
+    } else {
+      caption.textContent = '';
+      caption.style.opacity = 0;
+    }
+  }
+
+  /* ---------------- playback (a viewer), and seeking (the renderer) ---------------- */
+
+  function frame(){
+    if (!playing) return;
+    t = (performance.now() - wall) / 1000;
+    if (t >= FILM.total){ t = FILM.total; stop(); paint(); return; }
+    paint();
+    raf = requestAnimationFrame(frame);
+  }
+
+  function play(){
+    if (playing) return;
+    if (t >= FILM.total) t = 0;
+    playing = true;
+    poster.classList.add('gone');
+    wall = performance.now() - t * 1000;
+    if (track && track.src){ track.currentTime = t; var p = track.play(); if (p && p.catch) p.catch(function(){}); }
+    raf = requestAnimationFrame(frame);
+  }
+
+  function stop(){
+    playing = false;
+    cancelAnimationFrame(raf);
+    if (track) { try { track.pause(); } catch (e) {} }
+  }
+
+  poster.addEventListener('click', play);
+  content.addEventListener('click', function(){ playing ? stop() : play(); });
+  document.addEventListener('keydown', function(e){
+    if (e.code === 'Space'){ e.preventDefault(); playing ? stop() : play(); }
+  });
+
+  /* What render.js drives. Deliberately the same paint() a viewer sees. */
+  window.__film = {
+    total: FILM.total,
+    seek: function(time){ stop(); t = time; poster.classList.add('gone'); paint(); },
+    ready: function(){ return document.fonts ? document.fonts.status === 'loaded' : true; }
+  };
+
+  paint();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(paint);
+})();
+</script>

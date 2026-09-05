@@ -1,0 +1,437 @@
+<meta charset="utf-8">
+<title>Two Minutes on Your Fleet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Mono:wght@400;500;700&family=Source+Sans+3:wght@400;600;700;900&display=swap">
+
+<style>
+/* ============================================================
+   Two Minutes on Your Fleet - MyEZToll sales film, 2:04
+   The product's own screens carry every scene. Deliberately one
+   visual world (daylight), every colour painted explicitly.
+   ============================================================ */
+
+:root{
+  --paper:#e9eef5;
+  --card:#ffffff;
+  --ink:#0a1628;
+  --muted:#5b6f8a;
+  --line:#cfdae8;
+  --loss:#d92d4b;
+  --gain:#0b8f63;
+  --accent:#f5a524;
+  --accent-hot:#ef6c1f;
+
+  --display:'Anton',"Arial Narrow",Impact,sans-serif;
+  --body:'Source Sans 3',"Segoe UI",system-ui,sans-serif;
+  --mono:'Roboto Mono',ui-monospace,"Cascadia Mono",monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;background:#08111f;color:var(--ink);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(10px,1.6vh,20px);padding:clamp(10px,2.2vh,28px) clamp(10px,2.4vw,32px);
+}
+
+.film{width:min(100%,1360px);display:flex;flex-direction:column;gap:clamp(8px,1.3vh,14px)}
+
+.masthead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:0 2px}
+.wordmark{font-family:var(--body);font-weight:900;font-size:clamp(15px,1.5vw,19px);letter-spacing:-.02em;color:#eaf0f8;display:flex;align-items:center;gap:9px}
+.wordmark b{color:var(--accent)}
+.wordmark .rule{width:26px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent-hot))}
+.masthead .runtime{font-family:var(--mono);font-size:clamp(10px,1vw,12px);color:#8199b6;letter-spacing:.09em;text-transform:uppercase}
+
+/* ---------- stage ---------- */
+
+.stage-wrap{
+  position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
+  background:var(--paper);border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 30px 70px -30px rgba(0,0,0,.9);container-type:inline-size;
+}
+.scene{display:none;position:absolute;inset:0;overflow:hidden;background:var(--paper)}
+.scene.is-live{display:block}
+.stage-wrap.is-paused .scene.is-live,
+.stage-wrap.is-paused .scene.is-live *{animation-play-state:paused !important}
+
+.eyebrow{
+  position:absolute;top:3.6cqw;left:6cqw;
+  font-family:var(--mono);font-weight:700;font-size:1.25cqw;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--accent-hot);
+  display:flex;align-items:center;gap:.9cqw;z-index:6;
+}
+.eyebrow::before{content:"";width:2.4cqw;height:3px;border-radius:2px;background:var(--accent)}
+
+.h2{
+  font-family:var(--display);font-weight:400;font-size:4.4cqw;line-height:.98;
+  letter-spacing:.01em;text-transform:uppercase;margin:0;color:var(--ink);text-wrap:balance;
+}
+
+/* ---------- the product screen ---------- */
+
+.screen{
+  position:absolute;
+  border-radius:.7cqw;overflow:hidden;background:var(--card);
+  border:1px solid var(--line);
+  box-shadow:0 3cqw 5cqw -2.4cqw rgba(10,22,40,.55);
+  animation:screenIn .9s var(--ease-out) both;
+}
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(2.4cqw) scale(.985)}
+  to{opacity:1;transform:none}
+}
+.screen .chrome{
+  height:2.1cqw;background:#f1f5fa;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:.45cqw;padding:0 .9cqw;
+}
+.screen .chrome i{width:.62cqw;height:.62cqw;border-radius:50%;background:#cdd8e6;display:block}
+.screen .chrome span{
+  margin-left:.8cqw;font-family:var(--mono);font-size:.85cqw;color:#8fa3bb;letter-spacing:.08em;
+}
+.screen img{display:block;width:100%;height:auto}
+.shot{position:relative;display:block}
+
+/* highlight box drawn over a region of the screenshot */
+.spot{
+  position:absolute;border:.25cqw solid var(--accent);border-radius:.3cqw;
+  box-shadow:0 0 0 100cqw rgba(10,22,40,.42), 0 0 2.4cqw rgba(245,165,36,.75);
+  animation:spotIn .5s var(--ease-out) both;
+  pointer-events:none;
+}
+@keyframes spotIn{from{opacity:0;transform:scale(1.06)}to{opacity:1;transform:none}}
+.spot.soft{box-shadow:0 0 0 100cqw rgba(10,22,40,.28), 0 0 2cqw rgba(245,165,36,.6)}
+.spot.win{border-color:var(--gain);box-shadow:0 0 0 100cqw rgba(10,22,40,.42), 0 0 2.4cqw rgba(11,143,99,.7)}
+
+.callout{
+  position:absolute;
+  background:var(--ink);color:#fff;border-radius:.45cqw;
+  padding:.75cqw 1.15cqw;max-width:26cqw;
+  font-size:1.35cqw;line-height:1.35;font-weight:600;
+  box-shadow:0 1.4cqw 3cqw -1.2cqw rgba(10,22,40,.7);
+  animation:riseSm .45s var(--ease-out) both;
+}
+.callout b{color:var(--accent);font-weight:700}
+.callout .num{font-family:var(--mono);font-weight:700}
+
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(1.6cqw)}to{opacity:1;transform:none}}
+@keyframes riseSm{from{opacity:0;transform:translateY(.7cqw)}to{opacity:1;transform:none}}
+@keyframes slideL{from{opacity:0;transform:translateX(-1.6cqw)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:none}}
+@keyframes growx{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes dash{to{stroke-dashoffset:0}}
+
+/* ---------- S2: leak list beside the screen ---------- */
+.leaklist{position:absolute;left:6cqw;top:14cqw;width:26cqw;display:flex;flex-direction:column;gap:1.5cqw}
+.leakrow{display:flex;gap:1cqw;align-items:flex-start;opacity:0;animation:slideL .45s var(--ease-out) both}
+.leakrow .n{
+  font-family:var(--mono);font-weight:700;font-size:1.05cqw;color:var(--loss);
+  border:1px solid rgba(217,45,75,.45);border-radius:.3cqw;padding:.18cqw .5cqw;flex:none;margin-top:.25cqw;
+}
+.leakrow p{margin:0;font-size:1.55cqw;line-height:1.35;color:var(--ink);font-weight:600}
+.leakrow small{display:block;font-weight:400;color:var(--muted);font-size:1.25cqw;margin-top:.15cqw}
+
+/* ---------- S3: track drawn over the real map ---------- */
+.trackline{
+  fill:none;stroke:#2f7fe0;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1200;stroke-dashoffset:1200;
+  animation:dash 3s var(--ease) both;
+  filter:drop-shadow(0 0 6px rgba(47,127,224,.55));
+}
+.gantrypin{animation:pop .4s var(--ease-out) both}
+.pinring{fill:none;stroke:#f5a524;stroke-width:2.5;opacity:.9}
+
+/* ---------- S4: the free list ---------- */
+.freewrap{position:absolute;inset:0;display:flex;align-items:center;gap:4cqw;padding:0 7cqw}
+.freeword{flex:none;width:31cqw}
+.freeword .big{
+  font-family:var(--display);font-size:11cqw;line-height:.86;text-transform:uppercase;
+  color:var(--gain);letter-spacing:.01em;animation:pop .7s var(--ease-out) both;
+}
+.freeword .sub{
+  font-size:1.6cqw;line-height:1.45;color:var(--muted);margin-top:1.2cqw;
+  animation:rise .5s var(--ease-out) both;
+}
+.pricelist{
+  flex:1;background:var(--card);border:1px solid var(--line);border-radius:.8cqw;overflow:hidden;
+  box-shadow:0 2cqw 4cqw -2cqw rgba(10,22,40,.5);
+  animation:rise .6s var(--ease-out) both;
+}
+.priceline{
+  display:flex;justify-content:space-between;align-items:center;gap:1.2cqw;
+  padding:1.05cqw 1.6cqw;border-bottom:1px solid var(--line);
+  opacity:0;animation:riseSm .35s var(--ease-out) both;
+}
+.priceline:last-child{border-bottom:0}
+.priceline .what{font-size:1.5cqw;line-height:1.2;font-weight:600;color:var(--ink)}
+.priceline .cost{font-family:var(--display);font-size:2.1cqw;line-height:1;color:var(--gain);letter-spacing:.02em;white-space:nowrap}
+.priceline.optional{background:#f6f9fc}
+.priceline.optional .cost{font-family:var(--mono);font-weight:700;font-size:1.15cqw;line-height:1.2;color:var(--accent-hot);letter-spacing:.1em;text-transform:uppercase}
+
+/* ---------- S6: close ---------- */
+.closewrap{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1.8cqw;text-align:center;
+  padding:5cqw 6cqw 12cqw;background:linear-gradient(160deg,#0a1628 0%,#14294a 100%);
+}
+.closewrap .slogan{
+  font-family:var(--display);font-size:8cqw;line-height:.92;text-transform:uppercase;
+  color:#fff;letter-spacing:.01em;animation:pop .7s var(--ease-out) both;
+}
+.closewrap .slogan em{font-style:normal;color:var(--accent)}
+.closewrap .freeline{
+  font-family:var(--display);font-size:3.1cqw;text-transform:uppercase;color:#34d399;
+  letter-spacing:.02em;animation:rise .5s var(--ease-out) both;
+}
+.closewrap .cta{font-size:2cqw;font-weight:600;color:#c9d8ea;animation:rise .5s var(--ease-out) both}
+.closewrap .legal{font-family:var(--mono);font-size:1cqw;letter-spacing:.1em;color:#7e93ad;animation:fadein .5s ease both}
+
+/* ---------- captions ---------- */
+.caption-bay{position:absolute;left:0;right:0;bottom:2.6cqw;display:flex;justify-content:center;padding:0 9cqw;z-index:20;pointer-events:none}
+.caption{
+  font-size:1.9cqw;line-height:1.38;text-align:center;font-weight:600;color:#fff;
+  background:rgba(10,22,40,.92);padding:1cqw 1.8cqw;border-radius:.55cqw;max-width:76cqw;text-wrap:balance;
+  box-shadow:0 10px 26px -12px rgba(10,22,40,.7);
+}
+.caption:empty{opacity:0}
+.caption-bay.is-off{display:none}
+
+/* ---------- poster ---------- */
+.poster{
+  position:absolute;inset:0;z-index:40;background:linear-gradient(160deg,#0a1628 0%,#122744 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2cqw;text-align:center;padding:6cqw;
+}
+.poster.is-gone{display:none}
+.poster .kicker{font-family:var(--mono);font-weight:700;font-size:1.3cqw;letter-spacing:.3em;text-transform:uppercase;color:var(--accent)}
+.poster h2{font-family:var(--display);font-weight:400;font-size:8.8cqw;line-height:.92;letter-spacing:.01em;text-transform:uppercase;margin:0;color:#fff;max-width:72cqw}
+.poster h2 em{font-style:normal;color:var(--accent)}
+.poster p{font-size:1.85cqw;color:#a8bdd6;max-width:50cqw;margin:0;line-height:1.5}
+.playbtn{
+  margin-top:.4cqw;display:inline-flex;align-items:center;gap:1.1cqw;
+  font-family:var(--body);font-weight:900;font-size:2cqw;color:#1a1005;
+  background:linear-gradient(100deg,var(--accent),var(--accent-hot));
+  border:0;border-radius:100px;padding:1.25cqw 2.9cqw;cursor:pointer;
+  box-shadow:0 14px 34px -12px rgba(245,165,36,.7);transition:transform .18s var(--ease);
+}
+.playbtn:hover{transform:translateY(-2px) scale(1.02)}
+.playbtn:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.playbtn svg{width:1.8cqw;height:1.8cqw;fill:#1a1005}
+.poster .fineprint{font-family:var(--mono);font-size:1.05cqw;color:#8199b6;letter-spacing:.06em}
+
+/* ---------- transport ---------- */
+.transport{display:flex;align-items:center;gap:clamp(8px,1vw,14px);padding:clamp(8px,1vh,12px) clamp(10px,1.1vw,16px);background:#0f1c30;border:1px solid rgba(180,205,235,.16);border-radius:12px;flex-wrap:wrap}
+.tbtn{display:inline-flex;align-items:center;justify-content:center;width:clamp(32px,3vw,38px);height:clamp(32px,3vw,38px);border-radius:9px;background:#16263d;border:1px solid rgba(180,205,235,.16);color:#eaf0f8;cursor:pointer;flex:none;transition:background .15s ease}
+.tbtn:hover{background:#1e3352}
+.tbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tbtn svg{width:15px;height:15px;fill:currentColor}
+.tbtn.primary{background:linear-gradient(100deg,var(--accent),var(--accent-hot));border-color:transparent;color:#1a1005}
+.tbtn.primary svg{fill:#1a1005}
+.tbtn[aria-pressed="false"]{color:#8199b6}
+.track{flex:1 1 240px;min-width:180px;display:flex;gap:3px;height:26px;align-items:center;cursor:pointer}
+.seg{position:relative;flex:var(--w,1);height:6px;border-radius:3px;background:rgba(180,205,235,.18);overflow:hidden;transition:height .16s var(--ease)}
+.track:hover .seg{height:9px}
+.seg .fill{position:absolute;inset:0;transform-origin:left center;transform:scaleX(var(--p,0));background:linear-gradient(90deg,var(--accent),var(--accent-hot));border-radius:3px}
+.seg.done .fill{transform:scaleX(1);background:rgba(245,165,36,.45)}
+.clock{font-family:var(--mono);font-size:clamp(11px,1.05vw,13px);color:#8199b6;letter-spacing:.04em;font-variant-numeric:tabular-nums;flex:none}
+.chapter-name{font-family:var(--mono);font-weight:700;font-size:clamp(10px,.95vw,12px);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);flex:none;min-width:9ch}
+.sel{font-family:var(--mono);font-size:clamp(10px,.95vw,12px);background:#16263d;color:#eaf0f8;border:1px solid rgba(180,205,235,.16);border-radius:9px;padding:8px 9px;cursor:pointer;max-width:200px}
+.sel:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pitch{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:clamp(10px,.92vw,11.5px);letter-spacing:.12em;text-transform:uppercase;color:#8199b6;flex:none}
+.pitch input[type=range]{width:74px;accent-color:var(--accent);cursor:pointer}
+.pitch input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.voicebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:clamp(10px,.92vw,11.5px);color:#8199b6;letter-spacing:.04em}
+.dot{width:7px;height:7px;border-radius:50%;background:#34d399;flex:none}
+.dot.warn{background:var(--accent)}
+.dot.off{background:#8199b6}
+.footnote{font-family:var(--mono);font-size:clamp(10px,.92vw,11.5px);color:#7e93ad;letter-spacing:.05em;text-align:center;line-height:1.7;max-width:1360px}
+
+@media (prefers-reduced-motion:reduce){ .scene.is-live *{animation-duration:.01ms !important;animation-delay:0ms !important} }
+@media (max-width:640px){ .chapter-name{display:none} }
+</style>
+
+<div class="film">
+
+  <div class="masthead">
+    <div class="wordmark"><span class="rule"></span>My<b>EZ</b>Toll</div>
+    <div class="runtime" id="runtimeLabel">Sales film</div>
+  </div>
+
+  <div class="stage-wrap" id="stage">
+
+    <!-- ============ S1 - the leak ============ -->
+    <section class="scene" data-scene="0">
+      <div class="eyebrow">One week · one small fleet</div>
+      <div class="screen" style="left:5cqw;top:9.5cqw;width:57cqw">
+        <div class="chrome"><i></i><i></i><i></i><span>owner.myeztoll.com / toll transactions</span></div>
+        <span class="shot">
+          <img src="__SHOT_tolls__" alt="Toll Transactions screen listing crossings and amounts">
+          <span class="spot" data-cue="1" data-cue-offset="0.4" style="left:0.4%;top:18.5%;width:15%;height:6.5%"></span>
+        </span>
+      </div>
+      <div class="callout" data-cue="1" data-cue-offset="0.7" style="left:64cqw;top:14cqw;max-width:29cqw">
+        <span class="num">$412.68</span> in a single week — <b>39 crossings</b>
+      </div>
+      <div class="callout" data-cue="3" data-cue-offset="0.2" style="left:64cqw;top:27cqw;max-width:29cqw">
+        Not one renter named on the statement.<br>So the owner absorbs it.
+      </div>
+    </section>
+
+    <!-- ============ S2 - four leaks ============ -->
+    <section class="scene" data-scene="1">
+      <div class="eyebrow">Where the money goes</div>
+      <div class="leaklist">
+        <div class="leakrow" data-cue="0" data-cue-offset="0.2"><span class="n">01</span><p>Unmatched tolls<small>Nobody could prove who drove</small></p></div>
+        <div class="leakrow" data-cue="1" data-cue-offset="0.2"><span class="n">02</span><p>Late violations<small>Published after the rental closed</small></p></div>
+        <div class="leakrow" data-cue="2" data-cue-offset="0.2"><span class="n">03</span><p>Post-trip charges<small>Damage and fuel, found too late</small></p></div>
+        <div class="leakrow" data-cue="3" data-cue-offset="0.2"><span class="n">04</span><p>Admin hours<small>Spreadsheets against statements</small></p></div>
+      </div>
+      <div class="screen" style="right:5cqw;top:13cqw;width:54cqw">
+        <div class="chrome"><i></i><i></i><i></i><span>owner.myeztoll.com / violations</span></div>
+        <span class="shot">
+          <img src="__SHOT_violations__" alt="Violations screen listing citations, agencies and amounts">
+          <span class="spot soft" data-cue="1" data-cue-offset="0.6" style="left:58%;top:38%;width:41%;height:50%"></span>
+        </span>
+      </div>
+    </section>
+
+    <!-- ============ S3 - closed ============ -->
+    <section class="scene" data-scene="2">
+      <div class="eyebrow">Every charge, matched</div>
+      <div class="screen" style="left:5cqw;top:11cqw;width:37cqw">
+        <div class="chrome"><i></i><i></i><i></i><span>gps · trip map</span></div>
+        <div style="position:relative">
+          <img src="__SHOT_map__" alt="Fleet GPS map covering the New Jersey and New York toll corridors">
+          <svg viewBox="0 0 962 836" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true">
+            <path class="trackline" data-cue="1" data-cue-offset="0.1"
+                  d="M250 700 C 330 660, 380 600, 430 545 S 545 455, 600 400 S 690 300, 745 250"/>
+            <g class="gantrypin" data-cue="1" data-cue-offset="2.4">
+              <circle class="pinring" cx="600" cy="400" r="26"/>
+              <circle cx="600" cy="400" r="9" fill="#f5a524"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="callout" data-cue="1" data-cue-offset="2.6" style="left:5cqw;top:40cqw;max-width:36cqw">
+        Car at the gantry, <b>to the second</b> — and the booking names the driver.
+      </div>
+      <div class="screen" style="right:5cqw;top:14cqw;width:47cqw">
+        <div class="chrome"><i></i><i></i><i></i><span>charges</span></div>
+        <span class="shot">
+          <img src="__SHOT_charges__" alt="Charges screen showing each toll matched and billed">
+          <span class="spot win" data-cue="3" data-cue-offset="0.3" style="left:4%;top:12%;width:34%;height:46%"></span>
+        </span>
+      </div>
+    </section>
+
+    <!-- ============ S4 - free ============ -->
+    <section class="scene" data-scene="3">
+      <div class="eyebrow">What it costs you</div>
+      <div class="freewrap">
+        <div class="freeword">
+          <div class="big" data-cue="0" data-cue-offset="0.3">Free</div>
+          <div class="sub" data-cue="4" data-cue-offset="0.2">No contract, no minimum fleet, and no fee taken out of your rental income.</div>
+        </div>
+        <div class="pricelist" data-cue="0" data-cue-offset="0.5">
+          <div class="priceline" data-cue="1" data-cue-offset="0.2"><span class="what">Subscription</span><span class="cost">FREE</span></div>
+          <div class="priceline" data-cue="1" data-cue-offset="1.6"><span class="what">Set-up and onboarding</span><span class="cost">FREE</span></div>
+          <div class="priceline" data-cue="1" data-cue-offset="3"><span class="what">Charge per vehicle</span><span class="cost">FREE</span></div>
+          <div class="priceline" data-cue="2" data-cue-offset="0.4"><span class="what">Connecting the GPS you already run</span><span class="cost">FREE</span></div>
+          <div class="priceline" data-cue="2" data-cue-offset="2.2"><span class="what">Toll &amp; violation recovery</span><span class="cost">FREE</span></div>
+          <div class="priceline optional" data-cue="3" data-cue-offset="0.4"><span class="what">Our own telematics hardware</span><span class="cost">Optional · paid</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ S5 - you get paid ============ -->
+    <section class="scene" data-scene="4">
+      <div class="eyebrow">And it runs the other way</div>
+      <div class="screen" style="left:5cqw;top:11cqw;width:35cqw">
+        <div class="chrome"><i></i><i></i><i></i><span>charge log</span></div>
+        <span class="shot">
+          <img src="__SHOT_driver__" alt="Charge log showing the driver charged and the payout status">
+          <span class="spot" data-cue="0" data-cue-offset="1.2" style="left:33%;top:19%;width:16%;height:8%"></span>
+        </span>
+      </div>
+      <div class="callout" data-cue="0" data-cue-offset="1.4" style="left:5cqw;top:43.6cqw;max-width:34cqw">
+        <b>The renter</b> is charged — <span class="num">$106.82</span>, not you.
+      </div>
+      <div class="screen" style="right:5cqw;top:13cqw;width:47cqw">
+        <div class="chrome"><i></i><i></i><i></i><span>account statement</span></div>
+        <span class="shot">
+          <img src="__SHOT_income__" alt="Account statement showing owner share income lines">
+          <span class="spot win" data-cue="1" data-cue-offset="0.6" style="left:8%;top:46%;width:62%;height:40%"></span>
+        </span>
+      </div>
+      <div class="callout" data-cue="1" data-cue-offset="0.8" style="right:5cqw;top:43.6cqw;max-width:34cqw">
+        <b>Owner share</b> — income, on a fleet you already own.
+      </div>
+    </section>
+
+    <!-- ============ S6 - close ============ -->
+    <section class="scene" data-scene="5">
+      <div class="closewrap">
+        <div class="slogan" data-cue="0" data-cue-offset="0">Stop losing.<br><em>Start earning.</em></div>
+        <div class="freeline" data-cue="1" data-cue-offset="0.1">Free for fleet owners</div>
+        <div class="cta" data-cue="2" data-cue-offset="0.1">MyEZToll — book a demo and see it on your own fleet.</div>
+        <div class="legal" data-cue="2" data-cue-offset="1.2">Aegis AG Soft LLC · New Jersey, USA · optional telematics hardware excepted</div>
+      </div>
+    </section>
+
+    <div class="caption-bay" id="captionBay"><div class="caption" id="caption"></div></div>
+
+    <div class="poster" id="poster">
+      <div class="kicker" id="posterRuntime">A film for fleet owners</div>
+      <h2>Stop losing.<br><em>Start earning.</em></h2>
+      <p>Two minutes on where your fleet leaks money — and why MyEZToll costs the owner nothing and pays a share back.</p>
+      <button class="playbtn" id="playBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        Play with narration
+      </button>
+      <div class="fineprint">Narration &amp; subtitles · EN · ES · RU</div>
+    </div>
+
+  </div>
+
+  <div class="transport">
+    <button class="tbtn primary" id="ppBtn" aria-label="Play or pause"><svg id="ppIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+    <button class="tbtn" id="prevBtn" aria-label="Previous chapter"><svg viewBox="0 0 24 24"><path d="M7 6h2v12H7zM19 6l-9 6 9 6z"/></svg></button>
+    <button class="tbtn" id="nextBtn" aria-label="Next chapter"><svg viewBox="0 0 24 24"><path d="M15 6h2v12h-2zM5 6l9 6-9 6z"/></svg></button>
+    <button class="tbtn" id="restartBtn" aria-label="Restart from the beginning"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg></button>
+
+    <div class="track" id="track" role="slider" aria-label="Chapters" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" tabindex="0"></div>
+
+    <div class="clock" id="clock">0:00</div>
+    <div class="chapter-name" id="chapterName">The leak</div>
+
+    <button class="tbtn" id="voiceBtn" aria-label="Toggle narration" aria-pressed="true">
+      <svg id="voiceIcon" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+    </button>
+    <button class="tbtn" id="ccBtn" aria-label="Toggle subtitles" aria-pressed="true">
+      <svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11a2 2 0 1 0 0 2M16 11a2 2 0 1 0 0 2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+    <select class="sel" id="langSel" aria-label="Subtitle language">
+      <option value="en">Subtitles · EN</option>
+      <option value="es">Subtítulos · ES</option>
+      <option value="ru">Субтитры · RU</option>
+    </select>
+    <select class="sel" id="voiceSel" aria-label="Narration voice"></select>
+    <label class="pitch" title="Voice pitch - higher reads younger">
+      <span>Pitch</span>
+      <input type="range" id="pitchSel" min="0.85" max="1.35" step="0.01" value="1" aria-label="Narration pitch">
+    </label>
+  </div>
+
+  <div class="voicebar" id="voiceBar">
+    <span class="dot" id="voiceDot"></span>
+    <span id="voiceStatus">Looking for a British voice…</span>
+  </div>
+
+  <div class="footnote">
+    Screens are the real product, captured from a live owner account; plate numbers, names and contact details are redacted at source.
+  </div>
+
+</div>

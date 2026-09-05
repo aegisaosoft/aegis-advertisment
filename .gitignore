@@ -1,0 +1,34 @@
+# Finished films and their intermediates.
+#
+# The masters run 60-90 MB each and are rebuilt from what is in this repository, so they
+# are published as release assets rather than carried in the tree — a clone should not
+# cost a viewer a hundred megabytes to read a build script. The same goes for the
+# rendered audio: the narration is already inside the films that ship.
+*.mp4
+*.wav
+*.mp3
+*.zip
+
+# Working copies made while checking a cut frame by frame.
+*.orig
+*.png
+!build/short45/logo*.png
+!build/short45/endcard*.png
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor and OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Never in a repository, public or not.
+.env
+.env.*
+.claude/settings.local.json
+*.pem
+*.key

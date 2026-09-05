@@ -1,0 +1,145 @@
+<meta charset="utf-8">
+<title>Scene 10 — the price list</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Source+Sans+3:wght@600;700;900&display=swap">
+
+<style>
+/*
+ * The one shot in the ToonBee cut that has to be read, drawn instead of generated.
+ *
+ * Scene 10 is the price list — no subscription, no set-up fee, nothing per vehicle —
+ * and the generator cannot letter it. Its first pass wrote "5tv" and "3s" on the price
+ * discs; the regenerated pass cleared the discs and then span nonsense around them
+ * ("S I S I A A T L M N U D O"). Three legible lines are the whole point of the scene,
+ * so they are drawn here and composited over those six seconds.
+ *
+ * The ground is the film's own cyclorama, sampled off frame 65.0s: a warm light grey,
+ * darker at the corners, brighter along the floor. Matching it is what lets the splice
+ * fade in and out without announcing itself.
+ */
+:root{
+  --plate:#dad7d2;
+  --plate-edge:#c6c2bc;
+  --floor:#e2ddd7;
+  --ink:#22303f;
+  --muted:#6b7a8a;
+  --mark:#2f86d8;
+  --mark-deep:#1f5fa8;
+  --display:'Anton',"Arial Narrow",Impact,sans-serif;
+  --body:'Source Sans 3',"Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  background:
+    radial-gradient(120% 80% at 50% 96%, var(--floor) 0%, rgba(226,221,215,0) 55%),
+    radial-gradient(105% 95% at 50% 38%, var(--plate) 0%, var(--plate-edge) 100%);
+  color:var(--ink);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;
+}
+
+.stage{width:100vw;height:100vh;container-type:size;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6cqh}
+
+/* "Nothing." — the answer, before the three reasons for it. */
+.head{font-family:var(--display);font-size:17cqh;line-height:.9;letter-spacing:-.01em}
+
+.row{display:flex;align-items:flex-start;justify-content:center;gap:3.5cqw}
+/* Wide enough that the longest of the three labels still sits on one line: a row
+   where one card wraps and the others do not reads as a mistake. */
+.chip{width:29cqw;display:flex;flex-direction:column;align-items:center;gap:4cqh}
+
+/*
+ * A ring with a bar through it: the film's own three discs, reduced to the one shape
+ * that means "none" without being lettered at all. The label under it does the reading.
+ */
+.mark{position:relative;width:21cqh;height:21cqh;border-radius:50%;
+  border:2.3cqh solid var(--mark);
+  background:radial-gradient(60% 60% at 35% 28%, rgba(255,255,255,.85), rgba(255,255,255,0));
+  box-shadow:0 1.4cqh 2.6cqh rgba(31,95,168,.18), inset 0 0 1.2cqh rgba(255,255,255,.7)}
+.mark::after{content:"";position:absolute;left:50%;top:50%;
+  width:24cqh;height:2.3cqh;border-radius:1.2cqh;background:var(--mark-deep);
+  transform:translate(-50%,-50%) rotate(-45deg)}
+
+.label{font-size:4.3cqh;font-weight:900;line-height:1.16;text-align:center;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
+
+/* Every chip starts absent and is placed by seek(); nothing animates on its own, so
+   frame n is the same image however busy the machine is. */
+.head,.chip{opacity:0}
+</style>
+
+<div class="stage">
+  <div class="head"></div>
+  <div class="row">
+    <div class="chip"><div class="mark"></div><div class="label"></div></div>
+    <div class="chip"><div class="mark"></div><div class="label"></div></div>
+    <div class="chip"><div class="mark"></div><div class="label"></div></div>
+  </div>
+</div>
+
+<script>
+/*
+ * The words, and the second each one is spoken.
+ *
+ * The beats are not guesses: they are the narration's own word stamps, measured with
+ * ElevenLabs Scribe and given here relative to the start of scene 10 (64.2s in the
+ * film). A label appears as its phrase begins, so the picture says what the voice is
+ * saying at that moment rather than a beat behind it.
+ */
+var COPY = {
+  en: {
+    head: 'Nothing.',
+    at: 0.10,
+    items: [
+      { text: 'No subscription', at: 1.05 },
+      { text: 'No set-up fee', at: 2.20 },
+      { text: 'No charge per vehicle', at: 3.28 }
+    ]
+  },
+  es: {
+    head: 'Nada.',
+    at: 0.15,
+    items: [
+      { text: 'Sin suscripción', at: 0.92 },
+      { text: 'Sin costo de instalación', at: 2.18 },
+      { text: 'Sin cargo por vehículo', at: 3.82 }
+    ]
+  }
+};
+
+var lang = (location.search.match(/[?&]lang=(en|es)/) || [, 'en'])[1];
+var copy = COPY[lang];
+var head = document.querySelector('.head');
+var chips = [].slice.call(document.querySelectorAll('.chip'));
+
+head.textContent = copy.head;
+chips.forEach(function (chip, i) {
+  chip.querySelector('.label').textContent = copy.items[i].text;
+});
+
+// Ease-out cubic: quick to arrive, slow to settle, which is how the rest of the film moves.
+function ease(x) { return 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3); }
+
+function place(el, t, at, rise) {
+  var k = ease((t - at) / 0.5);
+  el.style.opacity = k;
+  el.style.transform = 'translateY(' + ((1 - k) * rise).toFixed(2) + 'px) scale(' +
+    (0.94 + 0.06 * k).toFixed(4) + ')';
+}
+
+window.__card = {
+  // Six seconds of scene, plus a tail: the film dissolves out of this shot between
+  // 70.10s and 70.30s, and the card has to stay opaque across that whole dissolve or
+  // the lettering it is covering shows through underneath it.
+  total: 6.3,
+  lang: lang,
+  seek: function (t) {
+    place(head, t, copy.at, 26);
+    chips.forEach(function (chip, i) { place(chip, t, copy.items[i].at, 34); });
+  }
+};
+
+window.__card.seek(0);
+</script>
