@@ -32,3 +32,19 @@ desktop.ini
 .claude/settings.local.json
 *.pem
 *.key
+
+# YouTube publishing credentials — never in git.
+# client_secret.json identifies the OAuth app; the token is a live credential for the channel.
+build/tutorials/client_secret.json
+build/tutorials/.youtube-token.json
+
+# Tutorial build output — rebuilt from the scripts. Frames and renders hold raw portal
+# screenshots (shots/_originals is pre-redaction), so they never go into a public repo.
+build/tutorials/mp4/
+build/tutorials/shots/
+build/tutorials/audio/
+build/tutorials/audition/
+build/tutorials/ep*.html
+build/tutorials/_elevenlabs.key.txt
+__pycache__/
+.pytest_cache/

@@ -1,0 +1,139 @@
+<meta charset="utf-8">
+<title>LinkedIn card — Turo part</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@500&display=swap">
+
+<style>
+/*
+ * The image attached to the LinkedIn post that announces the channel — 1200 x 900,
+ * the size the feed shows at full width without cropping.
+ *
+ * Same palette and type as `banner.html` and the film's closing card, so the post,
+ * the channel and the film read as one thing. The three tiles are the real portal
+ * screenshots the videos are cut from (`docs/images-2x/en`), not mock-ups: the post
+ * says nothing on the channel is a mock-up, and the picture has to hold that up.
+ */
+:root{
+  --paper:#eef2f7;
+  --paper-hi:#ffffff;
+  --ink:#0a1628;
+  --muted:#5b6f8a;
+  --accent-hot:#ef6c1f;
+  --accent-cool:#0b8f63;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1200px;height:900px;overflow:hidden}
+body{
+  background:radial-gradient(120% 90% at 50% 12%, var(--paper-hi) 0%, var(--paper) 58%, #dfe6ef 100%);
+  color:var(--ink);
+  font-family:'Oswald',system-ui,sans-serif;
+  padding:60px 64px 54px;
+  display:flex;flex-direction:column;
+}
+
+.road{position:absolute;inset:0;overflow:hidden;z-index:0}
+.road svg{position:absolute;inset:0;width:100%;height:100%}
+.sheet{position:relative;z-index:1;display:flex;flex-direction:column;height:100%}
+
+.top{display:flex;align-items:center;gap:18px}
+.top img{height:52px}
+.handle{
+  font-family:'Roboto Mono',monospace;font-weight:500;
+  font-size:21px;letter-spacing:.16em;color:var(--muted);
+}
+
+.head{
+  font-family:'Anton',sans-serif;
+  font-size:76px;line-height:1.02;letter-spacing:-.005em;
+  margin-top:34px;
+}
+.head em{font-style:normal;color:var(--accent-hot)}
+
+.sub{
+  font-weight:400;font-size:27px;line-height:1.35;color:var(--muted);
+  margin-top:18px;max-width:940px;
+}
+.sub b{color:var(--ink);font-weight:700}
+
+.tiles{display:flex;gap:22px;margin-top:auto}
+.tile{flex:1;min-width:0}
+.frame{
+  position:relative;height:250px;border-radius:10px;overflow:hidden;
+  border:1px solid #cbd6e4;box-shadow:0 10px 24px rgba(10,22,40,.13);
+  background:#fff no-repeat top left;background-size:cover;
+}
+.frame::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(10,22,40,0) 52%, rgba(10,22,40,.55) 100%);
+}
+.t1 .frame{background-image:url('file:///C:/aegis-aa/aegis-advertisment/build/tutorials/shots/en/g5-filter-forward.png');background-size:230%;background-position:30% 36%}
+.t2 .frame{background-image:url('file:///C:/aegis-aa/docs/images-2x/en/57-turo-import.png');background-size:200%;background-position:22% 18%}
+.t3 .frame{background-image:url('file:///C:/aegis-aa/docs/images-2x/en/58-confirm-pending.png');background-size:400%;background-position:49% 27%}
+
+.play{
+  position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(239,108,31,.94);
+  display:flex;align-items:center;justify-content:center;
+}
+.play span{
+  display:block;width:0;height:0;margin-left:5px;
+  border-left:19px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent;
+}
+.dur{
+  position:absolute;z-index:2;right:9px;bottom:9px;
+  font-family:'Roboto Mono',monospace;font-size:15px;color:#fff;
+  background:rgba(10,22,40,.82);border-radius:4px;padding:2px 7px;
+}
+.cap{
+  margin-top:13px;font-weight:500;font-size:22px;line-height:1.25;color:var(--ink);
+}
+.cap i{display:block;font-style:normal;font-weight:400;font-size:19px;color:var(--muted);margin-top:3px}
+
+.foot{
+  margin-top:40px;padding-top:22px;border-top:2px solid #cfd9e6;
+  display:flex;align-items:baseline;justify-content:space-between;gap:24px;
+  font-size:24px;font-weight:500;color:var(--muted);
+}
+.foot b{color:var(--ink);font-weight:700}
+.foot .free{color:var(--accent-cool);font-weight:700}
+</style>
+
+<div class="road">
+  <svg viewBox="0 0 1200 900" preserveAspectRatio="none">
+    <path d="M-30 900 C 260 780, 470 726, 1230 706" fill="none" stroke="#1e3a5f" stroke-opacity=".09" stroke-width="18"/>
+    <path d="M-30 900 C 290 812, 520 762, 1230 748" fill="none" stroke="#ef6c1f" stroke-opacity=".12" stroke-width="13"/>
+    <path d="M-30 44 C 320 104, 560 132, 1230 112" fill="none" stroke="#1e3a5f" stroke-opacity=".06" stroke-width="16"/>
+  </svg>
+</div>
+
+<div class="sheet">
+  <div class="top">
+    <img src="ez-mark-alpha.png" alt="">
+    <div class="handle">MYEZTOLL · FOR TURO HOSTS</div>
+  </div>
+
+  <div class="head">Turo tolls, set up<br><em>in five short videos.</em></div>
+  <div class="sub">From forwarding your Turo emails to confirming a pending trip — <b>every click shown, no tech background needed</b>.</div>
+
+  <div class="tiles">
+    <div class="tile t1">
+      <div class="frame"><div class="play"><span></span></div><div class="dur">1:44</div></div>
+      <div class="cap">Forward your Turo emails<i>Episode 23</i></div>
+    </div>
+    <div class="tile t2">
+      <div class="frame"><div class="play"><span></span></div><div class="dur">2:19</div></div>
+      <div class="cap">Tie listings to your cars<i>Episode 25</i></div>
+    </div>
+    <div class="tile t3">
+      <div class="frame"><div class="play"><span></span></div><div class="dur">2:30</div></div>
+      <div class="cap">Confirm pending bookings<i>Episode 26</i></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div><b>5 episodes</b> · English &amp; Español · real screens, data blurred</div>
+    <div class="free">Free for the fleet owner</div>
+  </div>
+</div>

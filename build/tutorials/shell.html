@@ -1,0 +1,360 @@
+<meta charset="utf-8">
+<title>MyEZToll tutorial</title>
+<!--
+  One tutorial episode, painted as a pure function of time.
+
+  Nothing here animates itself: `window.__film.seek(t)` puts every element where it
+  belongs at second t and nothing else moves. render.js asks for frame n at n/30s and
+  screenshots it, so a busy machine drops nothing and frame n is always the same image.
+
+  The picture is a real screenshot of the portal inside a browser window, with a camera
+  over it (pan and zoom), a cursor that travels to the control being talked about, and a
+  click that lands where a click would land. Read out of order it is a slideshow; read at
+  30fps it is a screen recording.
+-->
+<style>
+  @font-face { font-family: 'InterLocal'; src: local('Inter'), url('file:///C:/Windows/Fonts/Inter-Regular-slnt=0.ttf'); font-weight: 400; }
+  @font-face { font-family: 'InterLocal'; src: local('Inter Bold'), url('file:///C:/Windows/Fonts/Inter-Bold-slnt=0.ttf'); font-weight: 700; }
+
+  :root {
+    --ink: #1e1b39;
+    --violet: #6d4aff;
+    --violet-dim: #4a2fc4;
+    --paper: #f6f7fb;
+    --ring: #ff9f1a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0d0b1c; }
+  body { font-family: 'InterLocal', 'Segoe UI', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+  #stage { position: relative; width: 1920px; height: 1080px; }
+
+  /* The desk the browser window sits on. Brand colour, not a photograph: a photograph
+     would fight the screenshot for attention and it is the screenshot we came for. */
+  #desk {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(1200px 700px at 22% -10%, #3a2a7a 0%, transparent 60%),
+      radial-gradient(900px 600px at 92% 108%, #2a1f5c 0%, transparent 62%),
+      linear-gradient(160deg, #17123a 0%, #0d0b1c 100%);
+  }
+
+  /* ---------------------------------------------------------------- browser window */
+  #win {
+    position: absolute; left: 80px; top: 42px; width: 1760px; height: 1012px;
+    border-radius: 14px; overflow: hidden;
+    background: #fff;
+    box-shadow: 0 40px 90px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08);
+  }
+  #chrome {
+    position: absolute; left: 0; top: 0; width: 1760px; height: 42px;
+    background: linear-gradient(#2c2942, #26233a);
+    display: flex; align-items: center; gap: 10px; padding: 0 16px;
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  #url {
+    margin-left: 14px; height: 26px; min-width: 420px; padding: 0 14px;
+    border-radius: 13px; background: rgba(255,255,255,.09);
+    color: #cfcbe6; font-size: 13px; line-height: 26px; letter-spacing: .01em;
+  }
+  #url b { color: #fff; font-weight: 700; }
+
+  #view { position: absolute; left: 0; top: 42px; width: 1760px; height: 970px; overflow: hidden; background: var(--paper); }
+  .shot { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform, opacity; }
+
+  /* The spotlight. Four panels rather than one box-shadow: a shadow that big is
+     re-rasterised every frame and costs more than the screenshot it dims. */
+  .dim { position: absolute; background: rgba(13,11,28,.52); pointer-events: none; }
+  #ringbox {
+    position: absolute; border: 3px solid var(--ring); border-radius: 8px;
+    box-shadow: 0 0 0 3px rgba(255,159,26,.28), 0 8px 26px rgba(0,0,0,.35);
+  }
+
+  #cursor { position: absolute; width: 30px; height: 30px; margin: -3px 0 0 -3px; }
+  #ripple {
+    position: absolute; width: 90px; height: 90px; margin: -45px 0 0 -45px;
+    border-radius: 50%; border: 3px solid rgba(109,74,255,.9);
+    background: rgba(109,74,255,.16);
+  }
+
+  /* ---------------------------------------------------------------- overlays */
+  #lower {
+    position: absolute; left: 112px; bottom: 74px; max-width: 1120px;
+    padding: 12px 26px; border-radius: 12px;
+    background: rgba(13,11,28,.9); border-left: 5px solid var(--violet);
+    color: #fff; font-size: 27px; font-weight: 700; letter-spacing: -.01em;
+    box-shadow: 0 14px 34px rgba(0,0,0,.45);
+  }
+  /* In the chrome bar rather than over the page: the corner of a screenshot is where
+     the answer to somebody's question tends to be. */
+  #brand {
+    position: absolute; right: 22px; top: 13px;
+    color: rgba(255,255,255,.42); font-size: 15px; font-weight: 700; letter-spacing: .16em;
+  }
+
+  /* ---------------------------------------------------------------- cards */
+  .card {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; color: #fff;
+    background:
+      radial-gradient(1100px 640px at 26% 8%, #4a33a8 0%, transparent 62%),
+      linear-gradient(160deg, #1a1442 0%, #0d0b1c 100%);
+  }
+  .card .eyebrow { font-size: 24px; font-weight: 700; letter-spacing: .22em; color: #a893ff; text-transform: uppercase; }
+  .card h1 { font-size: 86px; font-weight: 700; letter-spacing: -.03em; line-height: 1.04; max-width: 1400px; margin: 26px 0 0; }
+  .card .sub { margin-top: 26px; font-size: 30px; color: #cfc7f5; font-weight: 400; }
+  .card .rule { width: 132px; height: 5px; border-radius: 3px; background: var(--violet); margin-top: 40px; }
+  #end h1 { font-size: 66px; }
+  #end .sub { font-size: 34px; color: #fff; }
+  #end .url { margin-top: 18px; font-size: 40px; font-weight: 700; color: #a893ff; letter-spacing: -.01em; }
+</style>
+
+<div id="stage">
+  <div id="desk"></div>
+
+  <div id="win">
+    <div id="chrome">
+      <span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span>
+      <span id="url"></span>
+    </div>
+    <div id="view">
+      <div id="dimT" class="dim"></div><div id="dimB" class="dim"></div>
+      <div id="dimL" class="dim"></div><div id="dimR" class="dim"></div>
+      <div id="ringbox"></div>
+      <div id="ripple"></div>
+      <svg id="cursor" viewBox="0 0 24 24">
+        <path d="M5 2.5 L5 20.2 L9.4 16.1 L12.2 22.4 L15.3 21.0 L12.6 14.9 L18.6 14.6 Z"
+              fill="#fff" stroke="#12102a" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div id="brand">MYEZTOLL</div>
+  </div>
+
+  <div id="lower"></div>
+
+  <div id="title" class="card">
+    <div class="eyebrow" id="tEyebrow"></div>
+    <h1 id="tTitle"></h1>
+    <div class="sub" id="tSub"></div>
+    <div class="rule"></div>
+  </div>
+
+  <div id="end" class="card">
+    <h1 id="eTitle"></h1>
+    <div class="sub" id="eSub"></div>
+    <div class="url" id="eUrl">owner.myeztoll.com</div>
+  </div>
+</div>
+
+<audio id="track" src="__AUDIO__" preload="auto"></audio>
+
+<script>
+var FILM = __FILM_JSON__;
+
+(function () {
+  'use strict';
+
+  var VW = 1760, VH = 970;
+  var MOVE = 0.85;        // camera travel between beats
+  var CUR_MOVE = 0.6;     // cursor travel
+  var FADE = 0.26;        // cross-fade when the page changes
+  var view = document.getElementById('view');
+
+  // ------------------------------------------------------------------ shots
+  // One <img> per distinct screenshot, all loaded up front. Swapping opacity is a
+  // composite; swapping src would be a decode, and a decode inside a seek is a frame
+  // that renders before its own picture arrives.
+  var imgs = {};
+  FILM.shots.forEach(function (s) {
+    var el = document.createElement('img');
+    el.className = 'shot';
+    el.src = s.src;
+    el.style.opacity = 0;
+    view.insertBefore(el, view.firstChild);
+    imgs[s.key] = { el: el, w: s.w, h: s.h };
+  });
+
+  var ringbox = document.getElementById('ringbox');
+  var dim = { T: document.getElementById('dimT'), B: document.getElementById('dimB'),
+              L: document.getElementById('dimL'), R: document.getElementById('dimR') };
+  var cursor = document.getElementById('cursor');
+  var ripple = document.getElementById('ripple');
+  var lower = document.getElementById('lower');
+  var url = document.getElementById('url');
+  var titleCard = document.getElementById('title');
+  var endCard = document.getElementById('end');
+
+  document.getElementById('tEyebrow').textContent = FILM.card.eyebrow;
+  document.getElementById('tTitle').textContent = FILM.card.title;
+  document.getElementById('tSub').textContent = FILM.card.sub;
+  document.getElementById('eTitle').textContent = FILM.card.endTitle;
+  document.getElementById('eSub').textContent = FILM.card.endSub;
+
+  // ------------------------------------------------------------------ helpers
+  function ease(u) { return u <= 0 ? 0 : u >= 1 ? 1 : (u < 0.5 ? 4*u*u*u : 1 - Math.pow(-2*u + 2, 3) / 2); }
+  function lerp(a, b, u) { return a + (b - a) * u; }
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+  /* Where the shot sits in the viewport at a given camera.
+     `zoom` 1 means the screenshot covers the window; the focus point is pulled to the
+     centre and then clamped, so a focus near an edge slides the picture rather than
+     revealing the paper behind it. */
+  function place(shot, cam) {
+    var s = Math.max(VW / shot.w, VH / shot.h) * cam.z;
+    var w = shot.w * s, h = shot.h * s;
+    return {
+      s: s, w: w, h: h,
+      x: clamp(VW / 2 - cam.fx * w, Math.min(0, VW - w), 0),
+      y: clamp(VH / 2 - cam.fy * h, Math.min(0, VH - h), 0)
+    };
+  }
+
+  // ------------------------------------------------------------------ the beat at t
+  var beats = FILM.beats;
+
+  function stateAt(t) {
+    var i = 0;
+    while (i + 1 < beats.length && t >= beats[i + 1].t) i++;
+    var b = beats[i], prev = i ? beats[i - 1] : null;
+    var into = t - b.t;
+
+    // Camera: ease from the previous beat's camera into this one.
+    var cam = { fx: b.cam[0], fy: b.cam[1], z: b.cam[2] };
+    if (prev && into < MOVE) {
+      var u = ease(into / MOVE);
+      // A shot change is a cut, not a pan — there is nothing to pan between.
+      if (prev.shot === b.shot) {
+        cam = { fx: lerp(prev.cam[0], b.cam[0], u), fy: lerp(prev.cam[1], b.cam[1], u),
+                z: lerp(prev.cam[2], b.cam[2], u) };
+      }
+    }
+
+    // Cursor: travels from wherever it was to this beat's target.
+    var from = null;
+    for (var j = i; j >= 0; j--) { if (beats[j].point) { from = beats[j].point; break; } }
+    var cur = null, curU = 1;
+    if (b.point) {
+      var start = prev && prev.point && prev.shot === b.shot ? prev.point : null;
+      // Coming out of a page change the cursor is already where it clicked; from a
+      // standing start it enters from below right, the way a hand arrives at a screen.
+      if (!start) start = from && from !== b.point ? from : [b.point[0] + 0.16, b.point[1] + 0.18];
+      curU = ease(clamp((into - 0.12) / CUR_MOVE, 0, 1));
+      cur = [lerp(start[0], b.point[0], curU), lerp(start[1], b.point[1], curU)];
+    }
+
+    return { i: i, b: b, prev: prev, into: into, cam: cam, cur: cur, curU: curU };
+  }
+
+  // ------------------------------------------------------------------ seek
+  function seek(t) {
+    // Cards top and tail the episode and nothing underneath them matters.
+    var inTitle = t < FILM.titleOut;
+    var endIn = FILM.total - FILM.endHold;
+    titleCard.style.opacity = inTitle ? 1 : clamp((FILM.titleOut + 0.45 - t) / 0.45, 0, 1);
+    endCard.style.opacity = clamp((t - endIn) / 0.5, 0, 1);
+
+    var st = stateAt(clamp(t, beats[0].t, endIn));
+    var b = st.b, prev = st.prev, into = st.into;
+    var shot = imgs[b.shot];
+    var p = place(shot, st.cam);
+
+    // Paint every shot: the outgoing one keeps its own camera while it fades, so a
+    // cross-fade does not drag the previous page across the screen.
+    FILM.shots.forEach(function (s) {
+      var im = imgs[s.key];
+      var on = 0, pp = p;
+      if (s.key === b.shot) {
+        on = 1;
+      } else if (prev && s.key === prev.shot && into < FADE) {
+        on = 1 - into / FADE;
+        pp = place(im, { fx: prev.cam[0], fy: prev.cam[1], z: prev.cam[2] });
+      }
+      im.el.style.opacity = on;
+      if (on) im.el.style.transform = 'translate(' + pp.x.toFixed(2) + 'px,' + pp.y.toFixed(2) +
+        'px) scale(' + pp.s.toFixed(5) + ')';
+    });
+    // A new page lands with a hair of scale, which is what a paint looks like.
+    if (prev && prev.shot !== b.shot && into < FADE) {
+      var k = 1 + 0.012 * (1 - into / FADE);
+      shot.el.style.transform = 'translate(' + (p.x - p.w * (k - 1) / 2).toFixed(2) + 'px,' +
+        (p.y - p.h * (k - 1) / 2).toFixed(2) + 'px) scale(' + (p.s * k).toFixed(5) + ')';
+    }
+
+    // ---------------------------------------------------------------- spotlight
+    var r = b.ring, rOn = 0;
+    if (r) {
+      var appear = clamp((into - 0.25) / 0.4, 0, 1);
+      var leave = b.ringOut ? clamp((b.ringOut - into) / 0.35, 0, 1) : 1;
+      rOn = ease(appear) * clamp(leave, 0, 1);
+    }
+    if (rOn > 0.01) {
+      var x = p.x + r[0] * p.w, y = p.y + r[1] * p.h, w = r[2] * p.w, h = r[3] * p.h;
+      ringbox.style.cssText += '';
+      ringbox.style.opacity = rOn;
+      ringbox.style.left = x + 'px'; ringbox.style.top = y + 'px';
+      ringbox.style.width = w + 'px'; ringbox.style.height = h + 'px';
+      var a = 0.52 * rOn;
+      dim.T.style.opacity = dim.B.style.opacity = dim.L.style.opacity = dim.R.style.opacity = 1;
+      dim.T.style.cssText = panel(0, 0, VW, Math.max(0, y), a);
+      dim.B.style.cssText = panel(0, y + h, VW, Math.max(0, VH - y - h), a);
+      dim.L.style.cssText = panel(0, Math.max(0, y), Math.max(0, x), Math.min(h, VH), a);
+      dim.R.style.cssText = panel(x + w, Math.max(0, y), Math.max(0, VW - x - w), Math.min(h, VH), a);
+    } else {
+      ringbox.style.opacity = 0;
+      ['T', 'B', 'L', 'R'].forEach(function (k) { dim[k].style.opacity = 0; });
+    }
+
+    // ---------------------------------------------------------------- cursor + click
+    if (st.cur) {
+      var cx = p.x + st.cur[0] * p.w, cy = p.y + st.cur[1] * p.h;
+      cursor.style.opacity = clamp(into / 0.2, 0, 1);
+      cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+      var pressed = b.click != null && into >= b.click && into < b.click + 0.14;
+      cursor.style.transform = 'scale(' + (pressed ? 0.86 : 1) + ')';
+      if (b.click != null && into >= b.click && into < b.click + 0.5) {
+        var u = (into - b.click) / 0.5;
+        ripple.style.opacity = 1 - u;
+        ripple.style.left = cx + 'px'; ripple.style.top = cy + 'px';
+        ripple.style.transform = 'scale(' + (0.25 + u * 0.85) + ')';
+      } else { ripple.style.opacity = 0; }
+    } else {
+      cursor.style.opacity = 0; ripple.style.opacity = 0;
+    }
+
+    // ---------------------------------------------------------------- overlays
+    // A url written as '@…' is not a portal page (a phone screen, say): show it as it is
+    // rather than pretending it lives under owner.myeztoll.com.
+    url.innerHTML = (b.url || '').charAt(0) === '@'
+      ? '<b>' + b.url.slice(1) + '</b>'
+      : 'owner.myeztoll.com<b>' + (b.url || '') + '</b>';
+    if (b.label) {
+      lower.textContent = b.label;
+      lower.style.opacity = ease(clamp(into / 0.3, 0, 1)) *
+        (prev && prev.label === b.label ? 1 : 1);
+    } else {
+      lower.style.opacity = 0;
+    }
+    var chromeOn = inTitle || endCard.style.opacity > 0.98 ? 0 : 1;
+    lower.style.opacity = lower.style.opacity * chromeOn;
+    document.getElementById('brand').style.opacity = 0.5 * chromeOn;
+  }
+
+  function panel(x, y, w, h, a) {
+    return 'left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h +
+      'px;background:rgba(13,11,28,' + a.toFixed(3) + ')';
+  }
+
+  window.__film = { total: FILM.total, seek: seek, film: FILM };
+  seek(0);
+
+  // Preview in a browser: click once and it plays with the voice.
+  var track = document.getElementById('track'), raf = 0;
+  document.body.addEventListener('click', function () {
+    if (!track.paused) { track.pause(); cancelAnimationFrame(raf); return; }
+    track.currentTime = 0; track.play();
+    (function step() { seek(track.currentTime); raf = requestAnimationFrame(step); })();
+  });
+})();
+</script>

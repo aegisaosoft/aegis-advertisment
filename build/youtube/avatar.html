@@ -1,0 +1,55 @@
+<meta charset="utf-8">
+<title>YouTube channel avatar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap">
+
+<style>
+/*
+ * The channel picture, 800 x 800. YouTube masks it to a circle and shows it at 48px
+ * next to a comment, so the wordmark cannot go here — at that size "MyEZToll" is a
+ * grey smear. The EZ mark alone survives it.
+ *
+ * Two grounds are drawn, ?dark for navy-on-white reversed. Render both and pick the
+ * one that holds up in the 48px preview; nothing else about the file changes.
+ */
+:root{
+  --paper:#ffffff;
+  --ink:#0a1628;
+  --accent-hot:#ef6c1f;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:800px;height:800px;overflow:hidden}
+body{
+  background:var(--paper);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Oswald',system-ui,sans-serif;
+}
+.disc{
+  width:800px;height:800px;border-radius:50%;
+  background:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:40px;
+}
+/* The mark is black line art with alpha; a filter tints it rather than a second file. */
+.mark{
+  width:598px;
+  /* black -> #0a1628 */
+  filter:invert(9%) sepia(24%) saturate(2609%) hue-rotate(189deg) brightness(94%) contrast(97%);
+}
+.rule{width:330px;height:16px;border-radius:8px;background:var(--accent-hot)}
+
+.dark body,body.dark{background:var(--ink)}
+body.dark .disc{background:var(--ink)}
+/* black -> white */
+body.dark .mark{filter:invert(100%)}
+</style>
+
+<div class="disc">
+  <img class="mark" src="ez-mark-alpha.png" alt="EZ">
+  <div class="rule"></div>
+</div>
+
+<script>
+if (location.search.includes('dark')) document.body.classList.add('dark');
+</script>

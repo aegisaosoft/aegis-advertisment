@@ -1,0 +1,89 @@
+<meta charset="utf-8">
+<title>YouTube channel banner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;700&family=Roboto+Mono:wght@500&display=swap">
+
+<style>
+/*
+ * The channel banner, drawn at the size YouTube asks for: 2048 x 1152.
+ *
+ * Only the middle 1235 x 338 is guaranteed to be on screen — that is all a phone
+ * shows, and a television crops to it as well. Everything that has to be read lives
+ * inside .safe; the rest of the frame is ground the desktop layout reveals and
+ * nothing more. The outline of the safe area is drawn only when the page is opened
+ * with ?guides, so a render is clean.
+ *
+ * Same palette as the film's closing card, on purpose: a viewer who arrives from the
+ * film should not think they have landed somewhere else.
+ */
+:root{
+  --paper:#eef2f7;
+  --paper-hi:#ffffff;
+  --ink:#0a1628;
+  --muted:#5b6f8a;
+  --accent-hot:#ef6c1f;
+  --accent-cool:#0b8f63;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:2048px;height:1152px;overflow:hidden}
+body{
+  background:
+    radial-gradient(120% 90% at 50% 18%, var(--paper-hi) 0%, var(--paper) 58%, #dfe6ef 100%);
+  color:var(--ink);
+  font-family:'Oswald',system-ui,sans-serif;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* The road, borrowed from the wordmark's own sweep: two arcs off the lower corners. */
+.road{position:absolute;inset:0;overflow:hidden}
+.road svg{position:absolute;inset:0;width:100%;height:100%}
+
+.safe{
+  position:relative;
+  width:1235px;height:338px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:30px;
+}
+.guides .safe{outline:2px dashed #ef6c1f80}
+
+
+.slogan{
+  font-family:'Anton',sans-serif;
+  font-size:88px;line-height:.98;letter-spacing:-.005em;
+  text-transform:none;
+  text-align:center;
+}
+.slogan em{font-style:normal;color:var(--accent-hot)}
+
+.line{
+  font-family:'Oswald',sans-serif;font-weight:500;
+  font-size:28px;letter-spacing:.02em;color:var(--muted);
+  text-align:center;max-width:1160px;line-height:1.3;
+}
+.line b{color:var(--ink);font-weight:700}
+.line i{font-style:normal;color:var(--accent-cool);font-weight:700}
+
+.url{
+  font-family:'Roboto Mono',monospace;font-weight:500;
+  font-size:25px;letter-spacing:.28em;color:var(--muted);
+}
+</style>
+
+<div class="road">
+  <svg viewBox="0 0 2048 1152" preserveAspectRatio="none">
+    <path d="M-40 1152 C 420 980, 760 900, 2088 872" fill="none" stroke="#1e3a5f" stroke-opacity=".10" stroke-width="26"/>
+    <path d="M-40 1152 C 460 1020, 820 950, 2088 928" fill="none" stroke="#ef6c1f" stroke-opacity=".13" stroke-width="18"/>
+    <path d="M-40 60 C 520 130, 900 170, 2088 148" fill="none" stroke="#1e3a5f" stroke-opacity=".07" stroke-width="20"/>
+  </svg>
+</div>
+
+<div class="safe">
+  <div class="slogan">Stop losing. <em>Start earning.</em></div>
+  <div class="line">Toll &amp; ticket recovery for rental fleets — <b>free for the owner</b>, <i>who keeps a share of the fee</i></div>
+  <div class="url">MYEZTOLL.COM</div>
+</div>
+
+<script>
+if (location.search.includes('guides')) document.documentElement.classList.add('guides');
+</script>
