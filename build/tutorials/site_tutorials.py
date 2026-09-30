@@ -67,13 +67,19 @@ def recordings(state_for, public=is_public):
     return out
 
 
-def site_episodes(series=None):
-    """The episodes the public /tutorials page may show: the owner series only.
+def episode_title(ep, lang):
+    """The title as YouTube shows it: a partner episode carries the partner guide's name."""
+    series = youtube.PARTNER_NAME if ep.audience == 'partner' else youtube.SERIES_NAME
+    return '%s — %d. %s' % (series[lang], ep.num, ep.title[lang])
 
-    A partner episode (E.audience == 'partner') is about what we charge and what a partner earns;
-    it is unlisted on YouTube and never listed on the owners' website.
+
+def site_episodes(series=None):
+    """The episodes the public /tutorials page shows: all of them (user 2026-09-30).
+
+    The partner episodes (E.audience == 'partner') are listed too, in their own parts at the end
+    (aa-web tutorialParts.ts), so an owner browsing the series meets them after the owner material.
     """
-    return [ep for ep in (episodes.SERIES if series is None else series) if ep.audience != 'partner']
+    return list(episodes.SERIES if series is None else series)
 
 
 def main():
@@ -94,7 +100,7 @@ def main():
         body.append("    slug: '%s'," % ep.slug)
         body.append("    duration: '%s'," % dur)
         for lang in [l for l in ('en', 'es') if l in recs]:
-            title = '%s — %d. %s' % (youtube.SERIES_NAME[lang], ep.num, ep.title[lang])
+            title = episode_title(ep, lang)
             body.append('    %s: {' % lang)
             body.append('      title: %s,' % ts(title))
             body.append('      summary: %s,' % ts(ep.sub[lang]))

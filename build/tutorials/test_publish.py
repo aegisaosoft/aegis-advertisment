@@ -302,7 +302,7 @@ def test_partner_episode_is_unlisted_and_skips_the_series_playlist(monkeypatch):
     st = {'videoId': 'W'}
     publish.add_to_series(None, st, {'lang': 'en', 'audience': 'owner'})
     assert added == [('W', 'en')] and st['playlist'] is True
-    assert publish.GROUPS['payment-options']['privacy'] == 'unlisted'
+    assert publish.GROUPS['payment-options']['privacy'] == 'public'
     assert publish.GROUPS['partner-api']['privacy'] == 'public'
     assert publish.groups_of(41) == ['partner-api'] and publish.groups_of(45) == ['partner-api']
 
@@ -339,4 +339,5 @@ def test_video_privacy_prefers_the_episode_choice():
     assert publish.video_privacy({'audience': 'partner', 'privacy': 'public'}) == 'public'
     import episodes
     assert [e.privacy for e in episodes.SERIES if 41 <= e.num <= 45] == ['public'] * 5
-    assert all(e.privacy is None for e in episodes.SERIES if 36 <= e.num <= 40)
+    assert [e.privacy for e in episodes.SERIES if 36 <= e.num <= 40] == ['public'] * 5
+    assert all(e.privacy is None for e in episodes.SERIES if e.num <= 35)
