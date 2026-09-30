@@ -41,7 +41,17 @@ class B(object):
 
 
 class E(object):
-    """One episode."""
+    """One episode.
+
+    `audience` is who the episode is for. 'owner' (the default) is the public owner series:
+    the series playlist, the /tutorials page. 'partner' is for partners only: uploaded as
+    unlisted, kept out of the owner series and off the website, shown only through its
+    topic playlist — so a fleet owner is never shown what a partner is told about money.
+    """
+
+    audience = 'owner'
+    # A partner episode is unlisted unless it says otherwise (series_n: the API episodes are public).
+    privacy = None
 
     def __init__(self, num, slug, title_en, title_es, sub_en, sub_es, beats):
         self.num = num
@@ -64,6 +74,9 @@ class E(object):
             else:
                 label = b.label
 
+
+# The eyebrow over the title card of a partner episode (see E.audience).
+PARTNER_EYEBROW = {'en': 'MyEZToll · Partner Guide', 'es': 'MyEZToll · Guía para socios'}
 
 # The words on the two cards that top and tail every episode.
 CARD = {

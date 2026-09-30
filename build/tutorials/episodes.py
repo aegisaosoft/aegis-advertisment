@@ -17,6 +17,11 @@ import series_f
 import series_g
 import series_h
 import series_i
+import series_j
+import series_k
+import series_l
+import series_m
+import series_n
 
 SERIES = [
     series_a.EP01, series_a.EP02,                   # find your way around, set the rules
@@ -28,6 +33,12 @@ SERIES = [
     series_g.EP18, series_g.EP19,                   # platform bookings, storefront
     series_h.EP20, series_h.EP21,                   # reports, the last settings tabs
     series_i.EP22, series_i.EP23, series_i.EP24, series_i.EP25, series_i.EP26,  # Turo
+    series_j.EP27, series_j.EP28, series_j.EP29, series_j.EP30,  # HQ Rental Software
+    series_k.EP31, series_k.EP32, series_k.EP33,  # collections agencies
+    series_l.EP34, series_l.EP35,  # registration: owner, partner
+    series_m.EP36, series_m.EP37, series_m.EP38,  # partners: payment options
+    series_m.EP39, series_m.EP40,                 # partners: the amounts
+    series_n.EP41, series_n.EP42, series_n.EP43, series_n.EP44, series_n.EP45,  # partners: the API
 ]
 
 BY_NUM = dict((e.num, e) for e in SERIES)

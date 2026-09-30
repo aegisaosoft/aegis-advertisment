@@ -48,3 +48,6 @@ build/tutorials/ep*.html
 build/tutorials/_elevenlabs.key.txt
 __pycache__/
 .pytest_cache/
+
+# The Chrome profile the admin-session capture scripts attach to (cookies of a live login).
+build/tutorials/.chrome-capture/

@@ -24,6 +24,7 @@ import sys
 from PIL import Image
 
 import episodes
+import model
 import tts
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -237,7 +238,8 @@ def build(ep, lang):
         'shots': shots,
         'beats': beats,
         'card': {
-            'eyebrow': '%s · %d' % (episodes.CARD[lang]['eyebrow'], ep.num),
+            'eyebrow': '%s · %d' % ((model.PARTNER_EYEBROW[lang] if ep.audience == 'partner'
+                                     else episodes.CARD[lang]['eyebrow']), ep.num),
             'title': ep.title[lang],
             'sub': ep.sub[lang],
             'endTitle': episodes.CARD[lang]['end_title'],
