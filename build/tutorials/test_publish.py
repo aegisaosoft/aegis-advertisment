@@ -303,7 +303,7 @@ def test_partner_episode_is_unlisted_and_skips_the_series_playlist(monkeypatch):
     publish.add_to_series(None, st, {'lang': 'en', 'audience': 'owner'})
     assert added == [('W', 'en')] and st['playlist'] is True
     assert publish.GROUPS['payment-options']['privacy'] == 'unlisted'
-    assert publish.GROUPS['partner-api']['privacy'] == 'unlisted'
+    assert publish.GROUPS['partner-api']['privacy'] == 'public'
     assert publish.groups_of(41) == ['partner-api'] and publish.groups_of(45) == ['partner-api']
 
 

@@ -107,7 +107,9 @@ GROUPS = {
     # PARTNERS ONLY (E.audience): the Partner API with examples (41-45).
     'partner-api': {
         'episodes': [41, 42, 43, 44, 45],
-        'privacy': 'unlisted',
+        # Public by the user's choice (2026-09-30): the API is not about what an owner pays, so the
+        # playlist may be found on the channel. The videos in it stay unlisted (E.audience).
+        'privacy': 'public',
         'title': {'en': 'Partner API — MyEZToll Partner Guide',
                   'es': 'API para socios — Guía para socios MyEZToll'},
         'description': {
