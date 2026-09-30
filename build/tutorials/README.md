@@ -47,6 +47,12 @@ same image.
 | `build.py` | Measures the clips, lays out the timeline, writes `ep<NN>.<lang>.html`, the mixed `track.mp3`, and the subtitles. |
 | `shell.html` | The film itself — the camera, the cursor, the spotlight, the cards. |
 | `render.js` | Frame-by-frame to mp4, muxing the track. `--stills` for a handful of frames instead. |
+| `capture-register.js` | Episodes 34-35: walks `/create-owner` and `/create-partner` on the public sandbox with a made-up person, registers it once (the agreement page needs a real registration), signs with `--sign`, and shoots Stripe's first page and Banking. Sandbox marks are hidden before the shutter. |
+| `stripe-walk.js` | Steps through Stripe's hosted onboarding from a list of actions and dumps what each screen shows. Stripe answers automation with a CAPTCHA after the first screen, so the episode shows that screen only. |
+| `pay-diagrams.js` | Episodes 36-40: draws the money diagrams (`shots/<lang>/pay-0N-*`). There is no portal screen that shows where the money goes, so these are drawn; the boxes sit at fixed fractions that `series_m.py` rings. |
+| `capture-payments.js` | Episodes 36-40: photographs one admin card per frame (Who collects payments, Distribution Settings, the fee cards) from a Chrome started with `--remote-debugging-port=9223` in which an administrator has signed in on dev. **Read-only by construction**: every non-GET API request is aborted, so pressing "Pay per plate" for the picture saves nothing. |
+| `compose_card.py` | Lays a captured card on a plain 3200x2000 frame and prints where it landed; the boxes go to `shots/_pay_boxes.json`, which `series_m.py` turns into per-language rings. |
+| `api-cards.js` | Episodes 41-45: the Partner API code frames — each catalog function's curl and response from `api/catalog.prod.json` (the API's own `GET /api/partner/v1/functions`), plus two snippets of ours, with the lines to point at highlighted and measured into `shots/_api_boxes.json`; and the public Swagger UI. One picture per frame serves both languages. |
 
 ## Writing an episode
 
@@ -131,5 +137,19 @@ Upload the mp4 and attach the matching `.srt` as the caption track rather than b
 subtitles in — YouTube will then let a viewer turn them off, translate them, and search
 them. The `.vtt` is the same cues for anywhere that wants WebVTT.
 
-One playlist per language, episodes in number order. The numbering is the running order:
+One playlist per language, episodes in number order. Beside them, topic playlists (`GROUPS`
+in `publish.py`): `Get Started` holds episodes 34-35 in each language. `python publish.py
+--create-playlists` creates the ones that do not exist yet (ids land in `mp4/playlists.json`)
+and puts every already-uploaded member into them; a normal run adds new members as they go up. The numbering is the running order:
 1 to 8 is a first week, 9 to 14 is the money, 15 to 21 is everything else.
+
+### Partner episodes
+
+Episodes 36-40 (`series_m.py`, payment options and every amount we charge) and 41-45 (`series_n.py`, the Partner
+API with examples) are **for partners, not owners**.
+They carry `E.audience = 'partner'`, which changes three things: the title card reads *Partner Guide*;
+`publish.py` uploads them **unlisted** and keeps them out of the owner series playlist, so they are reached only
+through their topic playlists `payment-options` and `partner-api` (both unlisted); and `site_tutorials.py` leaves them off
+`/tutorials`. To an owner the offer stays "you pay nothing" — do not move these into the owner series.
+The written counterparts are `docs/myeztoll-partner-payment-options(.es).md` and
+`docs/myeztoll-partner-api-quick-start(.es).md`.

@@ -53,6 +53,23 @@ WATCH = {
     '26-toll-account-transponders': ('ep06 Transponder inventory',        (.18, .30, .95, .85)),
     '69-invoices-to-pay':      ('ep13 Invoices to pay - rows',            (.18, .20, .95, .70)),
     '72-distribution-payouts': ('ep14 Payout history - rows',             (.18, .40, .95, .90)),
+
+    # The HQ part (27-30). Two systems, so two sources of somebody's data: HQ's own pages,
+    # blurred by capture-hq.js, and the portal's, blurred by the documentation harness. The
+    # tokens are on this list for the same reason a name is — a staging key is still a key.
+    'hq-12-tenant-token':      ('ep27 HQ settings - Tenant API Token',    (.30, .30, .95, .80)),
+    'hq-13-users':             ('ep27 HQ users - EMAIL / USERNAME',       (.18, .25, .95, .70)),
+    'hq-14-user-token':        ('ep27 HQ user form - User API Token',     (.20, .20, .90, .90)),
+    'hq-15-vehicles':          ('ep28 HQ vehicles - VIN / PLATE / TAG',   (.18, .25, .98, .90)),
+    'hq-16-external-charges':  ('ep30 HQ external charges - RESERVATION', (.18, .25, .98, .90)),
+    'hq-17-reservations':      ('ep29 HQ reservations - customer rows',   (.18, .25, .98, .90)),
+    'hq-p-10-vehicles':        ('ep28 Vehicles - plate rows',             (.18, .30, .95, .88)),
+    'hq-p-50-bookings':        ('ep29 Bookings - RENTER / PHONE',         (.18, .30, .95, .88)),
+    'hq-p-53-pending':         ('ep27 HQ pending - tabs and rows',        (.18, .20, .95, .80)),
+    'hq-p-55-platform-cars':   ('ep28 HQ cars - plate rows',              (.18, .25, .95, .88)),
+    'hq-p-60-tolls':           ('ep30 Tolls - plate / transponder',       (.18, .30, .95, .88)),
+    'hq-p-62-charges':         ('ep30 Charges - plate rows',              (.18, .25, .95, .88)),
+    'hq-p-90-drivers':         ('ep29 Drivers - name / phone / email',    (.18, .30, .95, .88)),
 }
 
 HERE = os.path.dirname(os.path.abspath(__file__))

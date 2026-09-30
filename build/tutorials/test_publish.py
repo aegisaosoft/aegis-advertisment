@@ -179,3 +179,155 @@ def test_playable_accepts_a_finished_render():
     good = sorted(glob.glob(os.path.join(publish.HERE, 'mp4', '*-03-*-en.mp4')))
     if good:
         assert publish.playable(good[0])
+
+
+def test_purge_stops_cleanly_when_the_quota_runs_out(monkeypatch, capsys):
+    state = {'k': {'videoId': 'new', 'replaces': 'old', 'oldHidden': True}}
+
+    class _Del:
+        def list(self, **kw):
+            class R:
+                def execute(self_inner):
+                    return {'items': [{'id': 'old', 'status': {'privacyStatus': 'private'},
+                                       'snippet': {'title': 'old one'}}]}
+            return R()
+
+        def delete(self, **kw):
+            raise publish.QuotaOut('quotaExceeded')
+
+    class _YT2:
+        def videos(self):
+            return _Del()
+
+    monkeypatch.setattr(publish, 'call', lambda req: req.execute())
+    monkeypatch.setattr(publish, 'save_state', lambda st: None)
+    publish.purge_replaced(_YT2(), state, True)          # must not raise
+    assert 'quota' in capsys.readouterr().out.lower()
+    assert 'purged' not in state['k']                    # nothing recorded as deleted
+
+
+# ---------------------------------------------------------------- topic playlists
+
+
+def test_groups_of_names_the_get_started_episodes_only():
+    assert publish.groups_of(34) == ['get-started']
+    assert publish.groups_of(35) == ['get-started']
+    assert publish.groups_of(36) == ['payment-options']
+    assert publish.groups_of(40) == ['payment-options']
+    assert publish.groups_of(33) == []
+    assert publish.groups_of(33) == []
+
+
+def test_begin_replace_clears_group_entries_too():
+    state = {'k': {'videoId': 'OLD', 'caption': True, 'playlist': True, 'groups': {'get-started': True}}}
+    st = publish.begin_replace(state, 'k')
+    assert st == {'replaces': 'OLD'}, st
+
+
+def test_add_to_groups_inserts_once_per_group_and_records_it(monkeypatch):
+    inserted = []
+    monkeypatch.setattr(publish, 'group_ids', lambda: {'get-started': {'en': 'PL_GS_EN'}})
+    monkeypatch.setattr(publish, 'add_to_playlist',
+                        lambda yt, vid, lang, pl=None: inserted.append((vid, lang, pl)))
+    monkeypatch.setattr(publish, 'save_state', lambda st: None)
+    state = {'k': {'videoId': 'V34'}}
+    entry = {'num': 34, 'lang': 'en'}
+    publish.add_to_groups(None, 'k', entry, state['k'], state)
+    publish.add_to_groups(None, 'k', entry, state['k'], state)     # a second call adds nothing
+    assert inserted == [('V34', 'en', 'PL_GS_EN')]
+    assert state['k']['groups'] == {'get-started': True}
+
+
+def test_add_to_groups_waits_for_a_playlist_that_does_not_exist_yet(monkeypatch):
+    monkeypatch.setattr(publish, 'group_ids', lambda: {})
+    monkeypatch.setattr(publish, 'add_to_playlist',
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError('must not insert')))
+    state = {'k': {'videoId': 'V34'}}
+    publish.add_to_groups(None, 'k', {'num': 34, 'lang': 'es'}, state['k'], state)
+    assert 'groups' not in state['k'] or not state['k']['groups']
+
+
+def test_add_to_groups_ignores_episodes_outside_every_group(monkeypatch):
+    monkeypatch.setattr(publish, 'group_ids', lambda: {'get-started': {'en': 'PL'}})
+    monkeypatch.setattr(publish, 'add_to_playlist',
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError('must not insert')))
+    state = {'k': {'videoId': 'V1'}}
+    publish.add_to_groups(None, 'k', {'num': 1, 'lang': 'en'}, state['k'], state)
+
+
+def test_create_playlists_creates_only_the_missing_ones_and_fills_them(monkeypatch, tmp_path):
+    created, inserted = [], []
+
+    class _PL:
+        def insert(self, part, body):
+            class R:
+                def execute(self_inner):
+                    created.append(body['snippet']['title'])
+                    return {'id': 'NEW_%d' % len(created)}
+            return R()
+
+    class _YT:
+        def playlists(self):
+            return _PL()
+
+    # One group is enough to prove the rule; the real GROUPS grows with the series.
+    monkeypatch.setattr(publish, 'GROUPS', {'get-started': publish.GROUPS['get-started']})
+    monkeypatch.setattr(publish, 'GROUPS_FILE', str(tmp_path / 'playlists.json'))
+    monkeypatch.setattr(publish, 'call', lambda req: req.execute())
+    monkeypatch.setattr(publish, 'save_state', lambda st: None)
+    monkeypatch.setattr(publish, 'order', lambda: ['a-34-x-en', 'a-34-x-es', 'a-01-x-en'])
+    monkeypatch.setattr(publish, 'add_to_playlist',
+                        lambda yt, vid, lang, pl=None: inserted.append((vid, lang, pl)))
+    import json as _json
+    (tmp_path / 'playlists.json').write_text(_json.dumps({'get-started': {'en': 'HAVE_EN'}}))
+    queue = {'a-34-x-en': {'num': 34, 'lang': 'en'}, 'a-34-x-es': {'num': 34, 'lang': 'es'},
+             'a-01-x-en': {'num': 1, 'lang': 'en'}}
+    state = {'a-34-x-en': {'videoId': 'V_EN', 'playlist': True},
+             'a-34-x-es': {'videoId': 'V_ES', 'playlist': True},
+             'a-01-x-en': {'videoId': 'V1', 'playlist': True}}
+    publish.create_playlists(_YT(), queue, state)
+    assert created == [publish.GROUPS['get-started']['title']['es']]        # en already existed
+    assert publish.group_ids() == {'get-started': {'en': 'HAVE_EN', 'es': 'NEW_1'}}
+    assert sorted(inserted) == [('V_EN', 'en', 'HAVE_EN'), ('V_ES', 'es', 'NEW_1')]
+    assert state['a-34-x-en']['groups'] == {'get-started': True}
+    assert 'groups' not in state['a-01-x-en']
+
+
+def test_partner_episode_is_unlisted_and_skips_the_series_playlist(monkeypatch):
+    added = []
+    monkeypatch.setattr(publish, 'add_to_playlist', lambda yt, vid, lang, pl=None: added.append((vid, lang)))
+    st = {'videoId': 'V'}
+    publish.add_to_series(None, st, {'lang': 'en', 'audience': 'partner'})
+    assert added == [] and st['playlist'] is True
+    st = {'videoId': 'W'}
+    publish.add_to_series(None, st, {'lang': 'en', 'audience': 'owner'})
+    assert added == [('W', 'en')] and st['playlist'] is True
+    assert publish.GROUPS['payment-options']['privacy'] == 'unlisted'
+    assert publish.GROUPS['partner-api']['privacy'] == 'unlisted'
+    assert publish.groups_of(41) == ['partner-api'] and publish.groups_of(45) == ['partner-api']
+
+
+def test_partner_episode_upload_body_is_unlisted(monkeypatch):
+    bodies = []
+
+    class _Req:
+        def next_chunk(self):
+            return None, {'id': 'NEWID'}
+
+    class _Videos:
+        def insert(self, part, body, media_body):
+            bodies.append(body)
+            return _Req()
+
+    class _YT:
+        def videos(self):
+            return _Videos()
+
+    import types
+    fake_http = types.ModuleType('googleapiclient.http')
+    fake_http.MediaFileUpload = lambda *a, **k: None
+    monkeypatch.setitem(sys.modules, 'googleapiclient.http', fake_http)
+    monkeypatch.setattr(publish, 'playable', lambda f: True)
+    entry = {'file': 'x.mp4', 'lang': 'en', 'title': 't', 'description': 'd', 'audience': 'partner'}
+    publish.upload_video(_YT(), entry, 'k')
+    assert bodies[0]['status']['privacyStatus'] == 'unlisted'

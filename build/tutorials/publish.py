@@ -9,6 +9,7 @@
     python publish.py --replace <key> [<key> ...]   # re-upload a corrected episode in place
     python publish.py --refresh <tag>               # new episodes, then re-upload all the rest
     python publish.py --purge-replaced [--yes]      # delete superseded private versions (a person runs this)
+    python publish.py --create-playlists            # the topic playlists (GROUPS) that do not exist yet, then fill them
 
 Each episode takes three calls: the video, its caption track, and its playlist entry.
 The state file records each step separately, so a run that dies halfway — or is stopped
@@ -57,6 +58,71 @@ PLAYLIST = {
     'en': 'PLDv48XdAqNzM',   # MyEZToll Owner Portal — Full Tutorial Series
     'es': 'PLRAIxpc3U_40',   # Portal del Propietario MyEZToll — Serie completa
 }
+
+# Topic playlists beside the series. A newcomer sent a link to "Get Started" sees two videos,
+# not thirty-five; the same videos stay in the series playlist at their episode numbers.
+# The ids are created once by --create-playlists and kept in mp4/playlists.json, so the
+# code names a group and the file remembers what YouTube called it.
+GROUPS = {
+    'get-started': {
+        'episodes': [34, 35],
+        'title': {'en': 'Get Started — MyEZToll Owner Portal',
+                  'es': 'Primeros pasos — Portal del Propietario MyEZToll'},
+        'description': {
+            'en': 'How to register with MyEZToll: as a fleet owner, and as a partner who refers '
+                  'owners. The sign-up form, the agreement, and connecting the bank account '
+                  'through Stripe. Then the two things to do next: toll agencies and cars.\n\n'
+                  'Full series: MyEZToll Owner Portal — Full Tutorial Series.\n'
+                  'Portal: owner.myeztoll.com',
+            'es': 'Cómo registrarse en MyEZToll: como propietario de flota, y como socio que '
+                  'recomienda propietarios. El formulario de registro, el contrato, y conectar '
+                  'la cuenta bancaria a través de Stripe. Después, las dos cosas que siguen: '
+                  'agencias de peaje y coches.\n\n'
+                  'Serie completa: Portal del Propietario MyEZToll — Serie completa de tutoriales.\n'
+                  'Portal: owner.myeztoll.com',
+        },
+    },
+    # PARTNERS ONLY (E.audience): the three payment options (36-38) and how the
+    # amounts themselves are set (39-40).
+    'payment-options': {
+        'episodes': [36, 37, 38, 39, 40],
+        'privacy': 'unlisted',          # a partner guide: reached by link, not by browsing the channel
+        'title': {'en': 'Payment Options — MyEZToll Partner Guide',
+                  'es': 'Formas de pago — Guía para socios MyEZToll'},
+        'description': {
+            'en': 'For MyEZToll partners. Every owner you bring to us pays the way that suits them. '
+                  'Three options: the driver pays us and the owner pays nothing; the owner\'s own '
+                  'booking system collects and we invoice only our share; or a flat fee per car '
+                  'per day. Then how every amount is set — tolls, fines, rentals, GPS — and what '
+                  'you earn.\n\n'
+                  'Portal: owner.myeztoll.com',
+            'es': 'Para socios de MyEZToll. Cada propietario que nos trae paga de la forma que le '
+                  'conviene. Tres opciones: el conductor nos paga y el propietario no paga nada; '
+                  'el propio sistema de reservas del propietario cobra y facturamos solo nuestra '
+                  'parte; o una tarifa fija por coche y día. Después, cómo se fija cada importe '
+                  '— peajes, multas, alquileres, GPS — y lo que usted gana.\n\n'
+                  'Portal: owner.myeztoll.com',
+        },
+    },
+    # PARTNERS ONLY (E.audience): the Partner API with examples (41-45).
+    'partner-api': {
+        'episodes': [41, 42, 43, 44, 45],
+        'privacy': 'unlisted',
+        'title': {'en': 'Partner API — MyEZToll Partner Guide',
+                  'es': 'API para socios — Guía para socios MyEZToll'},
+        'description': {
+            'en': 'For MyEZToll partners. The Partner API with examples: your key and the first call, '
+                  'cars, drivers and bookings with your own ids, tolls and fines, GPS and webhooks, '
+                  'and disputes on your own Stripe account.\n\n'
+                  'Reference: owner.myeztoll.com/api/partner/v1/index',
+            'es': 'Para socios de MyEZToll. La API para socios con ejemplos: su clave y la primera '
+                  'llamada, coches, conductores y reservas con sus propios id, peajes y multas, GPS y '
+                  'webhooks, y disputas en su propia cuenta de Stripe.\n\n'
+                  'Referencia: owner.myeztoll.com/api/partner/v1/index',
+        },
+    },
+}
+GROUPS_FILE = os.path.join(HERE, 'mp4', 'playlists.json')
 
 # YouTube's own language codes. The Spanish is US/Latin-American by design, never es-ES.
 LANG = {'en': 'en', 'es': 'es-419'}
@@ -161,6 +227,19 @@ def playable(path):
         return False
 
 
+def partner_only(entry):
+    """A partner episode (E.audience): unlisted, and never in the public owner series."""
+    return entry.get('audience') == 'partner'
+
+
+def add_to_series(yt, st, entry):
+    """Put a video in its language's series playlist — unless it is a partner episode, which
+    lives only in its topic playlist. Either way the step is recorded as done."""
+    if not partner_only(entry):
+        add_to_playlist(yt, st['videoId'], entry['lang'])
+    st['playlist'] = True
+
+
 def upload_video(yt, entry, key):
     from googleapiclient.http import MediaFileUpload
     if not playable(entry['file']):
@@ -177,7 +256,7 @@ def upload_video(yt, entry, key):
             'defaultAudioLanguage': LANG[lang],
         },
         'status': {
-            'privacyStatus': 'public',
+            'privacyStatus': 'unlisted' if partner_only(entry) else 'public',
             'selfDeclaredMadeForKids': False,
             'embeddable': True,
         },
@@ -234,10 +313,69 @@ def upload_caption(yt, video_id, key, lang):
     return False
 
 
-def add_to_playlist(yt, video_id, lang):
+def add_to_playlist(yt, video_id, lang, playlist_id=None):
     call(yt.playlistItems().insert(part='snippet', body={
-        'snippet': {'playlistId': PLAYLIST[lang],
+        'snippet': {'playlistId': playlist_id or PLAYLIST[lang],
                     'resourceId': {'kind': 'youtube#video', 'videoId': video_id}}}))
+
+
+def group_ids():
+    """{group: {lang: playlistId}} for the topic playlists that exist on the channel."""
+    return load(GROUPS_FILE, {})
+
+
+def groups_of(num):
+    """The topic playlists an episode belongs to."""
+    return [g for g, spec in GROUPS.items() if num in spec['episodes']]
+
+
+def add_to_groups(yt, key, entry, st, state):
+    """Put a published video into every topic playlist its episode belongs to.
+
+    Runs after the series playlist step, for new uploads and replacements alike; a group
+    whose playlist has not been created yet is simply left for --create-playlists, which
+    fills it from the state afterwards. Each group costs one playlistItems.insert.
+    """
+    ids = group_ids()
+    for g in groups_of(entry['num']):
+        pl = ids.get(g, {}).get(entry['lang'])
+        if not pl or st.setdefault('groups', {}).get(g):
+            continue
+        add_to_playlist(yt, st['videoId'], entry['lang'], pl)
+        st['groups'][g] = True
+        save_state(state)
+
+
+def create_playlists(yt, queue, state):
+    """Create the topic playlists that do not exist yet, then fill them from the state.
+
+    playlists.insert is 50 units; a playlist already recorded in mp4/playlists.json is
+    never created twice. Videos already on the channel that belong to a group are added
+    right away, so the command is also the way to fill a group after the fact.
+    """
+    ids = group_ids()
+    for g, spec in GROUPS.items():
+        for lang in ('en', 'es'):
+            if ids.get(g, {}).get(lang):
+                continue
+            res = call(yt.playlists().insert(part='snippet,status', body={
+                'snippet': {'title': spec['title'][lang],
+                            'description': spec['description'][lang],
+                            'defaultLanguage': LANG[lang]},
+                'status': {'privacyStatus': spec.get('privacy', 'public')}}))
+            ids.setdefault(g, {})[lang] = res['id']
+            io.open(GROUPS_FILE, 'w', encoding='utf-8').write(
+                json.dumps(ids, ensure_ascii=False, indent=1, sort_keys=True))
+            print('  created %s [%s]: %s' % (g, lang, res['id']))
+    for key in order():
+        st = state.get(key, {})
+        if st.get('videoId') and (st.get('playlist') or st.get('adopted')):
+            add_to_groups(yt, key, queue[key], st, state)
+    for g, spec in GROUPS.items():
+        for lang in ('en', 'es'):
+            n = sum(1 for k, st in state.items()
+                    if k.endswith('-' + lang) and st.get('groups', {}).get(g))
+            print('  %s [%s]: %d of %d videos in place' % (g, lang, n, len(spec['episodes'])))
 
 
 # ---------------------------------------------------------------- commands
@@ -278,6 +416,13 @@ def status(queue, state):
     print('queue %d · uploaded %d · to upload %d' % (len(queue), len(queue) - len(todo), len(todo)))
     print('captions still to attach: %d' % len(caps))
     print('playlist entries still to add: %d' % len(pls))
+    ids = group_ids()
+    grp = [k for k in order() if state.get(k, {}).get('videoId')
+           and any(not state[k].get('groups', {}).get(g) for g in groups_of(queue[k]['num']))]
+    missing = [g for g in GROUPS if not ids.get(g)]
+    if grp or missing:
+        print('topic playlist entries still to add: %d%s' %
+              (len(grp), ' (create first: %s)' % ', '.join(missing) if missing else ''))
     if todo:
         print('next up: ' + ', '.join(todo[:6]) + (' …' if len(todo) > 6 else ''))
 
@@ -300,9 +445,9 @@ def run(yt, queue, state, limit):
                 st['caption'] = upload_caption(yt, st['videoId'], key, entry['lang'])
                 save_state(state)
             if not st.get('playlist'):
-                add_to_playlist(yt, st['videoId'], entry['lang'])
-                st['playlist'] = True
+                add_to_series(yt, st, entry)
                 save_state(state)
+            add_to_groups(yt, key, entry, st, state)
         except QuotaOut as e:
             save_state(state)
             print('\nDaily quota reached — stopping cleanly. %s' % str(e)[:160])
@@ -354,7 +499,13 @@ def purge_replaced(yt, state, really):
         if not really:
             print('  %s  would delete — %s' % (vid, title))
             continue
-        call(yt.videos().delete(id=vid))
+        try:
+            call(yt.videos().delete(id=vid))
+        except QuotaOut as e:
+            save_state(state)
+            print('\nDaily quota reached — run the same command tomorrow, the rest is still '
+                  'on record. %s' % str(e)[:160])
+            return
         state[key].setdefault('purged', []).append(vid)
         save_state(state)
         print('  %s  deleted — %s' % (vid, title))
@@ -405,9 +556,9 @@ def refresh(yt, queue, state, tag, limit=None):
                     st['caption'] = upload_caption(yt, st['videoId'], key, entry['lang'])
                     save_state(state)
                 if not st.get('playlist'):
-                    add_to_playlist(yt, st['videoId'], entry['lang'])
-                    st['playlist'] = True
+                    add_to_series(yt, st, entry)
                     save_state(state)
+                add_to_groups(yt, key, entry, st, state)
             state[key]['rev'] = tag
             save_state(state)
             done += 1
@@ -439,7 +590,7 @@ def begin_replace(state, key):
         if st['replaces'] not in st['retired']:
             st['retired'].append(st['replaces'])
     st['replaces'] = st['videoId']
-    for k in ('videoId', 'caption', 'playlist', 'adopted', 'oldHidden'):
+    for k in ('videoId', 'caption', 'playlist', 'adopted', 'oldHidden', 'groups'):
         st.pop(k, None)
     return st
 
@@ -486,8 +637,11 @@ def playlist_moves(current, rank):
 
 
 def sort_playlists(yt, state):
-    """Put both playlists in episode order, 1 to the last."""
-    for lang, pl in PLAYLIST.items():
+    """Put every playlist — the two series ones and the topic ones — in episode order."""
+    lists = list(PLAYLIST.items())
+    for g, per_lang in group_ids().items():
+        lists += [(lang, pl) for lang, pl in per_lang.items()]
+    for lang, pl in lists:
         items = []
         req = yt.playlistItems().list(part='snippet', playlistId=pl, maxResults=50)
         while req is not None:
@@ -543,6 +697,10 @@ def replace(yt, queue, state, keys):
         if key not in queue:
             sys.exit('%s is not in the upload queue' % key)
         entry = queue[key]
+        if partner_only(entry):
+            # The slot swap below works on the series playlist, where a partner episode never is.
+            sys.exit('%s is a partner episode: replace it by hand in Studio (unlisted, topic '
+                     'playlist only) -- --replace does not handle those yet' % key)
         st = begin_replace(state, key)
         save_state(state)
         old = st['replaces']
@@ -622,6 +780,9 @@ def main(argv):
         return keep_order(yt, state)
     if '--sort-playlists' in argv:
         return sort_playlists(yt, state)
+    if '--create-playlists' in argv:
+        create_playlists(yt, queue, state)
+        return keep_order(yt, state)
     if '--purge-replaced' in argv:
         return purge_replaced(yt, state, '--yes' in argv)
     if '--refresh' in argv:

@@ -31,6 +31,16 @@ BLURB = {
            'errores que le cuestan dinero a los dueños de flotas.'),
 }
 
+# The blurb under a partner episode (E.audience): what the partner guide is, said to a partner.
+PARTNER_BLURB = {
+    'en': ('The MyEZToll partner guide to payments: the three ways the owners you bring to us can '
+           'pay, and how every amount behind them is set — tolls, fines, rentals, GPS and the '
+           'per-car price — and what you earn.'),
+    'es': ('La guía de pagos para socios de MyEZToll: las tres formas en que pueden pagar los '
+           'propietarios que nos trae, y cómo se fija cada importe — peajes, multas, alquileres, '
+           'GPS y el precio por coche — y lo que usted gana.'),
+}
+
 FOOTER = {
     'en': ('The written guide covers every field on every screen: myeztoll.com\n'
            'Portal: owner.myeztoll.com\n\n'
@@ -49,6 +59,8 @@ TAGS = {
 }
 
 SERIES_NAME = {'en': 'MyEZToll Owner Portal', 'es': 'Portal del Propietario MyEZToll'}
+# Partner episodes (E.audience) carry their own name: they are not part of the owner series.
+PARTNER_NAME = {'en': 'MyEZToll Partner Guide', 'es': 'Guía para socios MyEZToll'}
 
 # One playlist per language. Mixing them strands half the audience on every second
 # video and teaches YouTube to recommend the series to people who cannot follow it.
@@ -144,14 +156,16 @@ def main(argv):
                 missing.append(ep.num)
                 continue
             name = 'myeztoll-tutorial-%02d-%s-%s' % (ep.num, ep.slug, lang)
-            title = '%s — %d. %s' % (SERIES_NAME[lang], ep.num, ep.title[lang])
+            series = PARTNER_NAME if ep.audience == 'partner' else SERIES_NAME
+            title = '%s — %d. %s' % (series[lang], ep.num, ep.title[lang])
 
             lines += ['---', '', '## %02d · %s' % (ep.num, ep.slug), '',
                       '**File:** `%s.mp4` · captions `%s.srt` · %s' %
                       (name, name, clock(film['total'])), '',
                       '**Title**', '', '```', title, '```', '',
                       '**Description**', '', '```']
-            body = ['%s' % ep.sub[lang], '', BLURB[lang], '']
+            blurb = getattr(ep, 'blurb', None) or (PARTNER_BLURB if ep.audience == 'partner' else BLURB)
+            body = ['%s' % ep.sub[lang], '', blurb[lang], '']
             marks = chapters(film, lang)
             if len(marks) >= 3:
                 body.append('')
@@ -163,7 +177,7 @@ def main(argv):
             lines += ['```', '', '**Tags:** ' + ', '.join(TAGS[lang]), '']
 
             queue[name] = {
-                'num': ep.num, 'lang': lang, 'title': title,
+                'num': ep.num, 'lang': lang, 'title': title, 'audience': ep.audience,
                 'description': '\n'.join(body),
                 'file': os.path.join(HERE, 'mp4', name + '.mp4'),
                 'playlist': pl['title'],

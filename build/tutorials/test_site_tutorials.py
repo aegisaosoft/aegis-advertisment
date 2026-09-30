@@ -36,3 +36,13 @@ def test_recordings_falls_back_to_the_old_public_video():
 def test_recordings_is_empty_when_nothing_is_public():
     from site_tutorials import recordings
     assert recordings({'en': {'videoId': 'x', 'playlist': True}}, public=lambda v: False) == {}
+
+
+def test_partner_episodes_never_reach_the_public_page():
+    import episodes
+    from site_tutorials import site_episodes
+    shown = [ep.num for ep in site_episodes()]
+    partner = [ep.num for ep in episodes.SERIES if ep.audience == 'partner']
+    assert partner == list(range(36, 46))
+    assert not set(partner) & set(shown)
+    assert 35 in shown and 1 in shown

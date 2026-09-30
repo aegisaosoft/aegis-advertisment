@@ -67,10 +67,19 @@ def recordings(state_for, public=is_public):
     return out
 
 
+def site_episodes(series=None):
+    """The episodes the public /tutorials page may show: the owner series only.
+
+    A partner episode (E.audience == 'partner') is about what we charge and what a partner earns;
+    it is unlisted on YouTube and never listed on the owners' website.
+    """
+    return [ep for ep in (episodes.SERIES if series is None else series) if ep.audience != 'partner']
+
+
 def main():
     state = json.loads(io.open(os.path.join(HERE, 'mp4', 'published.json'), encoding='utf-8').read())
     rows = []
-    for ep in episodes.SERIES:
+    for ep in site_episodes():
         recs = recordings({lang: state.get('myeztoll-tutorial-%02d-%s-%s' % (ep.num, ep.slug, lang), {})
                            for lang in ('en', 'es')})
         if not recs:
