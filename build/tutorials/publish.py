@@ -86,7 +86,7 @@ GROUPS = {
     # amounts themselves are set (39-40).
     'payment-options': {
         'episodes': [36, 37, 38, 39, 40],
-        'privacy': 'unlisted',          # a partner guide: reached by link, not by browsing the channel
+        'privacy': 'public',            # user 2026-09-30: every video is visible, the partner guides too
         'title': {'en': 'Payment Options — MyEZToll Partner Guide',
                   'es': 'Formas de pago — Guía para socios MyEZToll'},
         'description': {

@@ -46,6 +46,7 @@ build/tutorials/audio/
 build/tutorials/audition/
 build/tutorials/ep*.html
 build/tutorials/_elevenlabs.key.txt
+build/tutorials/_sandbox_password.txt
 __pycache__/
 .pytest_cache/
 

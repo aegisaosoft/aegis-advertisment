@@ -147,9 +147,10 @@ and puts every already-uploaded member into them; a normal run adds new members 
 
 Episodes 36-40 (`series_m.py`, payment options and every amount we charge) and 41-45 (`series_n.py`, the Partner
 API with examples) are **for partners, not owners**.
-They carry `E.audience = 'partner'`, which changes three things: the title card reads *Partner Guide*;
-`publish.py` uploads them **unlisted** and keeps them out of the owner series playlist, so they are reached only
-through their topic playlists `payment-options` and `partner-api` (both unlisted); and `site_tutorials.py` leaves them off
-`/tutorials`. To an owner the offer stays "you pay nothing" — do not move these into the owner series.
+They carry `E.audience = 'partner'`: the title card reads *Partner Guide*, and `publish.py` keeps them out of
+the owner series playlist — they live in their own topic playlists `payment-options` and `partner-api`.
+Visibility is `E.privacy` (a partner episode without one is uploaded unlisted); since 2026-09-30, by the
+user's decision, all ten and both playlists are **public**, and `site_tutorials.py` lists them on `/tutorials`
+in their own parts after the owner material.
 The written counterparts are `docs/myeztoll-partner-payment-options(.es).md` and
 `docs/myeztoll-partner-api-quick-start(.es).md`.

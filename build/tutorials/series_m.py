@@ -159,6 +159,7 @@ PARTNER_SHARE = card('pay-17-partner-share', 0.508, 0.42, 0.48, 0.52)
 def partner(*eps):
     for ep in eps:
         ep.audience = 'partner'
+        ep.privacy = 'public'       # user 2026-09-30: every video is visible, the partner guides too
     return eps
 
 

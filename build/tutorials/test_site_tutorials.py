@@ -38,11 +38,19 @@ def test_recordings_is_empty_when_nothing_is_public():
     assert recordings({'en': {'videoId': 'x', 'playlist': True}}, public=lambda v: False) == {}
 
 
-def test_partner_episodes_never_reach_the_public_page():
+def test_every_episode_reaches_the_public_page():
+    # User 2026-09-30: the partner guides (36-45) are listed on /tutorials too.
     import episodes
     from site_tutorials import site_episodes
     shown = [ep.num for ep in site_episodes()]
     partner = [ep.num for ep in episodes.SERIES if ep.audience == 'partner']
     assert partner == list(range(36, 46))
-    assert not set(partner) & set(shown)
-    assert 35 in shown and 1 in shown
+    assert shown == [ep.num for ep in episodes.SERIES]
+
+
+def test_episode_titles_match_youtube():
+    import episodes
+    from site_tutorials import episode_title
+    assert episode_title(episodes.BY_NUM[1], 'en').startswith('MyEZToll Owner Portal — 1. ')
+    assert episode_title(episodes.BY_NUM[41], 'en').startswith('MyEZToll Partner Guide — 41. ')
+    assert episode_title(episodes.BY_NUM[36], 'es').startswith('Guía para socios MyEZToll — 36. ')
