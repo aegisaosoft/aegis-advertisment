@@ -75,6 +75,7 @@ def partner(*eps):
     for ep in eps:
         ep.audience = 'partner'
         ep.blurb = BLURB
+        ep.privacy = 'public'       # user 2026-09-30: the API videos are public (still off /tutorials)
     return eps
 
 

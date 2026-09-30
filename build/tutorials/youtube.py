@@ -177,7 +177,7 @@ def main(argv):
             lines += ['```', '', '**Tags:** ' + ', '.join(TAGS[lang]), '']
 
             queue[name] = {
-                'num': ep.num, 'lang': lang, 'title': title, 'audience': ep.audience,
+                'num': ep.num, 'lang': lang, 'title': title, 'audience': ep.audience, 'privacy': ep.privacy,
                 'description': '\n'.join(body),
                 'file': os.path.join(HERE, 'mp4', name + '.mp4'),
                 'playlist': pl['title'],

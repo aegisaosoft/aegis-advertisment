@@ -230,8 +230,13 @@ def playable(path):
 
 
 def partner_only(entry):
-    """A partner episode (E.audience): unlisted, and never in the public owner series."""
+    """A partner episode (E.audience): never in the public owner series."""
     return entry.get('audience') == 'partner'
+
+
+def video_privacy(entry):
+    """An episode's own choice (E.privacy) wins; otherwise a partner episode is unlisted."""
+    return entry.get('privacy') or ('unlisted' if partner_only(entry) else 'public')
 
 
 def add_to_series(yt, st, entry):
@@ -258,7 +263,7 @@ def upload_video(yt, entry, key):
             'defaultAudioLanguage': LANG[lang],
         },
         'status': {
-            'privacyStatus': 'unlisted' if partner_only(entry) else 'public',
+            'privacyStatus': video_privacy(entry),
             'selfDeclaredMadeForKids': False,
             'embeddable': True,
         },

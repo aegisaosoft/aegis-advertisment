@@ -50,6 +50,8 @@ class E(object):
     """
 
     audience = 'owner'
+    # A partner episode is unlisted unless it says otherwise (series_n: the API episodes are public).
+    privacy = None
 
     def __init__(self, num, slug, title_en, title_es, sub_en, sub_es, beats):
         self.num = num

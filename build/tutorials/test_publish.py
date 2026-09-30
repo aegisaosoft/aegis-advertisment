@@ -331,3 +331,12 @@ def test_partner_episode_upload_body_is_unlisted(monkeypatch):
     entry = {'file': 'x.mp4', 'lang': 'en', 'title': 't', 'description': 'd', 'audience': 'partner'}
     publish.upload_video(_YT(), entry, 'k')
     assert bodies[0]['status']['privacyStatus'] == 'unlisted'
+
+
+def test_video_privacy_prefers_the_episode_choice():
+    assert publish.video_privacy({'audience': 'owner'}) == 'public'
+    assert publish.video_privacy({'audience': 'partner'}) == 'unlisted'
+    assert publish.video_privacy({'audience': 'partner', 'privacy': 'public'}) == 'public'
+    import episodes
+    assert [e.privacy for e in episodes.SERIES if 41 <= e.num <= 45] == ['public'] * 5
+    assert all(e.privacy is None for e in episodes.SERIES if 36 <= e.num <= 40)
