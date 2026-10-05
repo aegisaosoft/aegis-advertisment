@@ -85,6 +85,16 @@ def test_every_youtube_title_fits_the_100_character_limit():
             assert len(title) <= 100, (ep.num, lang, len(title))
 
 
+def test_tesla_episodes_describe_tesla_not_the_partner_payments_guide():
+    import episodes
+    tesla = [ep for ep in episodes.SERIES if 46 <= ep.num <= 49]
+    assert len(tesla) == 4
+    for ep in tesla:
+        for lang in ('en', 'es'):
+            assert 'Tesla' in ep.blurb[lang]
+    assert publish.GROUPS['tesla']['episodes'] == [46, 47, 48, 49]
+
+
 def test_playlist_moves_sorts_by_episode_and_leaves_sorted_lists_alone():
     rank = {'a': 1, 'b': 2, 'c': 3, 'd': 26}
     cur = ['c', 'a', 'd', 'b']

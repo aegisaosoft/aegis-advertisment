@@ -123,6 +123,26 @@ GROUPS = {
                   'Referencia: owner.myeztoll.com/api/partner/v1/index',
         },
     },
+    # Tesla (46-49): connecting a Tesla account, the MyEZToll key and the check, the QR sheet for a
+    # lot, and Tesla for Business. 46-48 are owner episodes, 49 is for partners/admins (public).
+    'tesla': {
+        'episodes': [46, 47, 48, 49],
+        'privacy': 'public',
+        'title': {'en': 'Tesla — MyEZToll Owner Portal',
+                  'es': 'Tesla — Portal del Propietario MyEZToll'},
+        'description': {
+            'en': 'Tolls for your Teslas with no tracker to install. Connect your Tesla account, add the '
+                  'MyEZToll key to each car from a phone inside it, check which cars stream, print a QR '
+                  'sheet to do a whole lot in one walk, and connect a Tesla for Business fleet with one '
+                  'approval.\n\n'
+                  'Portal: owner.myeztoll.com',
+            'es': 'Peajes de sus Tesla sin instalar ningún rastreador. Conecte su cuenta de Tesla, agregue '
+                  'la llave de MyEZToll a cada coche desde un teléfono dentro de él, revise qué coches '
+                  'transmiten, imprima una hoja QR para toda la flota en un solo recorrido, y conecte una '
+                  'flota de Tesla for Business con una sola aprobación.\n\n'
+                  'Portal: owner.myeztoll.com',
+        },
+    },
 }
 GROUPS_FILE = os.path.join(HERE, 'mp4', 'playlists.json')
 
