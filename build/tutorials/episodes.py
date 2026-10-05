@@ -22,6 +22,7 @@ import series_k
 import series_l
 import series_m
 import series_n
+import series_o
 
 SERIES = [
     series_a.EP01, series_a.EP02,                   # find your way around, set the rules
@@ -39,6 +40,7 @@ SERIES = [
     series_m.EP36, series_m.EP37, series_m.EP38,  # partners: payment options
     series_m.EP39, series_m.EP40,                 # partners: the amounts
     series_n.EP41, series_n.EP42, series_n.EP43, series_n.EP44, series_n.EP45,  # partners: the API
+    series_o.EP46, series_o.EP47, series_o.EP48, series_o.EP49,  # Tesla
 ]
 
 BY_NUM = dict((e.num, e) for e in SERIES)
