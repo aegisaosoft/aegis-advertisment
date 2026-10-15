@@ -15,14 +15,65 @@ import unicodedata
 
 
 def fold(word):
-    """Compare words the way a listener would: letters and digits, no accents, no case."""
+    """Compare words the way a listener would: letters and digits, no accents, no case.
+
+    Letters of any script, not only Latin — an ASCII-only rule folded every Russian word
+    to an empty string, and the whole language silently failed to align.
+    """
     text = unicodedata.normalize('NFD', word.lower())
     text = ''.join(c for c in text if unicodedata.category(c) != 'Mn')
-    return re.sub(r'[^a-z0-9]', '', text)
+    return ''.join(c for c in text if c.isalnum())
+
+
+# A Han character is a word on its own, and so is each kana and Hangul syllable.
+CJK = re.compile(r'[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uac00-\ud7af]')
+# A word is not always broken where a space is. The apostrophe and the hyphen hold an
+# English or Uzbek word together; the zero-width non-joiner holds a Persian or Urdu one
+# together \u2014 "\u0645\u06cc\u200c\u06af\u0630\u0631\u062f" is one word, and splitting it at the joiner made two tokens that
+# matched nothing Scribe returned.
+INWORD = "'\u2019\u02bb\u02bc-\u200c\u200d"
+
+
+def _spans(line):
+    """(start, end) of every token in a line, one character per CJK glyph."""
+    out, start = [], None
+    for i, ch in enumerate(line):
+        if CJK.match(ch):
+            if start is not None:
+                out.append((start, i))
+                start = None
+            out.append((i, i + 1))
+        elif ch.isalnum() or ch in INWORD:
+            if start is None:
+                start = i
+        else:
+            if start is not None:
+                out.append((start, i))
+                start = None
+    if start is not None:
+        out.append((start, len(line)))
+    return out
+
+
+def _tokens(line):
+    return [line[a:b] for a, b in _spans(line)]
+
+
+def _pieces(line):
+    """Each token with the punctuation around it, together covering the whole line.
+
+    The cut is made at token starts, so an opening question mark stays with the sentence
+    it opens and a full stop stays with the word it ends.
+    """
+    spans = _spans(line)
+    if not spans:
+        return []
+    cuts = [0] + [a for a, _ in spans[1:]] + [len(line)]
+    return [line[cuts[i]:cuts[i + 1]] for i in range(len(spans))]
 
 
 def tokens(line):
-    return [t for t in (fold(w) for w in re.findall(r"[\w'\u2019-]+", line)) if t]
+    return [t for t in (fold(w) for w in _tokens(line)) if t]
 
 
 def load(path):
@@ -125,7 +176,7 @@ def word_times(lines, words_path):
     heard = load(words_path)
     flat, owner = [], []
     for n, line in enumerate(lines):
-        for word in re.findall(r"[\w'\u2019\u2013-]+", line):
+        for word in _tokens(line):
             if fold(word):
                 flat.append(word)
                 owner.append(n)
@@ -166,6 +217,15 @@ def word_times(lines, words_path):
     return out
 
 
+def width(text):
+    """Columns a string occupies on screen, not characters.
+
+    A Han character, a kana or a Hangul syllable is as wide as two Latin letters, and a
+    caption is wrapped to fit a screen rather than to a character count.
+    """
+    return sum(2 if CJK.match(c) else 1 for c in text)
+
+
 def wrap(text):
     """Break a cue into rows a player can show without shrinking the type.
 
@@ -174,40 +234,40 @@ def wrap(text):
     break that lands after a full stop or a comma is preferred over one mid-phrase.
     """
     words = text.split()
-    if len(' '.join(words)) <= WIDTH:
+    if width(' '.join(words)) <= WIDTH:
         return ' '.join(words)
 
-    rows = max(2, int(math.ceil(len(' '.join(words)) / float(WIDTH))))
-    target = len(' '.join(words)) / float(rows)
+    rows = max(2, int(math.ceil(width(' '.join(words)) / float(WIDTH))))
+    target = width(' '.join(words)) / float(rows)
 
     best, cuts = None, None
     def walk(start, left, taken, cost):
         nonlocal best, cuts
         if left == 1:
             row = ' '.join(words[start:])
-            if len(row) > WIDTH:
+            if width(row) > WIDTH:
                 return
-            total = cost + (len(row) - target) ** 2
+            total = cost + (width(row) - target) ** 2
             if best is None or total < best:
                 best, cuts = total, taken + [len(words)]
             return
         for end in range(start + 1, len(words)):
             row = ' '.join(words[start:end])
-            if len(row) > WIDTH:
+            if width(row) > WIDTH:
                 break
             # A row that ends where the sentence does reads at a glance; one that
             # splits "setup fee" or "four hundred twelve" does not, so mid-phrase
             # breaks cost far more than an uneven pair of rows.
             seam = 0.0 if re.search(r'[.!?]$', words[end - 1]) else (
                 6.0 if re.search(r'[,;:\u2014]$', words[end - 1]) else 90.0)
-            walk(end, left - 1, taken + [end], cost + (len(row) - target) ** 2 + seam)
+            walk(end, left - 1, taken + [end], cost + (width(row) - target) ** 2 + seam)
 
     walk(0, rows, [], 0.0)
     if cuts is None:
         # Nothing balanced fits; fall back to filling each row in turn.
         rows_out, row = [], ''
         for word in words:
-            if row and len(row) + 1 + len(word) > WIDTH:
+            if row and width(row) + 1 + width(word) > WIDTH:
                 rows_out.append(row)
                 row = word
             else:
@@ -232,7 +292,7 @@ def split_line(pieces, target, max_chars):
     place to end a card, a comma the next best, mid-clause the worst.
     """
     n = len(pieces)
-    length = [len(p.strip()) + 1 for p in pieces]
+    length = [width(p.strip()) + 1 for p in pieces]
     best = [None] * (n + 1)
     best[0] = (0.0, 0)
     for end in range(1, n + 1):
@@ -260,18 +320,16 @@ def split_line(pieces, target, max_chars):
     return list(reversed(cuts))
 
 
-def cues(lines, words_path, tail=0.25, beat=0.85):
+def cues(lines, words_path, tail=0.25, beat=0.85, bounds=None):
     """One caption per readable chunk, timed from the words actually spoken.
 
     A line is also cut at a sentence end the listener can hear — a pause longer than a
     beat — so a card is never left up through a silence that belongs to the next thought.
     """
     spoken = word_times(lines, words_path)
-    out = []
-    for line, words in zip(lines, spoken):
-        # The leading class keeps an opening ¿ or ¡ attached to its sentence.
-        pieces = re.findall(r"[^\w]*[\w'\u2019\u2013-]+[^\w]*", line)
-        pieces = [p for p in pieces if re.search(r"[\w]", p)]
+    out, owner_of = [], []
+    for index, (line, words) in enumerate(zip(lines, spoken)):
+        pieces = _pieces(line)
         if len(pieces) != len(words):
             raise SystemExit('cannot line punctuation up with the timing: %r' % line[:50])
 
@@ -286,17 +344,58 @@ def cues(lines, words_path, tail=0.25, beat=0.85):
 
         for g0, g1 in groups:
             chunk = pieces[g0:g1]
-            size = len(''.join(chunk).strip())
+            size = width(''.join(chunk).strip())
             cards = max(1, int(math.ceil(size / float(MAX_CHARS))))
             for a, b in split_line(chunk, size / float(cards), MAX_CHARS):
                 out.append([''.join(chunk[a:b]).strip(),
                             words[g0 + a][1], words[g0 + b - 1][2]])
+                owner_of.append(index)
 
     for i, cue in enumerate(out):
         cue[2] += tail
         cue[2] = max(cue[2], cue[1] + MIN_SHOW)
         if i + 1 < len(out):
             cue[2] = min(cue[2], out[i + 1][1] - 0.04)
+
+    # A caption may not stray outside the line it belongs to. Where the transcriber
+    # missed words, their times were interpolated, and interpolation can walk a caption
+    # into the previous scene; the narration's own placement is the authority.
+    if bounds:
+        for cue, line in zip(out, owner_of):
+            low, high = bounds[line]
+            cue[1] = min(max(cue[1], low), high)
+            cue[2] = min(max(cue[2], cue[1] + MIN_SHOW), high + tail)
+    return [(wrap(t), a, b) for t, a, b in out]
+
+
+def borrowed_cues(lines, timing, tail=0.25):
+    """Captions for a language nobody reads aloud, timed off another language's reading.
+
+    Uzbek is written but never spoken — no model speaks it — so the film carries the
+    English narration and the words on screen are Uzbek. There is nothing to align
+    against here: the words being said are not these words. What is known is when each
+    line is spoken, so each line takes exactly those seconds, and a line that needs more
+    than one card shares them out by how much there is to read on each.
+    """
+    out = []
+    for line, (start, end) in zip(lines, timing):
+        pieces = _pieces(line)
+        size = width(''.join(pieces).strip())
+        cards = max(1, int(math.ceil(size / float(MAX_CHARS))))
+        cuts = split_line(pieces, size / float(cards), MAX_CHARS)
+        sizes = [width(''.join(pieces[a:b]).strip()) for a, b in cuts]
+        total = float(sum(sizes)) or 1.0
+        at = start
+        for (a, b), room in zip(cuts, sizes):
+            stop = min(end, at + (end - start) * (room / total))
+            out.append([''.join(pieces[a:b]).strip(), at, stop])
+            at = stop
+
+    # A card the eye cannot catch is worse than no card, so a short one borrows from
+    # the silence after it — never from the card that follows.
+    for i, cue in enumerate(out):
+        limit = out[i + 1][1] if i + 1 < len(out) else cue[2] + tail
+        cue[2] = min(max(cue[2], cue[1] + MIN_SHOW), max(limit - 0.04, cue[2]))
     return [(wrap(t), a, b) for t, a, b in out]
 
 

@@ -52,3 +52,11 @@ __pycache__/
 
 # The Chrome profile the admin-session capture scripts attach to (cookies of a live login).
 build/tutorials/.chrome-capture/
+
+# Encoder / render scratch: two-pass ffmpeg stats, render progress logs, numbered backup copies of films.
+ffmpeg2pass-*.log*
+build/tutorials/render_*.log
+*.mp4.[0-9]*
+
+# Prospect lists and partner correspondence hold third-party contact data — never in this PUBLIC repo.
+outreach/

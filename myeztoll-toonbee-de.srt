@@ -1,0 +1,88 @@
+﻿1
+00:00:00,160 --> 00:00:03,470
+Dienstag. Vier Uhr zwölf nachmittags.
+
+2
+00:00:03,619 --> 00:00:07,929
+Eines Ihrer Autos fährt durch eine
+Maut. Niemand zahlt. Noch nicht.
+
+3
+00:00:10,579 --> 00:00:13,670
+Drei Wochen später kommt die
+Rechnung — auf Ihren Namen.
+
+4
+00:00:16,600 --> 00:00:21,369
+Da ist der Mieter längst weg, die
+Kaution zurück, die Vermietung
+geschlossen.
+
+5
+00:00:22,600 --> 00:00:25,449
+Also zahlen Sie und
+nennen es Betriebskosten.
+
+6
+00:00:28,599 --> 00:00:31,809
+Dasselbe bei Bußgeldern,
+Kraftstoff und Schäden.
+
+7
+00:00:34,599 --> 00:00:36,590
+Aber die Mautbetreiber wussten es.
+
+8
+00:00:36,739 --> 00:00:40,989
+E-ZPass, SunPass —
+einunddreißig Netze, landesweit.
+
+9
+00:00:42,979 --> 00:00:44,519
+Und die Buchung wusste, wer fuhr.
+
+10
+00:00:44,559 --> 00:00:49,069
+MyEZToll führt beides zusammen und
+bucht von der Karte des Mieters ab.
+
+11
+00:00:51,219 --> 00:00:53,449
+Eine kleine Flotte. Eine Woche.
+
+12
+00:00:53,559 --> 00:00:56,649
+Vierhundertzwölf Dollar —
+und Sie hätten sie getragen.
+
+13
+00:00:58,419 --> 00:01:00,549
+Was kostet die Plattform Ihre Flotte?
+
+14
+00:01:04,400 --> 00:01:09,209
+Nichts: keine Gebühr, keine
+Einrichtung, nichts pro Fahrzeug.
+
+15
+00:01:10,400 --> 00:01:14,109
+Ihr vorhandenes GPS anzubinden
+ist ebenfalls kostenlos.
+
+16
+00:01:16,379 --> 00:01:20,319
+Bezahlt wird nur unsere
+eigene Telematik-Hardware.
+
+17
+00:01:22,419 --> 00:01:27,390
+Sie zahlen nichts. Die Maut ganz,
+plus ein Anteil unserer Gebühr.
+
+18
+00:01:28,479 --> 00:01:29,949
+Schluss mit Verlieren.
+
+19
+00:01:30,819 --> 00:01:32,729
+Fangen Sie an zu verdienen.

@@ -88,7 +88,7 @@ async function render(lang) {
 
 (async () => {
   const langs = process.argv.slice(2).filter((a) => /^[a-z]{2}$/.test(a));
-  for (const lang of langs.length ? langs : ['en', 'es']) await render(lang);
+  for (const lang of langs.length ? langs : ['en', 'es', 'ru', 'de', 'fr', 'pt']) await render(lang);
 })().catch((e) => {
   console.error(e.message);
   process.exit(1);

@@ -1,0 +1,220 @@
+<meta charset="utf-8">
+<title>Reddit ad card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@500&display=swap">
+
+<style>
+/*
+ * The image of the Reddit promoted posts in `social/reddit-and-fb-groups.md`.
+ *
+ *   reddit-card.html?v=turo&shape=wide     1200 x 628  (feed, desktop)
+ *   reddit-card.html?v=fleet&shape=square  1080 x 1080 (feed, phone)
+ *   ...&lang=es                            Spanish copy (default en)
+ *
+ * Palette and type are the FB cover and the YouTube banner. The panel on the right is
+ * an illustration of the loop (toll row -> trip it fell into -> billed to the renter),
+ * not a screenshot: the facilities and amounts are real-looking but made up, and no
+ * text of the ad says "real screens".
+ */
+:root{
+  --paper:#eef2f7;
+  --paper-hi:#ffffff;
+  --ink:#0a1628;
+  --muted:#5b6f8a;
+  --line:#d6dfea;
+  --accent-hot:#ef6c1f;
+  --accent-cool:#0b8f63;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow:hidden}
+.wide,.wide body{width:1200px;height:628px}
+.square,.square body{width:1080px;height:1080px}
+body{
+  background:radial-gradient(120% 100% at 30% 10%, var(--paper-hi) 0%, var(--paper) 58%, #dfe6ef 100%);
+  color:var(--ink);
+  font-family:'Oswald',system-ui,sans-serif;
+  position:relative;
+}
+
+.road{position:absolute;inset:0;overflow:hidden;z-index:0}
+.road svg{position:absolute;inset:0;width:100%;height:100%}
+
+.sheet{position:relative;z-index:1;height:100%;display:flex}
+.wide .sheet{padding:48px 52px;gap:40px;align-items:stretch}
+.square .sheet{padding:64px 64px 56px;flex-direction:column}
+.square .copy{display:contents}
+.square .panel{order:4;margin-top:44px}
+.square .foot{order:5}
+
+.copy{display:flex;flex-direction:column}
+.wide .copy{width:540px;flex:none}
+
+.top{display:flex;align-items:center;gap:14px}
+.top img{height:44px}
+.handle{font-family:'Roboto Mono',monospace;font-weight:500;font-size:18px;letter-spacing:.16em;color:var(--muted);white-space:nowrap}
+.es .handle{letter-spacing:.08em}
+
+.head{font-family:'Anton',sans-serif;line-height:1.02;letter-spacing:-.005em;margin-top:28px}
+.wide .head{font-size:57px}
+.head em{white-space:nowrap}
+.es.wide .head{font-size:52px}
+.square .head{font-size:78px}
+.head em{font-style:normal;color:var(--accent-hot)}
+
+.sub{font-weight:400;line-height:1.35;color:var(--muted);margin-top:18px}
+.wide .sub{font-size:24px}
+.square .sub{font-size:30px}
+.sub b{color:var(--ink);font-weight:700}
+
+.foot{margin-top:auto;display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.free{color:var(--accent-cool);font-weight:700;white-space:nowrap}
+.wide .free{font-size:26px}
+.square .free{font-size:32px}
+.url{font-family:'Roboto Mono',monospace;font-weight:500;letter-spacing:.2em;color:var(--muted)}
+.wide .url{font-size:18px}
+.square .url{font-size:22px}
+
+/* The illustration: three toll rows, each landing in a trip and on the renter. */
+.panel{
+  flex:1;min-width:0;align-self:center;
+  background:#fff;border:1px solid #cbd6e4;border-radius:14px;
+  box-shadow:0 14px 30px rgba(10,22,40,.14);
+  overflow:hidden;
+}
+.square .panel{align-self:stretch;flex:none}
+.ph{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 22px;background:#f5f8fb;border-bottom:1px solid var(--line);
+  font-weight:500;font-size:17px;letter-spacing:.08em;color:var(--muted);
+}
+.ph b{color:var(--ink);letter-spacing:0;font-size:20px}
+.row{padding:16px 22px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.r1{display:flex;align-items:baseline;gap:12px}
+.when{font-family:'Roboto Mono',monospace;font-size:15px;color:var(--muted);flex:none}
+.fac{font-weight:500;font-size:20px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.amt{font-weight:700;font-size:22px;flex:none}
+.r2{display:flex;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap}
+.chip{
+  font-size:15px;font-weight:500;border-radius:999px;padding:3px 11px;
+  border:1px solid var(--line);color:var(--muted);background:#f7f9fc;white-space:nowrap;
+}
+.chip.ag{font-family:'Roboto Mono',monospace;font-size:13px;letter-spacing:.06em}
+.arrow{color:#9aabc2;font-size:16px}
+.chip.ok{border-color:#b6e2cf;background:#e9f7f0;color:var(--accent-cool);font-weight:700}
+.square .fac{font-size:24px}
+.square .amt{font-size:26px}
+.square .when{font-size:18px}
+.square .chip{font-size:18px}
+.square .chip.ag{font-size:15px}
+.square .row{padding:20px 26px}
+.four .row{padding-top:12px;padding-bottom:12px}
+.four .r2{margin-top:6px}
+.square.four .head{font-size:70px}
+.square.four .panel{margin-top:32px}
+</style>
+
+<div class="road">
+  <svg viewBox="0 0 1200 628" preserveAspectRatio="none">
+    <path d="M-30 628 C 260 540, 470 500, 1230 486" fill="none" stroke="#1e3a5f" stroke-opacity=".09" stroke-width="18"/>
+    <path d="M-30 628 C 290 566, 520 530, 1230 520" fill="none" stroke="#ef6c1f" stroke-opacity=".12" stroke-width="13"/>
+    <path d="M-30 34 C 320 80, 560 100, 1230 86" fill="none" stroke="#1e3a5f" stroke-opacity=".06" stroke-width="16"/>
+  </svg>
+</div>
+
+<div class="sheet">
+  <div class="copy">
+    <div class="top">
+      <img src="../youtube/ez-mark-alpha.png" alt="">
+      <div class="handle" id="handle"></div>
+    </div>
+    <div class="head" id="head"></div>
+    <div class="sub" id="sub"></div>
+    <div class="foot">
+      <div class="free" id="free"></div>
+      <div class="url">MYEZTOLL.COM</div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><b id="ptitle"></b><span id="pmeta"></span></div>
+    <div id="rows"></div>
+  </div>
+</div>
+
+<script>
+const q = new URLSearchParams(location.search);
+const shape = q.get('shape') === 'square' ? 'square' : 'wide';
+document.documentElement.classList.add(shape);
+const lang = q.get('lang') === 'es' ? 'es' : 'en';
+document.documentElement.lang = lang;
+document.documentElement.classList.add(lang);
+
+const EN = {
+  turo: {
+    handle: 'MYEZTOLL · FOR TURO HOSTS',
+    head: 'Your guest drove through it.<br><em>Your guest pays for it.</em>',
+    sub: 'Every toll is matched to the trip it fell into and <b>billed to the guest</b>. No copying charges into reimbursement requests.',
+    free: 'Free for hosts · nothing per car',
+    billed: 'Billed to guest',
+    ptitle: 'Tolls this week', pmeta: '3 FOUND · 3 BILLED',
+    rows: [
+      ['SEP 6 · 23:41', 'Newark / Jersey City', '$4.60', 'E-ZPASS NJ', 'Trip Sep 5–8'],
+      ['SEP 7 · 00:12', 'Lincoln Tunnel',       '$5.63', 'E-ZPASS NJ', 'Trip Sep 5–8'],
+      ['SEP 7 · 02:57', 'Goethals Bridge',      '$5.63', 'E-ZPASS NJ', 'Trip Sep 5–8'],
+    ],
+  },
+  fleet: {
+    handle: 'MYEZTOLL · FOR RENTAL FLEETS',
+    head: 'Tolls hit your plate.<br><em>Bill them to the renter.</em>',
+    sub: '<b>31 toll agency systems</b>, each crossing matched to the booking it fell into, from <b>HQ Rental Software</b>, <b>Fleetwire</b>, <b>Turo</b> or <b>your own booking site</b>.',
+    free: 'Free for the fleet owner',
+    billed: 'Billed to renter',
+    ptitle: 'Tolls this week', pmeta: '4 AGENCIES · 4 SOURCES',
+    rows: [
+      ['SEP 6 · 23:41', 'Lincoln Tunnel',     '$5.63', 'E-ZPASS', 'HQ reservation #1482'],
+      ['SEP 7 · 09:15', 'Florida’s Turnpike', '$1.93', 'SUNPASS', 'Turo trip Sep 5–8'],
+      ['SEP 7 · 12:40', 'Bay Bridge',         '$8.00', 'FASTRAK', 'Fleetwire #B-2231'],
+      ['SEP 7 · 17:02', 'SH 130, Austin',     '$2.36', 'TXTAG',   'Your site #1497'],
+    ],
+  },
+};
+const ES = {
+  turo: {
+    handle: 'MYEZTOLL · PARA ANFITRIONES DE TURO',
+    head: 'Tu huésped pasó<br>por el peaje.<br><em>Tu huésped lo paga.</em>',
+    sub: 'Cada peaje se asigna al viaje en el que ocurrió y <b>se le cobra al huésped</b>. Sin copiar cargos en solicitudes de reembolso.',
+    free: 'Gratis para anfitriones',
+    billed: 'Cobrado al huésped',
+    ptitle: 'Peajes de esta semana', pmeta: '3 ENCONTRADOS · 3 COBRADOS',
+    rows: [
+      ['6 SEP · 23:41', 'Newark / Jersey City', '$4.60', 'E-ZPASS NJ', 'Viaje 5–8 sep'],
+      ['7 SEP · 00:12', 'Lincoln Tunnel',       '$5.63', 'E-ZPASS NJ', 'Viaje 5–8 sep'],
+      ['7 SEP · 02:57', 'Goethals Bridge',      '$5.63', 'E-ZPASS NJ', 'Viaje 5–8 sep'],
+    ],
+  },
+  fleet: {
+    handle: 'MYEZTOLL · PARA FLOTAS DE ALQUILER',
+    head: 'El peaje llega<br>a tu placa.<br><em>Cóbraselo al conductor.</em>',
+    sub: '<b>31 sistemas de peaje</b>; cada cruce se asigna a su reserva, venga de <b>HQ Rental Software</b>, <b>Fleetwire</b>, <b>Turo</b> o <b>tu propio sitio de reservas</b>.',
+    free: 'Gratis para el dueño de la flota',
+    billed: 'Cobrado al conductor',
+    ptitle: 'Peajes de esta semana', pmeta: '4 AGENCIAS · 4 ORÍGENES',
+    rows: [
+      ['6 SEP · 23:41', 'Lincoln Tunnel',     '$5.63', 'E-ZPASS', 'Reserva HQ #1482'],
+      ['7 SEP · 09:15', 'Florida’s Turnpike', '$1.93', 'SUNPASS', 'Viaje Turo 5–8 sep'],
+      ['7 SEP · 12:40', 'Bay Bridge',         '$8.00', 'FASTRAK', 'Fleetwire #B-2231'],
+      ['7 SEP · 17:02', 'SH 130, Austin',     '$2.36', 'TXTAG',   'Tu sitio #1497'],
+    ],
+  },
+};
+const V = lang === 'es' ? ES : EN;
+const v = V[q.get('v')] || V.turo;
+for (const k of ['handle','head','sub','free','ptitle','pmeta']) document.getElementById(k).innerHTML = v[k];
+if (v.rows.length > 3) document.documentElement.classList.add('four');
+document.getElementById('rows').innerHTML = v.rows.map(([when, fac, amt, ag, trip]) => `
+  <div class="row">
+    <div class="r1"><span class="when">${when}</span><span class="fac">${fac}</span><span class="amt">${amt}</span></div>
+    <div class="r2"><span class="chip ag">${ag}</span><span class="arrow">→</span><span class="chip">${trip}</span><span class="arrow">→</span><span class="chip ok">✓ ${v.billed}</span></div>
+  </div>`).join('');
+</script>

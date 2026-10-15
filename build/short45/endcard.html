@@ -2,7 +2,7 @@
 <title>End card</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Mono:wght@500;700&family=Source+Sans+3:wght@700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@600;700&family=Noto+Sans+SC:wght@700;900&family=Noto+Sans+Armenian:wght@700;900&family=Noto+Sans+Georgian:wght@700;900&family=Noto+Naskh+Arabic:wght@700&family=Noto+Nastaliq+Urdu:wght@700&family=Roboto+Mono:wght@500;700&family=Source+Sans+3:wght@700;900&display=swap">
 
 <style>
 /*
@@ -25,8 +25,8 @@
   --accent-hot:#ef6c1f;
   --accent:#f5a524;
   --gain:#0b8f63;
-  --display:'Anton',"Arial Narrow",Impact,sans-serif;
-  --body:'Source Sans 3',"Segoe UI",system-ui,sans-serif;
+  --display:'Anton','Oswald','Noto Sans SC',"Arial Narrow",Impact,sans-serif;
+  --body:'Source Sans 3','Noto Sans SC',"Segoe UI",system-ui,sans-serif;
   --mono:'Roboto Mono',ui-monospace,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -60,6 +60,35 @@ body{
 
 .url{font-family:var(--mono);font-size:2.8cqh;letter-spacing:.24em;color:var(--muted);
   text-transform:uppercase;margin-top:1.8cqh}
+
+/*
+ * The four scripts Anton cannot draw.
+ *
+ * A display face that has no glyph for a letter does not fail loudly; it silently
+ * hands the letter to whatever the system has, so a card can come out in two
+ * typefaces without anyone noticing until it is on screen. Each of these languages
+ * therefore names its own face ahead of Anton, and the address keeps the mono face
+ * in every one of them because it is a domain name, not a word.
+ */
+.lang-hy{--display:'Noto Sans Armenian','Oswald',sans-serif;
+         --body:'Noto Sans Armenian','Source Sans 3',sans-serif}
+.lang-ka{--display:'Noto Sans Georgian','Oswald',sans-serif;
+         --body:'Noto Sans Georgian','Source Sans 3',sans-serif}
+.lang-fa{--display:'Noto Naskh Arabic','Oswald',sans-serif;
+         --body:'Noto Naskh Arabic','Source Sans 3',sans-serif}
+.lang-ur{--display:'Noto Nastaliq Urdu','Noto Naskh Arabic',serif;
+         --body:'Noto Nastaliq Urdu','Noto Naskh Arabic',serif}
+
+/* Armenian and Georgian capitals are wider than Latin ones and their letterforms are
+   rounder, so the slogan is set a little smaller to keep the two lines inside the frame. */
+.lang-hy .slogan,.lang-ka .slogan{font-size:9.5cqh;line-height:1.06}
+
+/* Arabic script hangs below the line and Nastaliq climbs steeply from right to left;
+   at the Latin line-height the descenders of one line cut into the next. */
+.lang-fa .slogan{font-size:9cqh;line-height:1.5}
+.lang-ur .slogan{font-size:8cqh;line-height:1.9}
+.lang-fa .free,.lang-ur .free{line-height:2}
+.lang-ur .free{font-size:2.6cqh}
 </style>
 
 <div class="card">

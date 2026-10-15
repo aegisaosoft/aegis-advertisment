@@ -64,4 +64,8 @@ data = json.loads(payload)
 io.open(dst, 'w', encoding='utf-8').write(json.dumps(data, ensure_ascii=False, indent=1))
 words = [w for w in data.get('words', []) if w.get('type') == 'word']
 print('%d words, %.2fs .. %.2fs' % (len(words), words[0]['start'], words[-1]['end']))
-print(' '.join(w['text'] for w in words[:30]) + ' ...')
+# The console here is not UTF-8, and a Cyrillic preview would raise after the file was
+# already written — a traceback that means nothing and hides that the work succeeded.
+preview = ' '.join(w['text'] for w in words[:30]) + ' ...'
+sys.stdout.write(preview.encode(sys.stdout.encoding or 'utf-8', 'replace').decode(sys.stdout.encoding or 'utf-8'))
+sys.stdout.write(chr(10))
