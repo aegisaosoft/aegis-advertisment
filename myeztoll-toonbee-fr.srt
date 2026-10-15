@@ -1,0 +1,86 @@
+﻿1
+00:00:00,239 --> 00:00:03,089
+Mardi. Quatre heures
+douze de l'après-midi.
+
+2
+00:00:03,519 --> 00:00:07,969
+Une de vos voitures franchit un péage.
+Personne ne paie. Pas encore.
+
+3
+00:00:10,599 --> 00:00:13,599
+Trois semaines plus tard,
+la facture arrive à votre nom.
+
+4
+00:00:16,560 --> 00:00:19,719
+Le locataire est parti,
+la caution rendue, la location close.
+
+5
+00:00:22,560 --> 00:00:25,209
+Alors vous payez, et vous
+appelez ça les frais du métier.
+
+6
+00:00:28,599 --> 00:00:31,809
+Pareil pour les amendes,
+le carburant et les dégâts.
+
+7
+00:00:34,639 --> 00:00:37,640
+Mais les sociétés de
+péage savaient. E-ZPass,
+
+8
+00:00:37,680 --> 00:00:41,290
+SunPass — trente et un réseaux,
+d'une côte à l'autre.
+
+9
+00:00:43,059 --> 00:00:45,389
+Et la réservation savait qui conduisait.
+
+10
+00:00:45,639 --> 00:00:49,519
+MyEZToll relie les deux et
+débite la carte du locataire.
+
+11
+00:00:51,160 --> 00:00:52,779
+Une petite flotte. Une semaine.
+
+12
+00:00:52,819 --> 00:00:56,250
+Quatre cent douze dollars —
+et c'était pour votre poche.
+
+13
+00:00:58,399 --> 00:01:01,199
+Alors, combien coûte la
+plateforme à votre flotte ?
+
+14
+00:01:04,360 --> 00:01:08,009
+Rien : pas d'abonnement, pas de
+mise en service, rien par véhicule.
+
+15
+00:01:10,379 --> 00:01:14,032
+Brancher le GPS que vous
+avez déjà est gratuit aussi.
+
+16
+00:01:16,500 --> 00:01:19,248
+Seul notre boîtier
+télématique est payant.
+
+17
+00:01:22,419 --> 00:01:26,709
+Vous ne payez rien. Le péage entier,
+plus une part de notre commission.
+
+18
+00:01:28,580 --> 00:01:31,301
+Arrêtez de perdre. Commencez à gagner.

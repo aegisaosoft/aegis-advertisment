@@ -1,0 +1,29 @@
+22-en | MyEZToll Owner Portal — 22. Turo, part 1: your own mailbox
+The address your Turo mail goes to, and where you read it
+
+22-es | Portal del Propietario MyEZToll — 22. Turo, parte 1: su propio buzón
+La dirección a la que va su correo de Turo, y dónde lo lee
+
+23-en | MyEZToll Owner Portal — 23. Turo, part 2: sending your Turo emails to the portal
+Adding the address in Gmail, confirming it, and a filter that forwards only Turo
+
+23-es | Portal del Propietario MyEZToll — 23. Turo, parte 2: enviar sus correos de Turo al portal
+Añadir la dirección en Gmail, confirmarla, y un filtro que reenvía solo lo de Turo
+
+24-en | MyEZToll Owner Portal — 24. Turo, part 3: the phone agent
+Installing My E-Z Toll, the four settings that keep it alive, and checking it works
+
+24-es | Portal del Propietario MyEZToll — 24. Turo, parte 3: el agente del teléfono
+Instalar My E-Z Toll, los cuatro ajustes que lo mantienen vivo, y comprobar que funciona
+
+25-en | MyEZToll Owner Portal — 25. Turo, part 4: tying listings to your cars
+Which cars need it, importing from your host page, and linking by hand
+
+25-es | Portal del Propietario MyEZToll — 25. Turo, parte 4: atar los anuncios a sus coches
+Qué coches lo necesitan, importar desde su página de anfitrión, y enlazar a mano
+
+26-en | MyEZToll Owner Portal — 26. Turo, part 5: pending bookings, and a car that is already taken
+Confirming, rejecting, and what to do when two trips want one car
+
+26-es | Portal del Propietario MyEZToll — 26. Turo, parte 5: reservas pendientes y un coche ya ocupado
+Confirmar, rechazar, y qué hacer cuando dos viajes quieren un coche

@@ -2,7 +2,7 @@
 <title>Scene 10 — the price list</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Source+Sans+3:wght@600;700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@600;700&family=Noto+Sans+SC:wght@700;900&family=Noto+Sans+Armenian:wght@700;900&family=Noto+Sans+Georgian:wght@700;900&family=Noto+Naskh+Arabic:wght@700&family=Noto+Nastaliq+Urdu:wght@700&family=Source+Sans+3:wght@600;700;900&display=swap">
 
 <style>
 /*
@@ -26,8 +26,8 @@
   --muted:#6b7a8a;
   --mark:#2f86d8;
   --mark-deep:#1f5fa8;
-  --display:'Anton',"Arial Narrow",Impact,sans-serif;
-  --body:'Source Sans 3',"Segoe UI",system-ui,sans-serif;
+  --display:'Anton','Oswald','Noto Sans SC',"Arial Narrow",Impact,sans-serif;
+  --body:'Source Sans 3','Noto Sans SC',"Segoe UI",system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
@@ -64,6 +64,29 @@ body{
 
 .label{font-size:4.3cqh;font-weight:900;line-height:1.16;text-align:center;
   text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
+
+/*
+ * The four scripts the display face has no letters for.
+ *
+ * A missing glyph is not an error a browser reports: it quietly borrows the letter
+ * from somewhere else, and the card comes out in two typefaces. Each of these names
+ * its own face first. Uppercasing is turned off with them — Armenian and Georgian
+ * have a case the label does not want, and the Arabic scripts have none at all.
+ */
+.lang-hy{--display:'Noto Sans Armenian','Oswald',sans-serif;
+         --body:'Noto Sans Armenian','Source Sans 3',sans-serif}
+.lang-ka{--display:'Noto Sans Georgian','Oswald',sans-serif;
+         --body:'Noto Sans Georgian','Source Sans 3',sans-serif}
+.lang-fa{--display:'Noto Naskh Arabic','Oswald',sans-serif;
+         --body:'Noto Naskh Arabic','Source Sans 3',sans-serif}
+.lang-ur{--display:'Noto Nastaliq Urdu','Noto Naskh Arabic',serif;
+         --body:'Noto Nastaliq Urdu','Noto Naskh Arabic',serif}
+.lang-hy .label,.lang-ka .label,.lang-fa .label,.lang-ur .label{
+  text-transform:none;letter-spacing:0}
+/* Nastaliq is drawn on a steep diagonal and needs the room, or a two-line label
+   collides with itself. */
+.lang-ur .label{font-size:3.9cqh;line-height:1.9}
+.lang-fa .label{line-height:1.6}
 
 /* Every chip starts absent and is placed by seek(); nothing animates on its own, so
    frame n is the same image however busy the machine is. */
@@ -106,11 +129,130 @@ var COPY = {
       { text: 'Sin costo de instalación', at: 2.18 },
       { text: 'Sin cargo por vehículo', at: 3.82 }
     ]
+  },
+  ru: {
+    head: 'Нисколько.',
+    at: 0.18,
+    items: [
+      { text: 'Без подписки', at: 0.82 },
+      { text: 'Без платы за подключение', at: 1.68 },
+      { text: 'Без платы за машину', at: 2.88 }
+    ]
+  },
+  de: {
+    head: 'Nichts.',
+    at: 0.20,
+    items: [
+      { text: 'Keine Gebühr', at: 1.18 },
+      { text: 'Keine Einrichtung', at: 2.12 },
+      { text: 'Nichts pro Fahrzeug', at: 3.52 }
+    ]
+  },
+  fr: {
+    // "Rien" and "pas d'abonnement" are one breath in French; the head barely leads.
+    head: 'Rien.',
+    at: 0.10,
+    items: [
+      { text: "Pas d'abonnement", at: 0.18 },
+      { text: 'Pas de mise en service', at: 1.18 },
+      { text: 'Rien par véhicule', at: 2.50 }
+    ]
+  },
+  pt: {
+    head: 'Nada.',
+    at: 0.10,
+    items: [
+      { text: 'Sem assinatura', at: 0.30 },
+      { text: 'Sem taxa de instalação', at: 1.42 },
+      { text: 'Sem cobrança por veículo', at: 3.06 }
+    ]
+  }
+,
+  uk: {
+    head: 'Ніскільки.',
+    at: 0.22,
+    items: [
+      { text: 'Без підписки', at: 0.98 },
+      { text: 'Без плати за підключення', at: 1.64 },
+      { text: 'Без плати за машину', at: 3.06 }
+    ]
+  },
+  tr: {
+    head: 'Hiç.',
+    at: 0.20,
+    items: [
+      { text: 'Abonelik yok', at: 0.68 },
+      { text: 'Kurulum ücreti yok', at: 1.46 },
+      { text: 'Araç başına ücret yok', at: 2.52 }
+    ]
+  },
+  zh: {
+    head: '一分不要。',
+    at: 0.38,
+    items: [
+      { text: '无订阅费', at: 1.52 },
+      { text: '无安装费', at: 2.98 },
+      { text: '不按车收费', at: 3.92 }
+    ]
+  },
+  hy: {
+    head: 'Ոչինչ։',
+    at: 0.28,
+    items: [
+      { text: 'Առանց բաժանորդագրության', at: 1.04 },
+      { text: 'Առանց միացման վճարի', at: 2.52 },
+      { text: 'Առանց վճարի մեքենայի համար', at: 3.78 }
+    ]
+  },
+  ka: {
+    head: 'არაფერი.',
+    at: 0.26,
+    items: [
+      { text: 'გამოწერის გარეშე', at: 1.12 },
+      { text: 'ჩართვის საფასურის გარეშე', at: 2.10 },
+      { text: 'მანქანაზე გადასახადის გარეშე', at: 3.70 }
+    ]
+  },
+  fa: {
+    // Scribe did not hear "هیچ" at all, so its stamp here is the start of the clip
+    // itself rather than an interpolated one; the first item follows it immediately,
+    // the way it does in French.
+    head: 'هیچ.',
+    at: 0.20,
+    items: [
+      { text: 'بدون اشتراک', at: 0.30 },
+      { text: 'بدون هزینه راه‌اندازی', at: 1.46 },
+      { text: 'بدون هزینه هر خودرو', at: 3.26 }
+    ]
+  },
+  ur: {
+    head: 'کچھ نہیں۔',
+    at: 0.18,
+    items: [
+      { text: 'سبسکرپشن نہیں', at: 1.04 },
+      { text: 'سیٹ اپ فیس نہیں', at: 2.18 },
+      { text: 'فی گاڑی چارج نہیں', at: 3.34 }
+    ]
+  },
+  // Uzbek is heard in English and read in Uzbek, so its beats are the English
+  // narrator's: the labels land on the words the viewer is actually hearing.
+  uz: {
+    head: 'Hech narsa.',
+    at: 0.18,
+    items: [
+      { text: 'Obuna yoʻq', at: 1.10 },
+      { text: 'Ulanish toʻlovi yoʻq', at: 2.26 },
+      { text: 'Mashina uchun toʻlov yoʻq', at: 3.14 }
+    ]
   }
 };
 
-var lang = (location.search.match(/[?&]lang=(en|es)/) || [, 'en'])[1];
-var copy = COPY[lang];
+var lang = (location.search.match(/[?&]lang=([a-z]{2})/) || [, 'en'])[1];
+var copy = COPY[lang] || COPY.en;
+// The script decides the direction, and the direction has to reach the markup: given
+// none, the browser lays Persian out left to right and puts the stop at the wrong end.
+document.documentElement.setAttribute('dir', lang === 'fa' || lang === 'ur' ? 'rtl' : 'ltr');
+document.querySelector('.stage').classList.add('lang-' + lang);
 var head = document.querySelector('.head');
 var chips = [].slice.call(document.querySelectorAll('.chip'));
 

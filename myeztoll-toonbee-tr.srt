@@ -1,0 +1,81 @@
+﻿1
+00:00:00,160 --> 00:00:02,009
+Salı. Öğleden sonra dört on iki.
+
+2
+00:00:02,079 --> 00:00:06,029
+Araçlarınızdan biri gişeden
+geçiyor. Kimse ödemiyor. Henüz.
+
+3
+00:00:10,599 --> 00:00:13,189
+Üç hafta sonra fatura
+sizin adınıza geliyor.
+
+4
+00:00:16,579 --> 00:00:20,549
+Kiracı çoktan gitti, depozito
+iade edildi, kiralama kapandı.
+
+5
+00:00:22,680 --> 00:00:25,909
+Siz ödüyorsunuz ve buna
+işin maliyeti diyorsunuz.
+
+6
+00:00:28,659 --> 00:00:31,689
+Aynısı cezalarda,
+yakıtta ve hasarda oluyor.
+
+7
+00:00:34,659 --> 00:00:39,643
+Ama gişe kurumları biliyordu. E-ZPass,
+SunPass — ülke genelinde otuz bir ağ.
+
+8
+00:00:42,960 --> 00:00:45,199
+Rezervasyon da kimin
+sürdüğünü biliyordu.
+
+9
+00:00:45,239 --> 00:00:49,309
+MyEZToll ikisini birleştirip
+kiracının kartından tahsil ediyor.
+
+10
+00:00:51,199 --> 00:00:56,449
+Küçük bir filo. Bir hafta. Dört yüz on
+iki dolar — ve ödeyecek olan sizdiniz.
+
+11
+00:00:58,439 --> 00:01:00,889
+Peki platform filonuza
+ne kadara mal oluyor?
+
+12
+00:01:04,400 --> 00:01:08,309
+Hiç: abonelik yok, kurulum ücreti
+yok, araç başına ücret yok.
+
+13
+00:01:10,400 --> 00:01:14,189
+Hâlihazırda kullandığınız
+GPS'i bağlamak da ücretsiz.
+
+14
+00:01:16,439 --> 00:01:19,669
+Ücretli olan tek şey kendi
+telematik donanımımız.
+
+15
+00:01:22,479 --> 00:01:25,599
+Siz hiç ödemiyorsunuz.
+Geçiş ücreti size tam döner,
+
+16
+00:01:25,639 --> 00:01:27,629
+artı komisyonumuzdan bir pay.
+
+17
+00:01:28,400 --> 00:01:30,883
+Kaybetmeyi bırakın. Kazanmaya başlayın.

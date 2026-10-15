@@ -1,0 +1,23 @@
+27-en | MyEZToll Owner Portal — 27. HQ Rental Software, part 1: connecting it
+The two keys HQ gives you, and what happens once we have them
+
+27-es | Portal del Propietario MyEZToll — 27. HQ Rental Software, parte 1: conectarlo
+Las dos claves que le da HQ, y qué pasa cuando las tenemos
+
+28-en | MyEZToll Owner Portal — 28. HQ Rental Software, part 2: your cars
+The fleet arrives by itself — and the two things you still fill in
+
+28-es | Portal del Propietario MyEZToll — 28. HQ Rental Software, parte 2: sus coches
+La flota llega sola, y las dos cosas que usted todavía rellena
+
+29-en | MyEZToll Owner Portal — 29. HQ Rental Software, part 3: bookings and drivers
+Every reservation, who rented the car, and the window that decides who pays
+
+29-es | Portal del Propietario MyEZToll — 29. HQ Rental Software, parte 3: reservas y conductores
+Cada reserva, quién alquiló el coche, y la ventana que decide quién paga
+
+30-en | MyEZToll Owner Portal — 30. HQ Rental Software, part 4: tolls, violations and the money
+Where a toll goes after we find it, and what to do when something is missing
+
+30-es | Portal del Propietario MyEZToll — 30. HQ Rental Software, parte 4: peajes, multas y el dinero
+Adónde va un peaje después de encontrarlo, y qué hacer si algo falta

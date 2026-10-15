@@ -23,14 +23,49 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import script
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+# The multilingual model speaks twenty-nine languages and is the better reader of all
+# of them, so it stays the default. Armenian, Georgian, Persian and Urdu are not among
+# the twenty-nine — only v3 speaks them — and asking the wrong model does not fail, it
+# reads the letters as if they were something else.
 MODEL = 'eleven_multilingual_v2'
-VOICES = {'es': ('Terry', 'Y4K0Zmn5yVLFKu1SopbT'), 'en': ('Alice', 'Xb7hH8MSUJpSbSDYk0k2')}
+V3 = 'eleven_v3'
+V3_ONLY = ('hy', 'ka', 'fa', 'ur')
+# Four more narrators than the film started with, all native speakers taken from the
+# shared library — a library voice costs one of thirty free slots, not money. Chosen
+# female throughout because both cuts that already exist are read by a woman.
+VOICES = {
+    'en': ('Alice', 'Xb7hH8MSUJpSbSDYk0k2'),
+    'es': ('Terry', 'Y4K0Zmn5yVLFKu1SopbT'),
+    'ru': ('Victoria', 'Phc1KhVrCoW3CD0K7bUS'),
+    'de': ('Sunny Sonja', 'orCAaN7voZRSXS1JoEX2'),
+    'fr': ('Nathalie', 'rS7c1woNY04WT3UAS83Y'),
+    'pt': ('Camilla', 'YklVF5l1Q8os8glyd5SM'),
+    'uk': ('Kateryna', 'X1WtgMmQUBwtiAPn4j1P'),
+    'tr': ('Gamze Baykan', '4XumGDZjxmgp3U7xXaul'),
+    'zh': ('Susan', '0H4ruoQ81Ei2FCwjW5j1'),
+    # The last four have no native narrator anywhere in the shared library: the
+    # language facet returns nothing for them and a search by name finds only English
+    # voices with an accent. So each was chosen by audition instead — the same line
+    # read by eight candidates, put back through Scribe with the language declared, and
+    # scored on how many of the script's own words survived the round trip.
+    #
+    # Persian and Urdu went to the two voices actually recorded by speakers of those
+    # languages; they scored level with the best and are the only ones that carry the
+    # right vowels. Armenian and Georgian have no such voice at all, so they went to
+    # the two that scored highest and read fast enough to fit the scenes.
+    'hy': ('Victoria', 'Phc1KhVrCoW3CD0K7bUS'),
+    'ka': ('Kateryna', 'X1WtgMmQUBwtiAPn4j1P'),
+    'fa': ('Noushin', 'NZiuR1C6kVMSWHG27sIM'),
+    'ur': ('Reva', 'UT6USLtoAlXHj5k4sOLY'),
+}
 SETTINGS = {'stability': 0.45, 'similarity_boost': 0.75, 'style': 0.15, 'use_speaker_boost': True}
 
 # Room the narrator has inside a scene: a beat after the cut before speaking, and a
 # beat of air before the next scene arrives.
-LEAD = 0.16
-TAIL = 0.35
+# Both live in script.py, which is what the lines were written against.
+LEAD = script.LEAD
+TAIL = script.TAIL
 
 
 def key():
@@ -45,10 +80,10 @@ def key():
         sys.exit('ELEVENLABS_API_KEY not set')
 
 
-def speak(voice_id, text):
+def speak(voice_id, text, model=MODEL):
     req = urllib.request.Request(
         'https://api.elevenlabs.io/v1/text-to-speech/%s?output_format=mp3_44100_128' % voice_id,
-        data=json.dumps({'text': text, 'model_id': MODEL, 'voice_settings': SETTINGS}).encode(),
+        data=json.dumps({'text': text, 'model_id': model, 'voice_settings': SETTINGS}).encode(),
         method='POST')
     req.add_header('xi-api-key', key())
     req.add_header('Content-Type', 'application/json')
@@ -71,7 +106,7 @@ def duration(path):
         return 0.0
 
 
-def record(voice_id, line, room, takes, path):
+def record(voice_id, line, room, takes, path, model=MODEL):
     """Keep the reading that fits the scene.
 
     The model does not give the same length twice — the same sentence came back at
@@ -82,7 +117,7 @@ def record(voice_id, line, room, takes, path):
     """
     best, best_length = None, None
     for _ in range(max(1, takes)):
-        blob = speak(voice_id, line)
+        blob = speak(voice_id, line, model)
         io.open(path, 'wb').write(blob)
         got = duration(path)
         fits = got <= room
@@ -97,26 +132,33 @@ def record(voice_id, line, room, takes, path):
     return best_length
 
 
-lang = next((a for a in sys.argv[1:] if not a.startswith('-')), 'es')
-force = '--force' in sys.argv[1:]
-takes = next((int(a.split('=')[1]) for a in sys.argv[1:] if a.startswith('--takes=')), 4)
-lines = {'es': script.ES, 'en': script.EN}[lang]
-name, voice_id = VOICES[lang]
-folder = os.path.join(HERE, 'audio', lang)
-os.makedirs(folder, exist_ok=True)
+# Recording is what this file does when run, not when imported: `key` and `speak` are
+# borrowed by the account and voice-library helpers, and importing must not spend credits.
+if __name__ == '__main__':
+    lang = next((a for a in sys.argv[1:] if not a.startswith('-')), 'es')
+    force = '--force' in sys.argv[1:]
+    takes = next((int(a.split('=')[1]) for a in sys.argv[1:] if a.startswith('--takes=')), 4)
+    if lang in script.SUBTITLED:
+        sys.exit('%s is a subtitle track over the %s narration, not a recording'
+                 % (lang, script.SUBTITLED[lang]))
+    lines = script.LANGS[lang]
+    name, voice_id = VOICES[lang]
+    model = V3 if lang in V3_ONLY else MODEL
+    folder = os.path.join(HERE, 'audio', lang)
+    os.makedirs(folder, exist_ok=True)
 
-print('%s - %s' % (lang.upper(), name))
-over = 0
-for n, (line, length) in enumerate(zip(lines, script.SCENES), 1):
-    path = os.path.join(folder, '%02d.mp3' % n)
-    room = length - LEAD - TAIL
-    if force or not os.path.exists(path):
-        got, kept = record(voice_id, line, room, takes, path), ''
-    else:
-        got, kept = duration(path), '  (kept)'
-        if got > room:
-            got, kept = record(voice_id, line, room, takes, path), '  (recut)'
-    flag = '  OVER by %.2fs' % (got - room) if got > room else ''
-    print('  %2d  %5.2fs / %5.2fs%s%s' % (n, got, room, flag, kept))
-    over += got > room
-print('%d of %d scenes overrun' % (over, len(lines)))
+    print('%s - %s (%s)' % (lang.upper(), name, model))
+    over = 0
+    for n, (line, length) in enumerate(zip(lines, script.SCENES), 1):
+        path = os.path.join(folder, '%02d.mp3' % n)
+        room = length - LEAD - TAIL
+        if force or not os.path.exists(path):
+            got, kept = record(voice_id, line, room, takes, path, model), ''
+        else:
+            got, kept = duration(path), '  (kept)'
+            if got > room:
+                got, kept = record(voice_id, line, room, takes, path, model), '  (recut)'
+        flag = '  OVER by %.2fs' % (got - room) if got > room else ''
+        print('  %2d  %5.2fs / %5.2fs%s%s' % (n, got, room, flag, kept))
+        over += got > room
+    print('%d of %d scenes overrun' % (over, len(lines)))
