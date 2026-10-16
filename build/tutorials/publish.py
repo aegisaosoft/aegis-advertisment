@@ -123,23 +123,25 @@ GROUPS = {
                   'Referencia: owner.myeztoll.com/api/partner/v1/index',
         },
     },
-    # Tesla (46-49): connecting a Tesla account, the MyEZToll key and the check, the QR sheet for a
-    # lot, and Tesla for Business. 46-48 are owner episodes, 49 is for partners/admins (public).
+    # Tesla (46-50): connecting a Tesla account, the MyEZToll key and the check, the QR sheet for a
+    # lot, Tesla for Business, and Supercharger rebilling. 49 is for partners/admins (public), the rest
+    # are owner episodes.
     'tesla': {
-        'episodes': [46, 47, 48, 49],
+        'episodes': [46, 47, 48, 49, 50],
         'privacy': 'public',
         'title': {'en': 'Tesla — MyEZToll Owner Portal',
                   'es': 'Tesla — Portal del Propietario MyEZToll'},
         'description': {
             'en': 'Tolls for your Teslas with no tracker to install. Connect your Tesla account, add the '
                   'MyEZToll key to each car from a phone inside it, check which cars stream, print a QR '
-                  'sheet to do a whole lot in one walk, and connect a Tesla for Business fleet with one '
-                  'approval.\n\n'
+                  'sheet to do a whole lot in one walk, connect a Tesla for Business fleet with one '
+                  'approval, and pass Supercharger bills from a booking on to the renter.\n\n'
                   'Portal: owner.myeztoll.com',
             'es': 'Peajes de sus Tesla sin instalar ningún rastreador. Conecte su cuenta de Tesla, agregue '
                   'la llave de MyEZToll a cada coche desde un teléfono dentro de él, revise qué coches '
-                  'transmiten, imprima una hoja QR para toda la flota en un solo recorrido, y conecte una '
-                  'flota de Tesla for Business con una sola aprobación.\n\n'
+                  'transmiten, imprima una hoja QR para toda la flota en un solo recorrido, conecte una '
+                  'flota de Tesla for Business con una sola aprobación, y traslade al arrendatario los '
+                  'cobros de Supercharger de una reserva.\n\n'
                   'Portal: owner.myeztoll.com',
         },
     },
@@ -371,6 +373,21 @@ def add_to_groups(yt, key, entry, st, state):
         add_to_playlist(yt, st['videoId'], entry['lang'], pl)
         st['groups'][g] = True
         save_state(state)
+
+
+def drop_from_groups(yt, entry, old_video_id):
+    """Take a replaced video out of every topic playlist its episode belongs to.
+
+    replace() swaps the series playlist slot itself; without this the old (now private)
+    video stayed in the topic playlists next to its replacement. Idempotent: a video that is
+    no longer in a playlist is skipped.
+    """
+    ids = group_ids()
+    for g in groups_of(entry['num']):
+        pl = ids.get(g, {}).get(entry['lang'])
+        item = pl and playlist_item_of(yt, pl, old_video_id)
+        if item is not None and item:
+            call(yt.playlistItems().delete(id=item['id']))
 
 
 def create_playlists(yt, queue, state):
@@ -617,7 +634,7 @@ def begin_replace(state, key):
         if st['replaces'] not in st['retired']:
             st['retired'].append(st['replaces'])
     st['replaces'] = st['videoId']
-    for k in ('videoId', 'caption', 'playlist', 'adopted', 'oldHidden', 'groups'):
+    for k in ('videoId', 'caption', 'playlist', 'adopted', 'oldHidden', 'oldOutOfGroups', 'groups'):
         st.pop(k, None)
     return st
 
@@ -765,6 +782,11 @@ def replace(yt, queue, state, keys):
                 if old_item is not None:
                     call(yt.playlistItems().delete(id=old_item['id']))
                 st['playlist'] = True
+                save_state(state)
+            add_to_groups(yt, key, entry, st, state)
+            if not st.get('oldOutOfGroups'):
+                drop_from_groups(yt, entry, old)
+                st['oldOutOfGroups'] = True
                 save_state(state)
             if not st.get('oldHidden'):
                 hide_video(yt, old)

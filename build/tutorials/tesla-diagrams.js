@@ -62,8 +62,8 @@ const T = {
     permTitle: 'What MyEZToll asks Tesla for, and what it does not',
     p1: ['1', 'Vehicle Information', 'Which car is which: VIN, model and year. That is how each Tesla finds its car in MyEZToll.', 'Needed'],
     p2: ['2', 'Vehicle Location', 'Where the car drives. Tolls are matched from the route, so this is the one that matters.', 'Keep it ticked'],
-    p3: ['3', 'Nothing else', 'No unlocking, no starting, no climate, no charging. MyEZToll cannot control the car.', 'Read only'],
-    permFoot: 'MyEZToll never wakes a sleeping car. Location comes in only while the car is awake and driving.',
+    p3: ['3', 'Vehicle Charging Management', 'Only to read the Supercharger history, so charging during a booking goes to the renter. MyEZToll never starts or stops a charge.', 'Optional'],
+    permFoot: 'Nothing else: no unlocking, no starting, no climate. MyEZToll never wakes a sleeping car.',
 
     keyTitle: 'Add the MyEZToll key: once per car, from a phone inside it',
     k1: ['Your phone', 'signed in to the Tesla app of the car\u2019s account'],
@@ -100,8 +100,8 @@ const T = {
     permTitle: 'Lo que MyEZToll pide a Tesla, y lo que no',
     p1: ['1', 'Información del vehículo', 'Qué coche es cuál: VIN, modelo y año. Así cada Tesla encuentra su coche en MyEZToll.', 'Necesario'],
     p2: ['2', 'Ubicación del vehículo', 'Por dónde circula el coche. Los peajes salen de la ruta, así que esta es la que importa.', 'Déjela marcada'],
-    p3: ['3', 'Nada más', 'Sin abrir, sin arrancar, sin climatización, sin carga. MyEZToll no puede controlar el coche.', 'Solo lectura'],
-    permFoot: 'MyEZToll nunca despierta un coche dormido. La ubicación llega solo mientras el coche está despierto y en marcha.',
+    p3: ['3', 'Gestión de carga del vehículo', 'Solo para leer el historial de Supercharger, así la carga durante una reserva va al arrendatario. MyEZToll nunca inicia ni detiene una carga.', 'Opcional'],
+    permFoot: 'Nada más: sin abrir, sin arrancar, sin climatización. MyEZToll nunca despierta un coche dormido.',
 
     keyTitle: 'Agregue la llave de MyEZToll: una vez por coche, desde un teléfono dentro',
     k1: ['Su teléfono', 'con la app de Tesla de la cuenta del coche'],

@@ -87,12 +87,12 @@ def test_every_youtube_title_fits_the_100_character_limit():
 
 def test_tesla_episodes_describe_tesla_not_the_partner_payments_guide():
     import episodes
-    tesla = [ep for ep in episodes.SERIES if 46 <= ep.num <= 49]
-    assert len(tesla) == 4
+    tesla = [ep for ep in episodes.SERIES if 46 <= ep.num <= 50]
+    assert len(tesla) == 5
     for ep in tesla:
         for lang in ('en', 'es'):
             assert 'Tesla' in ep.blurb[lang]
-    assert publish.GROUPS['tesla']['episodes'] == [46, 47, 48, 49]
+    assert publish.GROUPS['tesla']['episodes'] == [46, 47, 48, 49, 50]
 
 
 def test_playlist_moves_sorts_by_episode_and_leaves_sorted_lists_alone():
@@ -351,3 +351,27 @@ def test_video_privacy_prefers_the_episode_choice():
     assert [e.privacy for e in episodes.SERIES if 41 <= e.num <= 45] == ['public'] * 5
     assert [e.privacy for e in episodes.SERIES if 36 <= e.num <= 40] == ['public'] * 5
     assert all(e.privacy is None for e in episodes.SERIES if e.num <= 35)
+
+
+def test_drop_from_groups_removes_the_old_video_from_its_topic_playlists(monkeypatch):
+    deleted = []
+
+    class Items(object):
+        def delete(self, id):
+            deleted.append(id)
+            return id
+
+    class YT(object):
+        def playlistItems(self):
+            return Items()
+
+    monkeypatch.setattr(publish, 'group_ids', lambda: {'tesla': {'en': 'PL_T_EN'}})
+    monkeypatch.setattr(publish, 'call', lambda req: req)
+    found = {('PL_T_EN', 'OLD46'): {'id': 'ITEM1'}}
+    monkeypatch.setattr(publish, 'playlist_item_of', lambda yt, pl, vid: found.get((pl, vid)))
+    publish.drop_from_groups(YT(), {'num': 46, 'lang': 'en'}, 'OLD46')
+    assert deleted == ['ITEM1']
+    deleted[:] = []
+    publish.drop_from_groups(YT(), {'num': 46, 'lang': 'en'}, 'GONE')   # not in the playlist: nothing
+    publish.drop_from_groups(YT(), {'num': 46, 'lang': 'es'}, 'OLD46')  # no Spanish id recorded: nothing
+    assert deleted == []

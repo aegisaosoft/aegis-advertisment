@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Episodes 46-49 — Tesla.
+"""Episodes 46-50 — Tesla.
 
   46  connect your Tesla           — GPS Systems, Connect Tesla, sign in at Tesla, what is asked, cars by VIN
   47  the key and the check        — the panel, Add key to car from a phone in the car, Check cars, the states
   48  a QR sheet for the lot       — Print QR sheet, one card per car still missing the key, the walk
   49  Tesla for Business           — FOR PARTNERS/ADMINS: consent request, the code, Connect fleet
+  50  Supercharger                 — the Supercharger page: rebilling banner, import, the Renter charge states,
+                                     the row menu, Info with our fee and Tesla's invoice, rebilling off, Reconnect
 
 The portal frames (`tes-0N-*`, capture-tesla.js) are the real dev portal with DEMO DATA: no Tesla is
 connected to any of our accounts yet, so the GPS tab's API answers were staged in the browser — four
@@ -13,10 +15,19 @@ made-up VINs ending 0001xx. Where those frames put each button and row was MEASU
 English one. Tesla's own screens are not reproduced: those steps are drawn (`tes-2N-*`,
 tesla-diagrams.js), and their boxes are the fixed fractions written in that script.
 
-Facts the narration states, checked against the code: the connect asks only openid/offline_access/
-vehicle_device_data/vehicle_location (TeslaOAuth.Scopes) and a grant without vehicle_location is refused;
+Facts the narration states, checked against the code: the connect asks openid/offline_access/
+vehicle_device_data/vehicle_location (TeslaOAuth.Scopes) and a grant without vehicle_location is refused; since
+2026-10-05 it also asks vehicle_charging_cmds ("Vehicle Charging Management", Tesla:RequestChargingScope), which is
+optional (not in RequiredScopes) and used only to read charging history — the API sends the car no commands;
 the plugin never wakes a car (TeslaProvider: only cars Tesla lists as online are read); the telemetry config
 is re-pushed every 6 hours (Startup: "Tesla telemetry config - every 6 hours").
+
+Episode 50 (`tes-1N-*`) stages /api/supercharger-sessions: six made-up sessions, one per chip state. Checked against
+the code: sessions are imported every hour ("Tesla Supercharger import - hourly"); a session is charged only when it
+is on a booking, Tesla reports it paid by the owner, and the owner's rebilling is on (SuperchargerChargeQueue.
+PendingAsync), by the per-minute observer; the fee is Fixed $ or Percent of Tesla's bill (ServiceFee); no card ->
+ChargeFailed "No payment method on file for renter", shown as the chip's tooltip; owners who connected Tesla before the
+charging scope (vehicle_charging_cmds, requested since 2026-10-05) must reconnect (TeslaChargingImportService).
 """
 import io
 import json
@@ -86,6 +97,42 @@ def at(shot, key):
                         round(_r(lang, shot, key)[1] + _r(lang, shot, key)[3] / 2, 4))) for lang in LANGS)
 
 
+EDGE = 0.985   # the Supercharger table is wider than the frame: rings stop at the picture's edge
+
+
+def clip(rings):
+    """Rings cut at the right edge of the frame."""
+    return dict((lang, (x, y, round(min(w, EDGE - x), 4), h)) for lang, (x, y, w, h) in rings.items())
+
+
+def chip(shot, row_key):
+    """The Renter charge chip of one table row: the status column, at that row's height."""
+    out = {}
+    for lang in LANGS:
+        sx, _, sw, _ = _r(lang, shot, 'statusHead')
+        _, ry, _, rh = _r(lang, shot, row_key)
+        x = sx - PAD
+        out[lang] = (round(x, 4), round(ry, 4), round(min(sw + 0.03, EDGE - x), 4), round(rh, 4))
+    return out
+
+
+def chip_point(shot, row_key):
+    """The cursor resting on a row's Renter charge chip."""
+    return dict((lang, (round(x + 0.03, 4), round(y + h / 2, 4)))
+                for lang, (x, y, w, h) in chip(shot, row_key).items())
+
+
+def column(shot, head_key, last_row='row6'):
+    """A whole table column: its header down to the last row."""
+    out = {}
+    for lang in LANGS:
+        hx, hy, hw, _ = _r(lang, shot, head_key)
+        _, ly, _, lh = _r(lang, shot, last_row)
+        x = hx - PAD
+        out[lang] = (round(x, 4), round(hy - PAD, 4), round(min(hw + 0.03, EDGE - x), 4), round(ly + lh + PAD - hy, 4))
+    return out
+
+
 def look(rings, zoom):
     """The camera on a ring (per language), zoomed no further than lets the whole ring fit."""
     out = {}
@@ -146,10 +193,10 @@ EP46 = E(
           shot='tes-21-permissions', cam=WIDE, ring=OVER[1],
           label_en='What is asked', label_es='Lo que se pide'),
 
-        B(en='Nothing else is asked. MyEZToll cannot unlock, start or control the car, and it never wakes a '
-             'sleeping one.',
-          es='No se pide nada más. MyEZToll no puede abrir, arrancar ni controlar el coche, y nunca despierta '
-             'uno dormido.',
+        B(en='Charging management is optional. MyEZToll only reads the Supercharger history, to bill charging '
+             'to the renter. It never starts a charge, unlocks or drives the car, or wakes a sleeping one.',
+          es='La gestión de carga es opcional. MyEZToll solo lee el historial de Supercharger, para cobrar la '
+             'carga al arrendatario. Nunca inicia una carga, ni abre o conduce el coche, ni despierta uno dormido.',
           ring=OVER[2]),
 
         B(en='Approve, and you are back here. Tesla is connected, and your cars arrive by VIN within a minute '
@@ -350,6 +397,99 @@ EP49 = E(
 EP49.audience = 'partner'
 EP49.privacy = 'public'
 
+
+# =============================================================================== 50
+SC_LIST, SC_OFF, SC_MENU, SC_INFO = 'tes-10-sc-list', 'tes-11-sc-off', 'tes-12-sc-menu', 'tes-13-sc-info'
+TABLE = clip(span(SC_LIST, 'statusHead', 'row1', 'row6'))
+
+EP50 = E(
+    50, 'tesla-supercharger',
+    'Tesla: Supercharger bills go back to the renter',
+    'Tesla: el Supercharger se cobra al arrendatario',
+    'Charging during a booking is paid by the renter, with Tesla’s invoice as proof',
+    'La carga durante una reserva la paga el arrendatario, con la factura de Tesla como prueba',
+    [
+        B(en='When a renter charges your Tesla at a Supercharger, Tesla bills your account. The Supercharger '
+             'page passes that bill on to the renter.',
+          es='Cuando un arrendatario carga su Tesla en un Supercharger, Tesla lo cobra a su cuenta. La página '
+             'Supercharger traslada ese cobro al arrendatario.',
+          shot=SC_LIST, url='/supercharger', cam=WIDE,
+          label_en='Supercharger', label_es='Supercharger'),
+
+        B(en='The green line says rebilling is on, and the fee added to each session.',
+          es='La línea verde indica que la refacturación está activada, y la comisión que se suma a cada sesión.',
+          cam=look(ring(SC_LIST, 'banner'), 1.4), ring=ring(SC_LIST, 'banner')),
+
+        B(en='Sessions come in from Tesla every hour. Import from Tesla brings them in right now.',
+          es='Las sesiones llegan de Tesla cada hora. Importar desde Tesla las trae en este momento.',
+          cam=look(span(SC_LIST, 'import', 'pdf'), 1.6),
+          point=at(SC_LIST, 'import'), click=2.4, ring=ring(SC_LIST, 'import')),
+
+        B(en='Each line is one session: the car, the Supercharger, the energy, any idle fee, and Tesla’s total.',
+          es='Cada línea es una sesión: el coche, el Supercharger, la energía, la tarifa por inactividad si la '
+             'hay, y el total de Tesla.',
+          cam=look(clip(ring(SC_LIST, 'row2')), 1.2), ring=clip(ring(SC_LIST, 'row2'))),
+
+        B(en='Renter charge shows where each session stands.',
+          es='Cobro al arrendatario muestra en qué punto está cada sesión.',
+          cam=look(TABLE, 1.3), ring=column(SC_LIST, 'statusHead')),
+
+        B(en='Charged: the renter’s card has paid it.',
+          es='Cobrado: la tarjeta del arrendatario ya lo pagó.',
+          cam=look(TABLE, 1.3), ring=chip(SC_LIST, 'row2')),
+
+        B(en='Pending: the session is on a booking and paid to Tesla, so it goes to the renter’s card within '
+             'minutes.',
+          es='Pendiente: la sesión está en una reserva y pagada a Tesla, así que pasa a la tarjeta del '
+             'arrendatario en pocos minutos.',
+          cam=look(TABLE, 1.3), ring=chip(SC_LIST, 'row1')),
+
+        B(en='Unpaid to Tesla: your Tesla account has not paid this one yet. It is charged only after Tesla '
+             'shows it paid.',
+          es='Sin pagar a Tesla: su cuenta de Tesla aún no lo ha pagado. Se cobra solo cuando Tesla lo muestra '
+             'pagado.',
+          cam=look(TABLE, 1.3), ring=chip(SC_LIST, 'row3')),
+
+        B(en='No booking: the car was not on a booking when it charged, so there is no renter to charge.',
+          es='Sin reserva: el coche no estaba en una reserva cuando cargó, así que no hay arrendatario a quien '
+             'cobrar.',
+          cam=look(TABLE, 1.3), ring=chip(SC_LIST, 'row4')),
+
+        B(en='Charge failed: the card could not be charged. Point at the label to read why, here no card on file.',
+          es='Cobro fallido: no se pudo cobrar la tarjeta. Pase el cursor sobre la etiqueta para ver el motivo, '
+             'aquí no hay tarjeta registrada.',
+          cam=look(TABLE, 1.3), point=chip_point(SC_LIST, 'row5'), ring=chip(SC_LIST, 'row5')),
+
+        B(en='The menu at the start of a row opens the session’s details, its booking, and Tesla’s invoice.',
+          es='El menú al inicio de la fila abre los detalles de la sesión, su reserva y la factura de Tesla.',
+          shot=SC_MENU, cam=look(span(SC_MENU, 'menuInfo', 'menuInvoice'), 1.5),
+          ring=span(SC_MENU, 'menuInfo', 'menuInvoice')),
+
+        B(en='Info shows the whole session, with our fee: here ten percent of Tesla’s bill.',
+          es='Información muestra la sesión completa, con nuestra comisión: aquí el diez por ciento del cobro de '
+             'Tesla.',
+          shot=SC_INFO, cam=look(ring(SC_INFO, 'modal'), 1.3), ring=span(SC_INFO, 'infoTotal', 'ourFee')),
+
+        B(en='Tesla’s invoice is the proof behind the charge if a renter disputes it.',
+          es='La factura de Tesla es la prueba del cobro si un arrendatario lo disputa.',
+          cam=look(ring(SC_INFO, 'modal'), 1.3),
+          point=at(SC_INFO, 'infoInvoice'), ring=ring(SC_INFO, 'infoInvoice')),
+
+        B(en='A yellow line means rebilling is off: sessions are listed, but nobody is charged. Ask support to '
+             'turn it on.',
+          es='Una línea amarilla significa que la refacturación está desactivada: las sesiones se listan, pero '
+             'no se cobra a nadie. Pida a soporte que la active.',
+          shot=SC_OFF, cam=look(ring(SC_OFF, 'bannerOff'), 1.3), ring=ring(SC_OFF, 'bannerOff')),
+
+        B(en='No sessions at all? If you connected Tesla before October 2026, press Reconnect once in GPS '
+             'Systems, so Tesla shares the charging history.',
+          es='¿No aparece ninguna sesión? Si conectó Tesla antes de octubre de 2026, pulse Volver a conectar una vez en '
+             'GPS Systems, para que Tesla comparta el historial de carga.',
+          shot='tes-03-connected', url='/settings', cam=look(ring('tes-03-connected', 'teslaCard'), 1.5),
+          point=at('tes-03-connected', 'reconnect'), click=3.0, ring=ring('tes-03-connected', 'reconnect'),
+          label_en='Settings · GPS Systems', label_es='Configuración · GPS Systems'),
+    ])
+
 # The paragraph under each video on YouTube (youtube.py reads ep.blurb before its own default).
 BLURB = {
     'en': ('MyEZToll and Tesla: connect your Tesla account with one sign-in, add the MyEZToll key to '
@@ -360,5 +500,5 @@ BLURB = {
            'la reserva correcta sin instalar ningún rastreador. Tesla for Business trae una flota entera '
            'de una vez.'),
 }
-for _ep in (EP46, EP47, EP48, EP49):
+for _ep in (EP46, EP47, EP48, EP49, EP50):
     _ep.blurb = BLURB
