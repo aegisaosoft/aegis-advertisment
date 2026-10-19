@@ -13,16 +13,17 @@
  */
 
 /*
- * Screenshots for the Tesla episodes (46-49), from the DEV portal, with DEMO DATA.
+ * Screenshots for the Tesla episodes (46-50), from the DEV portal, with DEMO DATA.
  *
  * No Tesla is connected to any of our accounts yet, so the Tesla card, its cars and their key states
  * are supplied here: the GPS Systems tab's own API answers are replaced in the browser with a made-up
  * fleet (the VINs below end in 0001xx and belong to no real car). The page itself is the real,
- * deployed owner portal — only the data under it is staged.
+ * deployed owner portal — only the data under it is staged. Episode 50 (the Supercharger page, `tes-1N-*`)
+ * stages the page's /api/supercharger-sessions answer the same way: six made-up sessions on the same VINs.
  *
  * READ-ONLY BY CONSTRUCTION. Every request to the API that is not a GET is aborted before it leaves
- * the browser, except the one "Check cars" call, which is answered here with the staged status and
- * never reaches the server.
+ * the browser, except the "Check cars" and "Import from Tesla" calls, which are answered here with staged
+ * results and never reach the server.
  *
  * Like capture-payments.js this runs against an administrator session in a Chrome started with
  * --remote-debugging-port, signed in on dev-owner. The admin-only "Tesla for Business" card is hidden
@@ -114,6 +115,46 @@ const PENDING = {
   ],
 };
 
+// The Supercharger page (episode 50): one session per state the "Renter charge" chip can show, newest first.
+const daysAgo = (d, h) => {
+  const t = new Date(Date.now() - d * 86400000);
+  t.setUTCHours(h, 12, 0, 0);
+  return t.toISOString();
+};
+const session = (n, vin, car, plate, site, start, energy, idle, extra) => ({
+  id: `demo-sc-${n}`, sessionId: `DEMO-${4810 + n}`, vin, carId: `demo-car-${n}`, carTitle: car,
+  licensePlate: plate, state: 'NJ', siteName: site, countryCode: 'US',
+  chargeStartUtc: start, chargeStopUtc: new Date(Date.parse(start) + 38 * 60000).toISOString(),
+  energyKwh: Math.round((energy / 0.48) * 10) / 10, energyAmount: energy, idleFeeAmount: idle,
+  amount: Math.round((energy + idle) * 100) / 100, currency: 'USD', ownerPaid: true, hasInvoice: true,
+  source: 'history', bookingId: null, renterName: null, chargeStatus: 'NotCharged', chargeError: null,
+  chargedAt: null, ...extra,
+});
+// Dashless: TIDY_FN strips anything shaped like a GUID, which would leave the Info line empty.
+const booked = (n, renter) => ({ bookingId: `5e1d0c${n}a7b2f4c119d3e00000000000${n}`, renterName: renter });
+const SESSIONS = [
+  session(1, VIN.y23, 'Tesla Model Y 2023', 'KRT4102', 'Secaucus, NJ', daysAgo(1, 15), 18.4, 0,
+    { ...booked(1, 'Jamie Carter') }),
+  session(2, VIN.m322, 'Tesla Model 3 2022', 'NJL8830', 'Newark Airport, NJ', daysAgo(3, 21), 22.75, 6,
+    { ...booked(2, 'Morgan Lee'), chargeStatus: 'Charged', chargedAt: daysAgo(3, 23) }),
+  session(3, VIN.y24, 'Tesla Model Y 2024', 'PTX5521', 'Edison, NJ', daysAgo(5, 13), 15.1, 0,
+    { ...booked(3, 'Riley Brooks'), ownerPaid: false }),
+  session(4, VIN.s20, 'Tesla Model S 2020', 'HVW2093', 'Paramus, NJ', daysAgo(8, 17), 31.2, 0, {}),
+  session(5, VIN.m322, 'Tesla Model 3 2022', 'NJL8830', 'Woodbridge, NJ', daysAgo(11, 19), 12.6, 0,
+    { ...booked(5, 'Casey Nguyen'), chargeStatus: 'ChargeFailed', chargeError: 'No payment method on file for renter' }),
+  session(6, VIN.y23, 'Tesla Model Y 2023', 'KRT4102', 'Clinton, NJ', daysAgo(14, 12), 19.8, 0,
+    { ...booked(6, 'Jordan Patel'), chargeStatus: 'Charged', chargedAt: daysAgo(14, 14) }),
+];
+// With rebilling off nothing has been charged, so every session is still waiting.
+const SC = {
+  on: { items: SESSIONS, totalCount: SESSIONS.length, chargingEnabled: true, feeMode: 'Percent', fee: 10 },
+  off: {
+    items: SESSIONS.map((r) => ({ ...r, chargeStatus: 'NotCharged', chargedAt: null, chargeError: null })),
+    totalCount: SESSIONS.length, chargingEnabled: false, feeMode: 'Percent', fee: 10,
+  },
+};
+const SC_IMPORT = { ownerId: 'demo', fetched: 6, inserted: 1, updated: 5, withBooking: 5, problem: null };
+
 // ------------------------------------------------------------------ helpers
 
 function labeller(lang) {
@@ -184,7 +225,15 @@ const MEASURE_FN = function (want) {
   want.forEach(([key, text, kind]) => {
     const t = norm(text);
     let el = null;
-    if (kind === 'btn') {
+    if (kind === 'tag') {
+      el = Array.from(document.querySelectorAll(text)).find(vis) || null;
+    } else if (kind === 'row') {
+      el = Array.from(document.querySelectorAll('tbody tr')).filter(vis)
+        .find((r) => norm(r.textContent).includes(t)) || null;
+    } else if (kind === 'dl') {
+      const dt = Array.from(document.querySelectorAll('dt')).filter(vis).find((d) => norm(d.textContent).startsWith(t));
+      el = dt ? dt.parentElement : null;
+    } else if (kind === 'btn') {
       el = Array.from(document.querySelectorAll('button, a, select, input'))
         .filter(vis).find((b) => norm(b.textContent).startsWith(t) || norm(b.value) === t || norm(b.getAttribute('aria-label')) === t);
     } else {
@@ -194,7 +243,7 @@ const MEASURE_FN = function (want) {
       el = cands[0] || null;
       if (el && kind === 'box') {
         let n = el;
-        while (n && n !== document.body && !/\bborder\b/.test(n.className || '')) n = n.parentElement;
+        while (n && n !== document.body && !/\b(border|shadow-xl)\b/.test(n.className || '')) n = n.parentElement;
         if (n && n !== document.body) el = n;
       }
     }
@@ -264,6 +313,35 @@ const captureSheet = async (page) => {
   };
 };
 
+/** The Supercharger frames: the banner, the buttons, the table and one row per staged session. */
+function scMeasures(L) {
+  const P = (k, d) => L(`superchargerPage.${k}`, d);
+  const page = [
+    ['title', P('title', 'Supercharger'), 'el'],
+    ['banner', P('rebillingOn', 'Supercharger sessions').slice(0, 20), 'el'],
+    ['bannerOff', P('rebillingOff', 'Rebilling is off').slice(0, 16), 'el'],
+    ['import', P('importNow', 'Import from Tesla'), 'btn'],
+    ['excel', 'Excel', 'btn'],
+    ['pdf', 'PDF', 'btn'],
+    ['summary', P('summary', '{{count}}').split('{{')[0] || '6', 'el'],
+    ['table', 'table', 'tag'],
+    ['statusHead', P('chargeStatus', 'Renter charge'), 'el'],
+    ['idleHead', P('idleFee', 'Idle fee'), 'el'],
+    ...['Secaucus', 'Newark Airport', 'Edison', 'Paramus', 'Woodbridge', 'Clinton']
+      .map((site, i) => [`row${i + 1}`, site, 'row']),
+  ];
+  return {
+    'tes-10-sc-list': page,
+    'tes-11-sc-off': page,
+    'tes-12-sc-menu': [...page, ['menuInfo', P('info', 'Info'), 'btn'], ['menuBookings', P('bookings', 'Bookings'), 'btn'],
+      ['menuInvoice', P('teslaInvoice', 'Tesla invoice (PDF)'), 'btn']],
+    'tes-13-sc-info': [['modal', P('sessionInfo', 'Supercharger session'), 'box'],
+      ['ourFee', P('ourFee', 'Our fee'), 'dl'], ['infoTotal', P('amount', 'Total'), 'dl'],
+      ['infoStatus', P('chargeStatus', 'Renter charge'), 'dl'],
+      ['infoInvoice', P('teslaInvoice', 'Tesla invoice (PDF)'), 'btn']],
+  };
+}
+
 /** What to measure on each screen (see MEASURE_FN). */
 function measures(L, name) {
   const common = [
@@ -286,6 +364,7 @@ function measures(L, name) {
     'tes-04-review': [['modalTitle', L('ownerGps.pendingTitle', 'Review GPS vehicles'), 'el'],
       ['row', 'Tesla Model 3 2022', 'box'], ['writeDb', L('ownerGps.writeToDb', 'Write to DB'), 'btn'],
       ['discard', L('ownerGps.discard', 'Discard'), 'btn']],
+    ...scMeasures(L),
     'tes-08-business': [['biz', L('ownerGps.teslaBusinessTitle', 'Tesla for Business (admin)'), 'box'],
       ['bizConnect', L('ownerGps.teslaBusinessConnect', 'Connect fleet'), 'btn']],
   };
@@ -293,6 +372,19 @@ function measures(L, name) {
     .map((v, i) => [`vin${i + 1}`, v, 'el']);
   return [...common, ...(per[name] || []), ...rows];
 }
+
+/** Open the row menu (the button at the start of the row) of the session at `site`, as the owner would. */
+const openRowMenu = (site) => async (page) => {
+  const ok = await page.evaluate((want) => {
+    const tr = Array.from(document.querySelectorAll('tbody tr')).find((r) => (r.textContent || '').includes(want));
+    const btn = tr && tr.querySelector('button');
+    if (!btn) return false;
+    btn.click();
+    return true;
+  }, site);
+  if (!ok) throw new Error(`no row menu for "${site}"`);
+  await sleep(700);
+};
 
 function screens(L) {
   const gpsTab = [click('GPS Systems')];
@@ -308,6 +400,11 @@ function screens(L) {
     { name: 'tes-06-check-all', accounts: [teslaAccount()], status: STATUS.all, steps: [...gpsTab, check] },
     { name: 'tes-07-qr-sheet', accounts: [teslaAccount()], status: STATUS.sheet, sheet: true, steps: [...gpsTab, check] },
     { name: 'tes-08-business', accounts: [], business: true, steps: [...gpsTab, typeBusinessCode] },
+    { name: 'tes-10-sc-list', path: '/supercharger', sc: SC.on, steps: [] },
+    { name: 'tes-11-sc-off', path: '/supercharger', sc: SC.off, steps: [] },
+    { name: 'tes-12-sc-menu', path: '/supercharger', sc: SC.on, steps: [openRowMenu('Newark Airport')] },
+    { name: 'tes-13-sc-info', path: '/supercharger', sc: SC.on,
+      steps: [openRowMenu('Newark Airport'), click(L('superchargerPage.info', 'Info'))] },
     { name: 'tes-09-business-fleet', accounts: [teslaAccount('Tesla for Business')], status: STATUS.all,
       steps: [...gpsTab, check] },
   ];
@@ -335,6 +432,12 @@ function screens(L) {
     if (current && m === 'GET' && /\/api\/owners\/[^/]+\/gps-plugins(\?|$)/.test(url)) {
       return json({ providers: PROVIDERS, accounts: current.accounts || [] });
     }
+    if (current && m === 'GET' && /\/api\/supercharger-sessions(\?|$)/.test(url)) {
+      return json(current.sc || SC.on);
+    }
+    if (current && m === 'POST' && /\/api\/supercharger-sessions\/import(\?|$)/.test(url)) {
+      return json(SC_IMPORT);
+    }
     if (current && m === 'POST' && /\/api\/gps\/tesla\/telemetry\/refresh/.test(url)) {
       return json(current.status || STATUS.all);
     }
@@ -358,7 +461,7 @@ function screens(L) {
       process.stdout.write(`[${lang}] ${s.name}\n`);
       current = s;
       try {
-        await page.goto(`${BASE}/settings`, { waitUntil: 'domcontentloaded' });
+        await page.goto(`${BASE}${s.path || '/settings'}`, { waitUntil: 'domcontentloaded' });
         for (let i = 0; i < 2; i += 1) {
           await setLanguage(page, lang);
           await page.reload({ waitUntil: 'domcontentloaded' });

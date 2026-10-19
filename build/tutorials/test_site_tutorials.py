@@ -41,11 +41,12 @@ def test_recordings_is_empty_when_nothing_is_public():
 def test_every_episode_reaches_the_public_page():
     # User 2026-09-30: the partner guides (36-45) are listed on /tutorials too; 2026-10-05 the Tesla
     # part adds 46-49, of which 49 (Tesla for Business, done by an administrator) is a partner episode.
+    # 2026-10-19: 51, a partner turning on a booking plugin for an owner they brought.
     import episodes
     from site_tutorials import site_episodes
     shown = [ep.num for ep in site_episodes()]
     partner = [ep.num for ep in episodes.SERIES if ep.audience == 'partner']
-    assert partner == list(range(36, 46)) + [49]
+    assert partner == list(range(36, 46)) + [49, 51]
     assert shown == [ep.num for ep in episodes.SERIES]
 
 
