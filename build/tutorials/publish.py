@@ -123,6 +123,23 @@ GROUPS = {
                   'Referencia: owner.myeztoll.com/api/partner/v1/index',
         },
     },
+    # PARTNERS (51): working for the owners a partner brought — turning on a booking plugin for them.
+    'partner-owners': {
+        'episodes': [51],
+        'privacy': 'public',
+        'title': {'en': 'Your Owners — MyEZToll Partner Guide',
+                  'es': 'Sus propietarios — Guía para socios MyEZToll'},
+        'description': {
+            'en': 'For MyEZToll partners: setting things up for the owners you brought. Choose the owner on '
+                  'the Dashboard, then turn on Turo or a booking system for them under Settings, Booking '
+                  'Plugins — without writing to us.\n\n'
+                  'Portal: owner.myeztoll.com',
+            'es': 'Para socios de MyEZToll: configurar lo necesario para los propietarios que trajo. Elija al '
+                  'propietario en el Panel de control y actívele Turo o un sistema de reservas en '
+                  'Configuración, Booking Plugins, sin escribirnos.\n\n'
+                  'Portal: owner.myeztoll.com',
+        },
+    },
     # Tesla (46-50): connecting a Tesla account, the MyEZToll key and the check, the QR sheet for a
     # lot, Tesla for Business, and Supercharger rebilling. 49 is for partners/admins (public), the rest
     # are owner episodes.
