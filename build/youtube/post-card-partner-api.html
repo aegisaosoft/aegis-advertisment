@@ -1,0 +1,143 @@
+<meta charset="utf-8">
+<title>LinkedIn card — Partner API</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap">
+
+<style>
+/*
+ * The image for the LinkedIn post announcing the extended Partner API — 1200 x 900, same palette,
+ * type and layout as post-card-hq-collections.html so the series of posts reads as one hand.
+ *
+ * The code panel uses the real field names of the `Toll` schema in partner-api-openapi.yaml and the
+ * real route; the values are invented, so no plate or reservation of a live owner is shown.
+ */
+:root{
+  --paper:#eef2f7;
+  --paper-hi:#ffffff;
+  --ink:#0a1628;
+  --muted:#5b6f8a;
+  --accent-hot:#ef6c1f;
+  --accent-cool:#0b8f63;
+  --code-bg:#0f1d33;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1200px;height:900px;overflow:hidden}
+body{
+  background:radial-gradient(120% 90% at 50% 12%, var(--paper-hi) 0%, var(--paper) 58%, #dfe6ef 100%);
+  color:var(--ink);
+  font-family:'Oswald',system-ui,sans-serif;
+  padding:60px 64px 54px;
+  display:flex;flex-direction:column;
+}
+
+.road{position:absolute;inset:0;overflow:hidden;z-index:0}
+.road svg{position:absolute;inset:0;width:100%;height:100%}
+.sheet{position:relative;z-index:1;display:flex;flex-direction:column;height:100%}
+
+.top{display:flex;align-items:center;gap:18px}
+.top img{height:52px}
+.handle{
+  font-family:'Roboto Mono',monospace;font-weight:500;
+  font-size:21px;letter-spacing:.16em;color:var(--muted);
+}
+
+.head{
+  font-family:'Anton',sans-serif;
+  font-size:72px;line-height:1.03;letter-spacing:-.005em;
+  margin-top:34px;
+}
+.head em{font-style:normal;color:var(--accent-hot)}
+
+.sub{
+  font-weight:400;font-size:26px;line-height:1.35;color:var(--muted);
+  margin-top:18px;max-width:1000px;
+}
+.sub b{color:var(--ink);font-weight:700}
+
+.body{display:flex;gap:30px;margin-top:auto;align-items:stretch}
+
+.code{
+  flex:0 0 560px;border-radius:12px;background:var(--code-bg);
+  box-shadow:0 12px 28px rgba(10,22,40,.22);
+  padding:20px 24px 22px;
+  font-family:'Roboto Mono',monospace;font-size:16.5px;line-height:1.55;color:#c9d6ea;
+  white-space:pre;
+}
+.code .bar{display:flex;gap:7px;margin-bottom:14px}
+.code .bar i{width:11px;height:11px;border-radius:50%;background:#2c3e5c}
+.m{color:#7fd1a8;font-weight:500}
+.p{color:#fff}
+.h{color:#6f86a8}
+.k{color:#8fb8ff}
+.s{color:#ffc58f}
+.n{color:#ff9a5c;font-weight:500}
+
+.list{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:4px 0}
+.row{display:flex;align-items:baseline;gap:14px;font-size:24px;font-weight:500;line-height:1.2}
+.row::before{
+  content:'';flex:0 0 12px;height:12px;border-radius:3px;background:var(--accent-hot);
+  transform:translateY(-3px);
+}
+.row span{font-weight:400;color:var(--muted);font-size:20px}
+.row.new::before{background:var(--accent-cool)}
+.row .tag{
+  font-family:'Roboto Mono',monospace;font-size:14px;font-weight:500;letter-spacing:.08em;
+  color:#fff;background:var(--accent-cool);border-radius:4px;padding:2px 7px;transform:translateY(-3px);
+}
+
+.foot{
+  margin-top:40px;padding-top:22px;border-top:2px solid #cfd9e6;
+  display:flex;align-items:baseline;justify-content:space-between;gap:24px;
+  font-size:24px;font-weight:500;color:var(--muted);
+}
+.foot b{color:var(--ink);font-weight:700}
+.foot .url{color:var(--accent-cool);font-weight:700}
+</style>
+
+<div class="road">
+  <svg viewBox="0 0 1200 900" preserveAspectRatio="none">
+    <path d="M-30 900 C 260 780, 470 726, 1230 706" fill="none" stroke="#1e3a5f" stroke-opacity=".09" stroke-width="18"/>
+    <path d="M-30 900 C 290 812, 520 762, 1230 748" fill="none" stroke="#ef6c1f" stroke-opacity=".12" stroke-width="13"/>
+    <path d="M-30 44 C 320 104, 560 132, 1230 112" fill="none" stroke="#1e3a5f" stroke-opacity=".06" stroke-width="16"/>
+  </svg>
+</div>
+
+<div class="sheet">
+  <div class="top">
+    <img src="ez-mark-alpha.png" alt="">
+    <div class="handle">MYEZTOLL · PARTNER API</div>
+  </div>
+
+  <div class="head">Tolls, tickets and telematics —<br><em>one API call away.</em></div>
+  <div class="sub">30+ US agencies and Canada, matched to the car and the rental — <b>under your own IDs</b>.</div>
+
+  <div class="body">
+<div class="code"><div class="bar"><i></i><i></i><i></i></div><span class="m">GET</span> <span class="p">/api/partner/v1/tolls?bookingId=RES-1048</span>
+<span class="h">X-Api-Key: ••••••••••••</span>
+
+{ <span class="k">"items"</span>: [{
+    <span class="k">"source"</span>:       <span class="s">"agency"</span>,
+    <span class="k">"carId"</span>:        <span class="s">"VAN-07"</span>,
+    <span class="k">"agency"</span>:       <span class="s">"E-ZPass NJ"</span>,
+    <span class="k">"location"</span>:     <span class="s">"Exit 13A"</span>,
+    <span class="k">"agencyAmount"</span>: <span class="n">4.95</span>,
+    <span class="k">"serviceFee"</span>:   <span class="n">1.50</span>,
+    <span class="k">"bookingId"</span>:    <span class="s">"RES-1048"</span>
+}] }</div>
+
+    <div class="list">
+      <div class="row">Tolls <span>agency + GPS-matched</span></div>
+      <div class="row">Violations <span>parking &amp; camera tickets</span></div>
+      <div class="row">Cars, tags, drivers, bookings</div>
+      <div class="row">GPS &amp; telematics <span>live, tracks, mileage</span></div>
+      <div class="row">Charges, disputes, webhooks</div>
+      <div class="row new">Create owners <span class="tag">NEW</span></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div><b>Docs in 15 languages</b> · Swagger · sandbox</div>
+    <div class="url">myeztoll.com/api-docs</div>
+  </div>
+</div>
