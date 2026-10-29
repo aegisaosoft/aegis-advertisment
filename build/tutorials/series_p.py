@@ -3,8 +3,9 @@
 
 Since owner-web #654 (2026-10-19) the "+ Add booking plugin" picker on Settings → Booking Plugins is offered to
 partners as well as administrators; the API already accepted a partner for the owners whose OwnerBalances.PartnerId
-is that partner (OwnerRouteScope). What a partner still cannot do there — remove a plugin, or change one that is
-connected — stays with an administrator, and the episode says so.
+is that partner (OwnerRouteScope). Since owner-web #695 (2026-10-29) a partner also changes and removes a connected
+plugin (RentalStatusCard: the Turo login, one account, Disconnect), so the closing beat no longer sends them to us;
+the same release translated the tab label (pluginsPage.tabBooking: "Plugins de reservas" in Spanish).
 
 The frames (`prt-0N-*`, capture-partner.js) are the real dev portal with the session switched to a partner's in the
 browser, and DEMO DATA: two made-up owners ("Sunrise Car Rental", "Harbor Rentals") and a staged plugin list. Turning
@@ -126,10 +127,10 @@ EP51 = E(
           cam=look(BANNER, 2.0), ring=BANNER),
 
         B(en='Open Administration, then Settings, and the Booking Plugins tab.',
-          es='Abra Administración, luego Configuración, y la pestaña Booking Plugins.',
+          es='Abra Administración, luego Configuración, y la pestaña Plugins de reservas.',
           shot='prt-03-plugins-empty', url='/admin/settings', cam=look(ring('prt-03-plugins-empty', 'tab'), 1.6),
           ring=ring('prt-03-plugins-empty', 'tab'), point=at('prt-03-plugins-empty', 'tab'), click=1.4,
-          label_en='Settings · Booking Plugins', label_es='Configuración · Booking Plugins'),
+          label_en='Settings · Booking Plugins', label_es='Configuración · Plugins de reservas'),
 
         B(en='Nothing is on yet. Open Add booking plugin.',
           es='Todavía no hay nada activo. Abra Añadir plugin de reservas.',
@@ -161,8 +162,8 @@ EP51 = E(
              'acceso. Rellénelo y guárdelo.',
           cam=look(ring('prt-04-turo-enabled', 'add'), 1.8), ring=ring('prt-04-turo-enabled', 'add')),
 
-        B(en='To remove a plugin, or change one that is already connected, write to us.',
-          es='Para quitar un plugin, o cambiar uno que ya está conectado, escríbanos.',
+        B(en='You can also change or remove a plugin yourself, here or from the Partners page.',
+          es='También puede cambiar o quitar un plugin usted mismo, aquí o desde la página Socios.',
           cam=WIDE),
 
         B(en='When you are done, press the cross on the owner card, on the left, to go back to your own account.',

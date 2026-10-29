@@ -25,6 +25,7 @@ import series_n
 import series_o
 import series_p
 import series_q
+import series_r
 
 SERIES = [
     series_a.EP01, series_a.EP02,                   # find your way around, set the rules
@@ -45,6 +46,7 @@ SERIES = [
     series_o.EP46, series_o.EP47, series_o.EP48, series_o.EP49, series_o.EP50,  # Tesla
     series_p.EP51,                                # partners: plugins for the owners they brought
     series_q.EP52, series_q.EP53,                 # new 19.10: re-read Turo emails, refer a booking by hand
+    series_r.EP54,                                # partners: the Partners page — row menu, owner pages
 ]
 
 BY_NUM = dict((e.num, e) for e in SERIES)

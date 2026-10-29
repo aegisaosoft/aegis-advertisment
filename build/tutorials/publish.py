@@ -123,20 +123,23 @@ GROUPS = {
                   'Referencia: owner.myeztoll.com/api/partner/v1/index',
         },
     },
-    # PARTNERS (51): working for the owners a partner brought — turning on a booking plugin for them.
+    # PARTNERS (51, 54): working for the owners a partner brought — turning on a booking plugin for them, and the
+    # Partners page's row menu (payments, owner settings, booking plugins, visible pages).
     'partner-owners': {
-        'episodes': [51],
+        'episodes': [51, 54],
         'privacy': 'public',
         'title': {'en': 'Your Owners — MyEZToll Partner Guide',
                   'es': 'Sus propietarios — Guía para socios MyEZToll'},
         'description': {
-            'en': 'For MyEZToll partners: setting things up for the owners you brought. Choose the owner on '
-                  'the Dashboard, then turn on Turo or a booking system for them under Settings, Booking '
-                  'Plugins — without writing to us.\n\n'
+            'en': 'For MyEZToll partners: setting things up for the owners you brought. Turn on Turo or a '
+                  'booking system for them, change or remove it, and manage each owner from the Partners '
+                  'page: payment settings, owner settings, booking plugins and visible pages — without '
+                  'writing to us.\n\n'
                   'Portal: owner.myeztoll.com',
-            'es': 'Para socios de MyEZToll: configurar lo necesario para los propietarios que trajo. Elija al '
-                  'propietario en el Panel de control y actívele Turo o un sistema de reservas en '
-                  'Configuración, Booking Plugins, sin escribirnos.\n\n'
+            'es': 'Para socios de MyEZToll: configurar lo necesario para los propietarios que trajo. Actíveles '
+                  'Turo o un sistema de reservas, cámbielo o quítelo, y gestione a cada propietario desde la '
+                  'página Socios: ajustes de pago, configuración, plugins de reservas y páginas visibles, '
+                  'sin escribirnos.\n\n'
                   'Portal: owner.myeztoll.com',
         },
     },
@@ -276,6 +279,12 @@ def partner_only(entry):
 def video_privacy(entry):
     """An episode's own choice (E.privacy) wins; otherwise a partner episode is unlisted."""
     return entry.get('privacy') or ('unlisted' if partner_only(entry) else 'public')
+
+
+def in_series(entry):
+    """Whether the episode has a slot in the per-language series playlist. A partner episode does not:
+    it lives only in its topic playlist, so replacing it swaps the topic playlist entry alone."""
+    return not partner_only(entry)
 
 
 def add_to_series(yt, st, entry):
@@ -758,10 +767,6 @@ def replace(yt, queue, state, keys):
         if key not in queue:
             sys.exit('%s is not in the upload queue' % key)
         entry = queue[key]
-        if partner_only(entry):
-            # The slot swap below works on the series playlist, where a partner episode never is.
-            sys.exit('%s is a partner episode: replace it by hand in Studio (unlisted, topic '
-                     'playlist only) -- --replace does not handle those yet' % key)
         st = begin_replace(state, key)
         save_state(state)
         old = st['replaces']
@@ -775,6 +780,11 @@ def replace(yt, queue, state, keys):
                 print('      video %s' % st['videoId'])
             if not st.get('caption'):
                 st['caption'] = upload_caption(yt, st['videoId'], key, entry['lang'])
+                save_state(state)
+            if not st.get('playlist') and not in_series(entry):
+                # A partner episode has no series slot; add_to_groups / drop_from_groups below
+                # swap it in its topic playlist.
+                st['playlist'] = True
                 save_state(state)
             if not st.get('playlist'):
                 old_item = playlist_item_of(yt, pl, old)
