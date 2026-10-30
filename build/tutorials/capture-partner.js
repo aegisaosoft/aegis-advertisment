@@ -13,8 +13,9 @@
  */
 
 /*
- * Screenshots for episode 51 (a partner turns on a booking plugin for an owner they brought), from the
- * DEV portal, with DEMO DATA.
+ * Screenshots for episode 51 (a partner turns on a booking plugin for an owner they brought) and episode 54
+ * (the Partners page: the row menu and the owner's Owner Settings / Booking Plugins / Page Visibility pages),
+ * from the DEV portal, with DEMO DATA.
  *
  * The frames show the portal as a PARTNER sees it. The session underneath is whatever account is signed in
  * on dev-owner (an administrator is fine): the persisted auth state is switched to partner-only in the
@@ -22,9 +23,10 @@
  * Who the partner's owners are, and which booking plugins the server has loaded, are staged here — two
  * made-up rental companies and a plugin list — so no real owner's name or email reaches a frame.
  *
- * READ-ONLY BY CONSTRUCTION. The one write the episode shows — "+ Add booking plugin" → Turo, a PUT — is
+ * READ-ONLY BY CONSTRUCTION. The one write episode 51 shows — "+ Add booking plugin" → Turo, a PUT — is
  * answered here with success and never reaches the server; every other request to the API that is not a
- * GET is aborted before it leaves the browser.
+ * GET is aborted before it leaves the browser. Episode 54 shows no write at all: its Turo card (connected,
+ * two accounts) and the partner's owner list are staged answers to GETs.
  *
  * Usage:
  *   node capture-partner.js --cdp=9223
@@ -80,8 +82,20 @@ const fleet = (platformId, platformName) => ({
   supportsBookingSync: true, supportsFleetSync: true, supportsCustomerSync: true, supportsWebhooks: false,
   supportsBookingCreate: false, regions: [],
 });
+// Episode 54: Turo already connected for the owner, with two Turo accounts, so the card shows everything a
+// partner can now change — the login, removing one account, Disconnect.
+const TURO_LOGIN = 'sunrise.rentals@mail.myeztoll.com';
+const TURO_ACCOUNTS = {
+  supportsMultipleAccounts: true,
+  accounts: [
+    { accountKey: 'acct-1', login: TURO_LOGIN, isDefault: true, connected: true },
+    { accountKey: 'acct-2', login: 'sunrise.airport@mail.myeztoll.com', isDefault: false, connected: true },
+  ],
+};
 const PLUGINS = (turoOn) => [
-  rental('turo', 'Turo', turoOn),
+  turoOn === 'connected'
+    ? { ...rental('turo', 'Turo', true), connected: true, login: TURO_LOGIN }
+    : rental('turo', 'Turo', turoOn),
   fleet('hq', 'HQ Rental Software'),
   fleet('fleetwire', 'Fleetwire'),
   fleet('wheelbase', 'Wheelbase'),
@@ -180,6 +194,9 @@ const MEASURE_FN = function (want) {
     let el = null;
     if (kind === 'tag') {
       el = Array.from(document.querySelectorAll(text)).find(vis) || null;
+    } else if (kind === 'row' || kind === 'rowbtn') {
+      const row = Array.from(document.querySelectorAll('tr')).filter(vis).find((r) => norm(r.textContent).includes(t)) || null;
+      el = row && kind === 'rowbtn' ? row.querySelector('button') : row;
     } else if (kind === 'btn') {
       el = Array.from(document.querySelectorAll('button, a, select, input'))
         .filter(vis).find((b) => norm(b.textContent).startsWith(t) || norm(b.value) === t);
@@ -198,7 +215,16 @@ const MEASURE_FN = function (want) {
       }
     }
     if (!el) return;
-    const r = el.getBoundingClientRect();
+    // Clip to the scrolling box around it — a table row is wider than the list when the list scrolls sideways.
+    let { left, top, right, bottom } = el.getBoundingClientRect();
+    for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+      if (!/(auto|scroll|hidden)/.test(getComputedStyle(a).overflowX)) continue;
+      const c = a.getBoundingClientRect();
+      left = Math.max(left, c.left); right = Math.min(right, c.right);
+      top = Math.max(top, c.top); bottom = Math.min(bottom, c.bottom);
+    }
+    right = Math.min(right, W);
+    const r = { left, top, width: right - left, height: bottom - top };
     out[key] = [r.left / W, r.top / H, r.width / W, r.height / H].map((v) => Math.round(v * 10000) / 10000);
   });
   return out;
@@ -214,6 +240,42 @@ const clickButton = (text) => async (page) => {
   }, text);
   if (!ok) throw new Error(`no button "${text}"`);
   await sleep(1500);
+};
+
+/** Right-click the table row that holds `text` — the row menu of the Partners list. A real mouse click, so
+ *  React's onContextMenu sees it the way a person's would. */
+const rightClickRow = (text) => async (page) => {
+  const at = await page.evaluate((t) => {
+    const norm = (s) => (s || '').replace(/\s+/g, ' ').trim().toLowerCase();
+    const vis = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+    const row = Array.from(document.querySelectorAll('tr')).filter(vis).find((r) => norm(r.textContent).includes(norm(t)));
+    if (!row) return null;
+    const cell = row.querySelectorAll('td')[2] || row;
+    const r = cell.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2, hit: (document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2) || {}).tagName };
+  }, text);
+  if (!at) throw new Error(`no row "${text}"`);
+  // The list may still be re-rendering from its first fetch, which swallows an early click — try again.
+  for (let i = 0; i < 4; i += 1) {
+    await page.mouse.click(at.x, at.y, { button: 'right' });
+    await sleep(900);
+    if (await page.evaluate(() => !!document.querySelector('div.fixed.w-56'))) return;
+    const diag = await page.evaluate((x, y) => {
+      let fired = 0;
+      const on = () => { fired += 1; };
+      window.addEventListener('contextmenu', on, true);
+      const el = document.elementFromPoint(x, y);
+      el && el.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 2 }));
+      window.removeEventListener('contextmenu', on, true);
+      return { fired, el: el && el.outerHTML.slice(0, 120), fixed: Array.from(document.querySelectorAll('.fixed')).map((d) => d.className).slice(0, 5) };
+    }, at.x, at.y);
+    await sleep(700);
+    if (await page.evaluate(() => !!document.querySelector('div.fixed.w-56'))) return;
+    console.log(`  row menu not open (try ${i + 1})`, JSON.stringify(diag));
+    await page.keyboard.press('Escape');
+    await sleep(1500);
+  }
+  throw new Error('row menu did not open');
 };
 
 /** Choose an option in the select that offers it (the owner picker, the plugin picker). */
@@ -246,7 +308,9 @@ const chooseOwner = (name) => async (page) => {
 // ------------------------------------------------------------------ the screens
 
 function screens(L) {
-  const pluginsTab = clickButton('Booking Plugins');
+  // The tab label is translated since owner-web #695 ("Plugins de reservas" in Spanish).
+  const pluginsLabel = L('pluginsPage.tabBooking', 'Booking Plugins');
+  const pluginsTab = clickButton(pluginsLabel);
   const myAccount = L('dashboard.partnerMyAccount', 'My account');
   return [
     // Dashboard, "My account" still selected: the Select Owner card is the point.
@@ -258,14 +322,57 @@ function screens(L) {
         ['banner', '.selected-owner-banner', 'tag']] },
     // Settings → Booking Plugins, nothing on yet: the "+ Add booking plugin" picker.
     { name: 'prt-03-plugins-empty', path: '/admin/settings', selected: true, banner: true, turo: false, steps: [pluginsTab],
-      measure: [['tab', 'Booking Plugins', 'btn'], ['add', L('pluginsSettings.ownerBooking.addPlugin', '+ Add booking plugin'), 'select'],
+      measure: [['tab', pluginsLabel, 'btn'], ['add', L('pluginsSettings.ownerBooking.addPlugin', '+ Add booking plugin'), 'select'],
         ['banner', '.selected-owner-banner', 'tag']] },
     // Turo picked: the card appears with "Turo enabled for this owner".
     { name: 'prt-04-turo-enabled', path: '/admin/settings', selected: true, banner: true, turo: false,
       steps: [pluginsTab, choose('Turo')],
-      measure: [['tab', 'Booking Plugins', 'btn'], ['add', L('pluginsSettings.ownerBooking.addPlugin', '+ Add booking plugin'), 'select'],
+      measure: [['tab', pluginsLabel, 'btn'], ['add', L('pluginsSettings.ownerBooking.addPlugin', '+ Add booking plugin'), 'select'],
         ['card', 'Turo', 'box'], ['toast', '[role="status"]', 'tag']] },
+
+    // ---- episode 54: Partnership → Partners, the row menu, and the three pages it opens
+    { name: 'prt-05-partners-list', path: '/partners', selected: false, steps: [],
+      measure: [['title', 'h1', 'tag'], ['row', 'Sunrise', 'row'], ['dots', 'Sunrise', 'rowbtn'],
+        ['search', 'input[placeholder]', 'tag']] },
+    { name: 'prt-06-row-menu', path: '/partners', selected: false, steps: [rightClickRow('Sunrise')],
+      measure: [['row', 'Sunrise', 'row'], ['menu', 'div.fixed.w-56', 'tag'],
+        ['payment', L('partnersPage.paymentSettings', 'Payment Settings'), 'btn'],
+        ['owner', L('ownerSettingsPage.ownerSettingsTab', 'Owner Settings'), 'btn'],
+        ['plugins', L('pluginsPage.tabBooking', 'Booking Plugins'), 'btn'],
+        ['visibility', L('ownerSettingsPage.pageVisibilityTab', 'Page Visibility'), 'btn']] },
+    { name: 'prt-07-owner-settings', path: '/partners', selected: false,
+      steps: [rightClickRow('Sunrise'), clickButton(L('ownerSettingsPage.ownerSettingsTab', 'Owner Settings')), settle],
+      measure: [['title', 'h1', 'tag'], ['owner', 'h1 + p', 'tag'], ['save', L('ownerSettingsPage.save', 'Save'), 'btn']] },
+    { name: 'prt-08-owner-plugins', path: '/partners', selected: false, turo: 'connected',
+      steps: [rightClickRow('Sunrise'), clickButton(L('pluginsPage.tabBooking', 'Booking Plugins')), settle,
+        hideText('TuroActivator')],
+      measure: [['title', 'h1', 'tag'], ['owner', 'h1 + p', 'tag'], ['card', 'Turo', 'box'],
+        ['login', 'input[type="email"]', 'tag'],
+        ['accounts', L('pluginsSettings.bookingCards.connectedAccounts', 'Connected Turo accounts'), 'text'],
+        ['remove', `button[title="${L('pluginsSettings.bookingCards.removeAccount', 'Remove account')}"]`, 'tag'],
+        ['disconnect', L('pluginsSettings.bookingCards.disconnect', 'Disconnect'), 'btn'],
+        ['add', L('pluginsSettings.ownerBooking.addPlugin', '+ Add booking plugin'), 'select']] },
+    { name: 'prt-09-owner-visibility', path: '/partners', selected: false,
+      steps: [rightClickRow('Sunrise'), clickButton(L('ownerSettingsPage.pageVisibilityTab', 'Page Visibility')), settle],
+      measure: [['title', 'h1', 'tag'], ['owner', 'h1 + p', 'tag'],
+        ['preset', L('ownerSettingsPage.visibilityPresetPlaceholder', 'Choose a preset…'), 'select'],
+        ['save', L('ownerSettingsPage.save', 'Save'), 'btn']] },
   ];
+}
+
+/** Drop the paragraph holding `text` — for a line only an administrator sees (the frames run as admin, the
+ *  viewer is a partner). */
+const hideText = (text) => async (page) => {
+  await page.evaluate((t) => {
+    Array.from(document.querySelectorAll('p, div')).filter((e) => e.children.length === 0 && e.textContent.includes(t))
+      .forEach((e) => e.remove());
+  }, text);
+};
+
+/** The owner pages load their own data after the client-side navigation. */
+async function settle(page) {
+  await waitForApp(page);
+  await sleep(SETTLE_MS);
 }
 
 // ------------------------------------------------------------------ run
@@ -305,6 +412,12 @@ function screens(L) {
     if (current && m === 'GET' && /\/OwnerTollBalance\/my-partnership-owners(\?|$)/i.test(url)) {
       return json({ result: OWNERS, reason: 0 });
     }
+    if (current && m === 'GET' && /\/OwnerTollBalance\/my-partnership-owners-paged(\?|$)/i.test(url)) {
+      return json({ result: { items: OWNERS, totalCount: OWNERS.length, page: 1, pageSize: 10 }, reason: 0 });
+    }
+    if (current && m === 'GET' && /\/api\/owners\/[^/]+\/booking-plugins\/turo\/accounts(\?|$)/.test(url)) {
+      return json(turoOn === 'connected' ? TURO_ACCOUNTS : { supportsMultipleAccounts: false, accounts: [] });
+    }
     if (current && m === 'GET' && /\/api\/owners\/[^/]+\/booking-plugins(\?|$)/.test(url)) {
       return json(PLUGINS(turoOn));
     }
@@ -331,7 +444,7 @@ function screens(L) {
     for (const s of list) {
       process.stdout.write(`[${lang}] ${s.name}\n`);
       current = s;
-      turoOn = !!s.turo;
+      turoOn = s.turo === 'connected' ? 'connected' : !!s.turo;
       try {
         await page.goto(`${BASE}/dashboard`, { waitUntil: 'domcontentloaded' });
         await page.evaluate(STAGE_SESSION_FN, PARTNER, s.selected ? SELECTED : null, s.banner ? 'demo-partner' : null);

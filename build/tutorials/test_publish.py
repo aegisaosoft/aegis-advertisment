@@ -32,6 +32,11 @@ def test_begin_replace_refuses_unpublished():
         return
     raise AssertionError('expected ValueError')
 
+def test_partner_episode_has_no_series_slot_so_replace_swaps_only_its_topic_playlist():
+    assert not publish.in_series({'audience': 'partner', 'lang': 'en', 'num': 51})
+    assert publish.in_series({'lang': 'en', 'num': 9})
+
+
 def test_refresh_plan_puts_new_episodes_first_and_skips_done():
     import publish as p
     queue = {'a-01-x-en': {'num': 1, 'lang': 'en'}, 'a-02-x-en': {'num': 2, 'lang': 'en'},
