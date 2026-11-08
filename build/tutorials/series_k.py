@@ -159,6 +159,34 @@ EP32 = E(
              'expediente pasa a Aprobado y le ofrece un archivo para descargar y enviar usted.',
           shot='col-12-approved', cam=(0.5, 0.20, 1.10),
           label_en='Approved', label_es='Aprobados'),
+
+        # 2026-11-08 (owner-web #711/#713, API 3.0.302): a refusal says why, with the agency's link, and the case
+        # can be placed again; a placed case shows the agency's case number and that the driver's invoice is closed.
+        B(en='Sometimes the agency refuses a case. Refused shows why, in the agency\'s own words, with a '
+             'link to the page where they want something fixed.',
+          es='A veces la agencia rechaza un expediente. Rechazados por la agencia muestra por qué, en '
+             'palabras de la agencia, con un enlace a la página donde piden corregir algo.',
+          shot='nov-10-col-refused', cam={'en': (0.62, 0.20, 1.45), 'es': (0.62, 0.20, 1.45)},
+          ring={'en': (0.686, 0.146, 0.208, 0.096), 'es': (0.694, 0.146, 0.215, 0.096)},
+          label_en='Refused', label_es='Rechazado por la agencia'),
+
+        B(en='Fix it, then press Place again. You are asked to confirm, and the case goes back to the '
+             'agency within the hour.',
+          es='Corríjalo y pulse Enviar de nuevo. Se le pide confirmación, y el expediente vuelve a la '
+             'agencia en menos de una hora.',
+          cam={'en': (0.62, 0.20, 1.45), 'es': (0.62, 0.20, 1.45)},
+          ring={'en': (0.686, 0.216, 0.050, 0.024), 'es': (0.694, 0.216, 0.065, 0.024)},
+          point={'en': (0.711, 0.228), 'es': (0.727, 0.228)}, click=1.2),
+
+        B(en='Once the agency has it, With the agency shows its case number — the one to quote when you '
+             'call them — and that the driver\'s invoice is closed: from now on the debt is paid through '
+             'the agency, not to you.',
+          es='Cuando la agencia lo tiene, En la agencia muestra su número de expediente, el que debe citar '
+             'si les llama, y que la factura del conductor está cerrada: desde ahora la deuda se paga a '
+             'través de la agencia, no a usted.',
+          shot='nov-11-col-placed', cam={'en': (0.70, 0.19, 1.45), 'es': (0.70, 0.19, 1.45)},
+          ring={'en': (0.660, 0.160, 0.248, 0.064), 'es': (0.633, 0.160, 0.300, 0.064)},
+          label_en='With the agency', label_es='En la agencia'),
     ])
 
 
