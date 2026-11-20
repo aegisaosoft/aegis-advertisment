@@ -28,6 +28,7 @@ import series_q
 import series_r
 import series_s
 import series_t
+import series_u
 
 SERIES = [
     series_a.EP01, series_a.EP02,                   # find your way around, set the rules
@@ -51,6 +52,34 @@ SERIES = [
     series_r.EP54,                                # partners: the Partners page — row menu, owner pages
     series_s.EP55, series_s.EP56,                 # integrations: FleetBold, Fleetwire
     series_t.EP57,                                # new 07.11: a ticket that came by mail
+    series_u.EP58,                                # new 19.11: transfer a notice to the renter
 ]
 
 BY_NUM = dict((e.num, e) for e in SERIES)
+
+
+def _load_translations():
+    """Add the languages in langs/<lang>_<range>.py: EPISODES = {num: dict(title, sub, lines)}.
+
+    A language other than English and Spanish lives in its own file per batch of episodes, so a batch can
+    be added without touching the series files.
+    """
+    import importlib.util
+    import io
+    import os
+    import re
+    here = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'langs')
+    if not os.path.isdir(here):
+        return
+    for fn in sorted(os.listdir(here)):
+        m = re.match(r'^([a-z]{2}(?:-[A-Za-z]+)?)_\w+\.py$', fn)
+        if not m:
+            continue
+        spec = importlib.util.spec_from_file_location('langs_' + fn[:-3], os.path.join(here, fn))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        for num, t in mod.EPISODES.items():
+            BY_NUM[num].translate(m.group(1), t['title'], t['sub'], t['lines'])
+
+
+_load_translations()

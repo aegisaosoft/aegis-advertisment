@@ -43,7 +43,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 /** Every ep<NN>.<lang>.html build.py has written, as {num, lang, slug}. */
 function built() {
   return fs.readdirSync(HERE)
-    .map((f) => /^ep(\d\d)\.(en|es)\.html$/.exec(f))
+    .map((f) => /^ep(\d\d)\.([a-z]{2})\.html$/.exec(f))
     .filter(Boolean)
     .map((m) => ({ num: Number(m[1]), lang: m[2], file: m[0] }))
     .sort((a, b) => a.num - b.num || a.lang.localeCompare(b.lang));
@@ -147,7 +147,7 @@ async function stills(entry, seconds) {
   const args = process.argv.slice(2);
   const wantStills = args.includes('--stills');
   const nums = args.filter((a) => /^\d+$/.test(a)).map(Number);
-  const langs = args.filter((a) => a === 'en' || a === 'es');
+  const langs = args.filter((a) => /^[a-z]{2}$/.test(a));
 
   if (wantStills) {
     const entries = built().filter((e) => (!langs.length || langs.includes(e.lang)));

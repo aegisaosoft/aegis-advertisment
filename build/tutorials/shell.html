@@ -103,6 +103,9 @@
   .card .eyebrow { font-size: 24px; font-weight: 700; letter-spacing: .22em; color: #a893ff; text-transform: uppercase; }
   .card h1 { font-size: 86px; font-weight: 700; letter-spacing: -.03em; line-height: 1.04; max-width: 1400px; margin: 26px 0 0; }
   .card .sub { margin-top: 26px; font-size: 30px; color: #cfc7f5; font-weight: 400; }
+  /* Persian and Urdu run right to left: each line takes its direction from its own first
+     letter, so a Latin line is laid out exactly as before. */
+  .card h1, .card .sub, .card .eyebrow, #lower { unicode-bidi: plaintext; }
   .card .rule { width: 132px; height: 5px; border-radius: 3px; background: var(--violet); margin-top: 40px; }
   #end h1 { font-size: 66px; }
   #end .sub { font-size: 34px; color: #fff; }

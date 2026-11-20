@@ -20,11 +20,16 @@ label — needs writing out per language, as `{'en': ..., 'es': ...}`.
 
 
 class B(object):
-    """One beat: a line of narration and the screen that goes with it."""
+    """One beat: a line of narration and the screen that goes with it.
+
+    English and Spanish are the two the series is written in. Any other language rides
+    along as keyword arguments named by its code — `tr='…'`, `say_tr='…'`, `label_tr='…'`
+    — or is added to a whole episode at once with `E.translate`.
+    """
 
     def __init__(self, en, es, shot=None, url=None, cam=(0.5, 0.5, 1.0),
                  point=None, click=None, ring=None, ring_out=None,
-                 label_en=None, label_es=None, hold=0.0, say_en=None, say_es=None):
+                 label_en=None, label_es=None, hold=0.0, say_en=None, say_es=None, **more):
         # What the subtitle shows. `say` is what the voice reads, when the two differ:
         # a subtitle wants "owner.myeztoll.com" and a narrator wants it spelled out.
         self.text = {'en': en, 'es': es}
@@ -38,6 +43,18 @@ class B(object):
         self.ring_out = ring_out
         self.label = {'en': label_en, 'es': label_es}
         self.hold = hold          # extra seconds held after the line, for a busy screen
+        # Whether this beat names its own caption (the ones after it inherit it).
+        self.own_label = label_en is not None
+        for key, value in more.items():
+            if key.startswith('say_'):
+                self.say[key[4:]] = value
+            elif key.startswith('label_'):
+                self.label[key[6:]] = value
+            elif key in LANGS:
+                self.text[key] = value
+                self.say.setdefault(key, value)
+            else:
+                raise TypeError('unknown beat argument %r' % key)
 
 
 class E(object):
@@ -74,6 +91,37 @@ class E(object):
             else:
                 label = b.label
 
+    @property
+    def langs(self):
+        """The languages this episode can be built in: every one it has a title for."""
+        return [lang for lang in LANGS if (self.title.get(lang) or '').strip()]
+
+    def translate(self, lang, title, sub, lines):
+        """Add a language to the whole episode.
+
+        `lines` has one entry per beat, in order: the subtitle as a string, or a dict
+        {'text': …, 'say': …, 'label': …}. A beat that names its own caption in English
+        needs a 'label'; the beats after it inherit it, as they do in English.
+        """
+        if len(lines) != len(self.beats):
+            raise ValueError('ep%02d %s: %d lines for %d beats' % (self.num, lang, len(lines), len(self.beats)))
+        self.title[lang] = title
+        self.sub[lang] = sub
+        for b, line in zip(self.beats, lines):
+            line = {'text': line} if isinstance(line, str) else line
+            b.text[lang] = line['text']
+            b.say[lang] = line.get('say') or line['text']
+            if b.own_label:
+                if not line.get('label'):
+                    raise ValueError('ep%02d %s: a beat with its own caption needs a label' % (self.num, lang))
+                # Inheriting beats share this dict, so they inherit the new language too.
+                b.label[lang] = line['label']
+
+
+# The languages the pipeline knows, in the order they are built. Every episode has 'en' and
+# 'es'; the others are added per episode (E.translate). RTL are written right to left.
+LANGS = ('en', 'es', 'tr', 'uk', 'uz', 'ka', 'hy', 'fa', 'ur')
+RTL = ('fa', 'ur')
 
 # The eyebrow over the title card of a partner episode (see E.audience).
 PARTNER_EYEBROW = {'en': 'MyEZToll · Partner Guide', 'es': 'MyEZToll · Guía para socios'}
@@ -86,4 +134,25 @@ CARD = {
     'es': {'eyebrow': 'MyEZToll · Portal del Propietario',
            'end_title': 'Y eso es todo.',
            'end_sub': 'La guía escrita cubre cada campo de cada pantalla.'},
+    'tr': {'eyebrow': 'MyEZToll · Sahip Portalı',
+           'end_title': 'Hepsi bu kadar.',
+           'end_sub': 'Yazılı kılavuz her ekrandaki her alanı anlatır.'},
+    'uk': {'eyebrow': 'MyEZToll · Портал власника',
+           'end_title': 'Ось і все.',
+           'end_sub': 'Письмовий посібник описує кожне поле на кожному екрані.'},
+    'uz': {'eyebrow': 'MyEZToll · Egasi portali',
+           'end_title': 'Hammasi shu.',
+           'end_sub': 'Yozma qo‘llanma har bir ekrandagi har bir maydonni tushuntiradi.'},
+    'ka': {'eyebrow': 'MyEZToll · მფლობელის პორტალი',
+           'end_title': 'სულ ეს არის.',
+           'end_sub': 'წერილობითი სახელმძღვანელო აღწერს ყველა ველს ყველა ეკრანზე.'},
+    'hy': {'eyebrow': 'MyEZToll · Սեփականատիրոջ պորտալ',
+           'end_title': 'Այսքանը։',
+           'end_sub': 'Գրավոր ուղեցույցը նկարագրում է յուրաքանչյուր էկրանի յուրաքանչյուր դաշտ։'},
+    'fa': {'eyebrow': 'پورتال مالک · MyEZToll',   # RTL: the Persian first, so the line runs right to left
+           'end_title': 'همین بود.',
+           'end_sub': 'راهنمای نوشتاری همهٔ فیلدهای هر صفحه را توضیح می‌دهد.'},
+    'ur': {'eyebrow': 'مالک پورٹل · MyEZToll',
+           'end_title': 'بس اتنا ہی۔',
+           'end_sub': 'تحریری گائیڈ ہر اسکرین کے ہر خانے کی وضاحت کرتی ہے۔'},
 }
