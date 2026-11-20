@@ -144,6 +144,12 @@ function verify(rawBody, header, secret) {
   { name: 'api-21-evidence', fn: 'GET /disputes/{id}',
     hl: { rec: '"recommendation"', ev: '"evidence": {', file: '"fileId": "9f1c' } },
   { name: 'api-22-dispute-patch', fn: 'PATCH /disputes/{id}', hl: { status: '"status"' } },
+  // 1.5 (2026-11-07): a ticket that came by mail — save it, read it off a photo, ask the agency portal again.
+  { name: 'api-23-notice-create', fn: 'POST /violations', compactBody: true,
+    hl: { car: '"carId": "5d73', issued: '"issueDateUtc"', booking: '"bookingId"', lookup: '"outcome"' } },
+  { name: 'api-24-notice-read', fn: 'POST /violations/notice/read',
+    hl: { file: 'file=@ticket.jpg', citation: '"citationNumber"', pin: '"pin"', issued: '"issuedLocal"', plate: '"licensePlate"' } },
+  { name: 'api-25-notice-lookup', fn: 'POST /violations/{id}/lookup', hl: { outcome: '"outcome"', paid: '"isPaid": true' } },
 ];
 
 // ---------------------------------------------------------------- rendering

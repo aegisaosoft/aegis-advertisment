@@ -35,6 +35,16 @@ VOICES = {
     'en': ('Alice', 'Xb7hH8MSUJpSbSDYk0k2'),
     'es': ('Terry', 'Y4K0Zmn5yVLFKu1SopbT'),
 }
+# The pilot languages (episode 58): Alice, through the model that speaks all of them.
+for _lang in ('tr', 'uk', 'uz', 'ka', 'hy', 'fa', 'ur'):
+    VOICES[_lang] = ('Alice', 'Xb7hH8MSUJpSbSDYk0k2')
+# English and Spanish stay on the model they were recorded with.
+MODELS = {'en': MODEL, 'es': MODEL}
+NEW_MODEL = 'eleven_v4'
+
+
+def model_for(lang):
+    return MODELS.get(lang, NEW_MODEL)
 
 # Steadier than the advertising read: this voice is explaining a procedure, not selling.
 SETTINGS = {'stability': 0.55, 'similarity_boost': 0.80, 'style': 0.05, 'use_speaker_boost': True}
@@ -56,10 +66,13 @@ def key():
     sys.exit('ELEVENLABS_API_KEY not set and no _elevenlabs.key.txt')
 
 
-def speak(voice_id, text):
+def speak(voice_id, text, model=MODEL, language=None):
+    body = {'text': text, 'model_id': model, 'voice_settings': SETTINGS}
+    if language and model != MODEL:
+        body['language_code'] = language
     req = urllib.request.Request(
         '%s/v1/text-to-speech/%s?output_format=mp3_44100_128' % (BASE, voice_id),
-        data=json.dumps({'text': text, 'model_id': MODEL, 'voice_settings': SETTINGS}).encode(),
+        data=json.dumps(body).encode(),
         method='POST',
     )
     req.add_header('xi-api-key', key())
@@ -82,7 +95,7 @@ def clip_path(lang, ep, i):
 def main(argv):
     force = '--force' in argv
     argv = [a for a in argv if a != '--force']
-    langs = [a for a in argv if a in VOICES] or ['en', 'es']
+    langs = [a for a in argv if a in VOICES] or list(VOICES)
     nums = [int(a) for a in argv if a.isdigit()]
     series = [e for e in episodes.SERIES if not nums or e.num in nums]
 
@@ -90,6 +103,8 @@ def main(argv):
     for lang in langs:
         name, voice_id = VOICES[lang]
         for ep in series:
+            if lang not in ep.langs:
+                continue
             out_dir = os.path.dirname(clip_path(lang, ep, 0))
             os.makedirs(out_dir, exist_ok=True)
             print('ep%02d %s  %s  %s' % (ep.num, ep.slug, lang, name))
@@ -99,7 +114,7 @@ def main(argv):
                 if os.path.exists(path) and not force:
                     print('    %02d  have' % i)
                     continue
-                audio = speak(voice_id, text)
+                audio = speak(voice_id, text, model_for(lang), lang)
                 io.open(path, 'wb').write(audio)
                 spent += len(text)
                 print('    %02d  %4d chars  %6.1f KB' % (i, len(text), len(audio) / 1024.0))

@@ -209,6 +209,26 @@ EP10 = E(
 
 
 # =============================================================================== 11
+# Re-shot 2026-11-08 on the current page (nov-01/02, capture-nov-features.js, demo rows): the Find Violations scan,
+# the Date/Time/Car/Citation/Amount/Location/Agency columns, the Pay link, the row menu Info / Bookings / Paid by cash,
+# and the new Add mailed ticket button (episode 57).
+_V_FIND = {'en': (0.660, 0.098, 0.118, 0.048), 'es': (0.660, 0.098, 0.139, 0.048)}
+_V_ADD = {'en': (0.776, 0.098, 0.131, 0.048), 'es': (0.798, 0.098, 0.147, 0.048)}
+_V_WHEN = (0.306, 0.318, 0.146, 0.192)
+_V_CAR = (0.458, 0.318, 0.142, 0.192)
+_V_CIT = (0.598, 0.318, 0.134, 0.192)
+_V_WHERE = (0.762, 0.318, 0.224, 0.192)
+_V_PAY = (0.256, 0.380, 0.036, 0.032)
+_V_MENU = {'en': (0.215, 0.434, 0.106, 0.122), 'es': (0.215, 0.434, 0.106, 0.142)}
+
+
+def _vlook(r, z):
+    if isinstance(r, dict):
+        return dict((k, _vlook(v, z)) for k, v in r.items())
+    x, y, w, h = r
+    return (round(x + w / 2, 4), round(y + h / 2, 4), round(max(1.0, min(z, 0.9 / w, 0.85 / h)), 3))
+
+
 EP11 = E(
     11, 'violations',
     'Violations', 'Multas',
@@ -217,10 +237,10 @@ EP11 = E(
     [
         B(en='Tolls and Violations, then Violations. These are camera tickets and citations — '
              'a different kind of debt from a toll, and worth its own screen.',
-          es='Peajes y Multas, y luego Multas. Estas son multas de cámara y citaciones: una '
+          es='Peajes e infracciones, y luego Infracciones. Estas son multas de cámara y citaciones: una '
              'clase de deuda distinta de un peaje, y merece su propia pantalla.',
-          shot='63-violations', url='/violations', cam=(0.5, 0.42, 1.0),
-          label_en='Violations', label_es='Multas'),
+          shot='nov-01-violations', url='/violations', cam=(0.5, 0.42, 1.0),
+          label_en='Violations', label_es='Infracciones'),
 
         B(en='The first thing to understand is timing. A toll shows up within days. A '
              'violation is published by the issuing authority weeks later — often a week and a '
@@ -231,58 +251,60 @@ EP11 = E(
           cam=(0.5, 0.42, 1.0)),
 
         B(en='Which means a booking can be finished, the car returned and the driver gone, and '
-             'the ticket only appears afterwards. That is normal, and it is why this list is '
-             'checked on its own schedule.',
+             'the ticket only appears afterwards. That is normal: the system keeps looking on its own.',
           es='Lo que significa que una reserva puede estar terminada, el coche devuelto y el '
-             'conductor lejos, y la multa aparecer solo después. Eso es normal, y por eso esta '
-             'lista se revisa con su propio ritmo.',
+             'conductor lejos, y la multa aparecer solo después. Es normal: el sistema sigue buscando '
+             'por su cuenta.',
           cam=(0.5, 0.42, 1.0)),
 
-        B(en='Issue date is when the authority says the offence happened, not when it reached '
-             'you. Match it against your bookings by that date, never by today.',
-          es='La fecha de emisión es cuándo dice la autoridad que ocurrió la infracción, no '
-             'cuándo le llegó a usted. Cótejela con sus reservas por esa fecha, nunca por hoy.',
-          cam=(0.34, 0.42, 1.26),
-          ring=(0.276, 0.328, 0.100, 0.360),
-          label_en='Issue date', label_es='Fecha de emisión'),
+        B(en='Find Violations asks the agencies right now, for the dates you pick. The line under the '
+             'buttons says when the last search ran.',
+          es='Buscar infracciones pregunta a las agencias ahora mismo, para las fechas que elija. La línea '
+             'bajo los botones dice cuándo fue la última búsqueda.',
+          cam=_vlook(_V_FIND, 1.4), ring=_V_FIND,
+          label_en='Find Violations', label_es='Buscar infracciones'),
 
-        B(en='Plate and state, exactly as on the vehicle. This is the pair from episode five '
-             'again, and it is why getting the plate state right mattered.',
-          es='Matrícula y estado, exactamente como en el vehículo. Es el mismo par del '
-             'episodio cinco, y por eso importaba acertar con el estado de la matrícula.',
-          cam=(0.44, 0.42, 1.26),
-          ring=(0.360, 0.328, 0.120, 0.360)),
+        B(en='Date and time are when the authority says it happened, not when it reached you. That '
+             'moment is what ties the ticket to a booking.',
+          es='La fecha y la hora son cuándo dice la autoridad que ocurrió, no cuándo le llegó a usted. Ese '
+             'momento es lo que une la multa a una reserva.',
+          cam=_vlook(_V_WHEN, 1.3), ring=_V_WHEN,
+          label_en='Date and time', label_es='Fecha y hora'),
 
-        B(en='Agency is who issued it, and the range is wide: a city transport department, a '
-             'traffic authority, or a processing centre acting for one of them.',
-          es='Agencia es quién la emitió, y el abanico es amplio: un departamento municipal de '
-             'transporte, una autoridad de tráfico, o un centro de procesamiento que actúa '
-             'por cuenta de alguno de ellos.',
-          cam=(0.60, 0.42, 1.22),
-          ring=(0.509, 0.328, 0.192, 0.360),
-          label_en='Agency', label_es='Agencia'),
+        B(en='The car, with its plate and state exactly as on the vehicle — the pair from episode five.',
+          es='El coche, con su matrícula y estado exactamente como en el vehículo: el par del episodio '
+             'cinco.',
+          cam=_vlook(_V_CAR, 1.3), ring=_V_CAR,
+          label_en='Car', label_es='Vehículo'),
 
-        B(en='Citation number and address complete the record: the reference you quote when '
-             'you contest it, and where it happened.',
-          es='El número de citación y la dirección completan el registro: la referencia que '
-             'cita si la recurre, y dónde ocurrió.',
-          cam=(0.84, 0.42, 1.22),
-          ring=(0.718, 0.328, 0.240, 0.360)),
+        B(en='The citation number you quote if you contest it, and the amount.',
+          es='El número de citación que cita si la recurre, y el importe.',
+          cam=_vlook(_V_CIT, 1.3), ring=_V_CIT,
+          label_en='Citation and amount', label_es='Citación e importe'),
 
-        B(en='The status filter starts on three of them. If a violation you were told about '
-             'is not here, widen the filter before you assume it was missed.',
-          es='El filtro de estado empieza con tres. Si una multa de la que le hablaron no está '
-             'aquí, ensanche el filtro antes de suponer que se perdió.',
-          cam=(0.32, 0.24, 1.26),
-          point=(0.273, 0.238), click=1.4,
-          ring=(0.214, 0.216, 0.120, 0.040)),
+        B(en='Where it happened, and who issued it: a city transport department, a traffic authority, '
+             'or a processing centre acting for one of them.',
+          es='Dónde ocurrió, y quién la emitió: un departamento municipal de transporte, una autoridad de '
+             'tráfico, o un centro de procesamiento que actúa por cuenta de alguno de ellos.',
+          cam=_vlook(_V_WHERE, 1.25), ring=_V_WHERE,
+          label_en='Location and agency', label_es='Ubicación y organismo'),
 
-        B(en='And the row menu is where you charge it to the driver, or write it off. Most '
-             'fleets carry a handful at any time, and each one is a real amount of money '
-             'that will otherwise be yours.',
-          es='Y el menú de la fila es donde se lo cobra al conductor, o lo da por perdido. La '
-             'mayoría de las flotas tienen unas pocas en cualquier momento, y cada una es una '
-             'cantidad real de dinero que si no será suya.',
-          cam=(0.28, 0.42, 1.28),
-          point=(0.241, 0.409), click=1.3),
+        B(en="Pay opens the agency's own page for that ticket.",
+          es='Pagar abre la página de la propia agencia para esa multa.',
+          cam=_vlook(_V_PAY, 1.6), ring=_V_PAY,
+          label_en='Pay', label_es='Pagar'),
+
+        B(en='The three dots open the row menu. Info shows everything about the ticket, Bookings opens '
+             'the rental it belongs to, and Paid by cash is for a fine the driver paid you by hand.',
+          es='Los tres puntos abren el menú de la fila. Información muestra todo sobre la multa, Reservas abre '
+             'el alquiler al que pertenece, y Pagado en efectivo es para una multa que el conductor le '
+             'pagó en mano.',
+          shot='nov-02-row-menu', cam=_vlook(_V_MENU, 1.5), ring=_V_MENU,
+          point=(0.2255, 0.396), click=0.6,
+          label_en='Row menu', label_es='Menú de la fila'),
+
+        B(en='And a ticket that came by mail? Add mailed ticket — that is the next episode.',
+          es='¿Y una multa que llegó por correo? Añadir multa recibida: es el siguiente episodio.',
+          shot='nov-01-violations', cam=_vlook(_V_ADD, 1.4), ring=_V_ADD,
+          label_en='Add mailed ticket', label_es='Añadir multa recibida'),
     ])

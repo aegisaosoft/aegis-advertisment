@@ -253,23 +253,23 @@ EP08 = E(
           es='En la lista, tres columnas cuentan toda la historia. Contrato de alquiler '
              'muestra si está firmado, enviado, o si no hace falta.',
           cam=(0.36, 0.55, 1.22),
-          ring=(0.306, 0.366, 0.080, 0.424),
+          ring=(0.306, 0.366, 0.080, 0.470),
           label_en='Rental Agreement', label_es='Contrato de alquiler'),
 
         B(en='Status is the booking’s own state: Approved, Completed, Completed Early, '
              'Waiting for Card.',
           es='Estado es el estado propio de la reserva: Aprobada, Completada, Completada '
              'antes de tiempo, Esperando tarjeta.',
-          cam=(0.44, 0.55, 1.22),
-          ring=(0.386, 0.366, 0.082, 0.424),
+          cam=(0.53, 0.55, 1.22),
+          ring=(0.479, 0.366, 0.094, 0.470),
           label_en='Status', label_es='Estado'),
 
         B(en='And Toll Payments is the money: Succeeded, Failed, Not charged, Payment stuck. '
              'This is the column to scan every morning.',
           es='Y Pagos de peaje es el dinero: Correcto, Fallido, Sin cobrar, Pago atascado. '
              'Esta es la columna que hay que repasar cada mañana.',
-          cam=(0.54, 0.55, 1.22),
-          ring=(0.483, 0.366, 0.084, 0.424),
+          cam=(0.62, 0.55, 1.22),
+          ring=(0.577, 0.366, 0.086, 0.470),
           label_en='Toll Payments', label_es='Pagos de peaje'),
 
         B(en='A row like this one says it plainly: waiting for a card, nothing charged, and '
@@ -277,8 +277,8 @@ EP08 = E(
              'it is fixed.',
           es='Una fila como esta lo dice claro: esperando tarjeta, nada cobrado, y una '
              'condición aún sin cumplir. Esa reserva no cobrará nada hasta que se arregle.',
-          cam=(0.45, 0.60, 1.30),
-          ring=(0.386, 0.575, 0.184, 0.048)),
+          cam=(0.57, 0.52, 1.30),
+          ring=(0.479, 0.497, 0.183, 0.050)),
 
         B(en='The three dots on a row open everything you can do to that booking.',
           es='Los tres puntos de una fila abren todo lo que puede hacerle a esa reserva.',

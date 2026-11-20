@@ -257,8 +257,8 @@ EP43 = E(
     43, 'api-tolls-fines',
     'Partner API 3: tolls and fines',
     'API para socios 3: peajes y multas',
-    'What each field means, whether the driver paid, and reading every page',
-    'Qué significa cada campo, si el conductor pagó, y cómo leer todas las páginas',
+    'What each field means, whether the driver paid, every page, and tickets that come by mail',
+    'Qué significa cada campo, si el conductor pagó, todas las páginas, y las multas por correo',
     [
         B(en='GET /tolls returns every priced toll in a period, from the toll agencies and from GPS.',
           es='GET /tolls devuelve cada peaje con precio de un periodo, de las agencias de peaje y '
@@ -317,6 +317,47 @@ EP43 = E(
           shot='api-13-violations', cam=look(box('api-13-violations', 'res'), 1.2),
           ring=join(line('api-13-violations', 'amount'), line('api-13-violations', 'paid')),
           label_en='GET /violations', label_es='GET /violations'),
+
+        # 1.5 (2026-11-07): mailed tickets. Facts: PartnerViolationsController / ViolationNoticeEntryService —
+        # carId is the partner's own id, issuedLocal is the agency's wall clock, the ticket lands on the
+        # booking that had the car, the portal is asked within 60 s, 409 returns the ticket already on file;
+        # notice/read saves nothing; outcomes found / not_found / no_plugin / timeout / skipped.
+        B(en='A ticket that came by mail? Send it with POST /violations. carId is your own car id.',
+          es='¿Una multa que llegó por correo? Envíela con POST /violations. carId es su propio id de '
+             'coche.',
+          shot='api-23-notice-create', cam=look(box('api-23-notice-create', 'req'), 1.2),
+          ring=box('api-23-notice-create', 'req'),
+          label_en='POST /violations', label_es='POST /violations'),
+
+        B(en='issuedLocal is the time exactly as printed. We read it in the agency\'s time zone and '
+             'attach the ticket to the booking that had the car at that moment.',
+          es='issuedLocal es la hora tal como viene impresa. La leemos en la zona horaria de la agencia '
+             'y unimos la multa a la reserva que tenía el coche en ese momento.',
+          cam=look(join(line('api-23-notice-create', 'issued'), line('api-23-notice-create', 'booking')), 1.3),
+          ring=join(line('api-23-notice-create', 'issued'), line('api-23-notice-create', 'booking'))),
+
+        B(en='Then we ask the agency\'s website for that ticket, with the PIN if you sent one. lookup '
+             'says what came back. The same ticket sent twice returns 409, with the one on file.',
+          es='Después preguntamos por esa multa en la web de la agencia, con el PIN si lo envió. lookup '
+             'dice qué respondió. La misma multa enviada dos veces devuelve 409, con la que ya existe.',
+          cam=look(line('api-23-notice-create', 'lookup'), 1.5),
+          ring=line('api-23-notice-create', 'lookup')),
+
+        B(en='Only have a photo? POST /violations/notice/read reads it and saves nothing. Check the '
+             'fields, then send them to POST /violations.',
+          es='¿Solo tiene una foto? POST /violations/notice/read la lee y no guarda nada. Revise los '
+             'campos y envíelos a POST /violations.',
+          shot='api-24-notice-read', cam=look(box('api-24-notice-read', 'res'), 1.15),
+          ring=join(line('api-24-notice-read', 'citation'), line('api-24-notice-read', 'plate')),
+          label_en='Read a photo', label_es='Leer una foto'),
+
+        B(en='Ask the agency again at any time with POST /violations/{id}/lookup. When it is found, '
+             'the amount and whether it is paid are updated.',
+          es='Vuelva a preguntar a la agencia cuando quiera con POST /violations/{id}/lookup. Si la '
+             'encuentra, el importe y si está pagada se actualizan.',
+          shot='api-25-notice-lookup', cam=look(box('api-25-notice-lookup', 'res'), 1.2),
+          ring=join(line('api-25-notice-lookup', 'paid'), line('api-25-notice-lookup', 'outcome')),
+          label_en='Look it up again', label_es='Buscarla de nuevo'),
     ])
 
 

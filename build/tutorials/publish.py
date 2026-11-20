@@ -146,6 +146,20 @@ GROUPS = {
     # Tesla (46-50): connecting a Tesla account, the MyEZToll key and the check, the QR sheet for a
     # lot, Tesla for Business, and Supercharger rebilling. 49 is for partners/admins (public), the rest
     # are owner episodes.
+    'integrations': {
+        'episodes': [55, 56],
+        'privacy': 'public',
+        'title': {'en': 'Integrations — MyEZToll Owner Portal',
+                  'es': 'Integraciones — Portal del Propietario MyEZToll'},
+        'description': {
+            'en': 'MyEZToll with the tools you already use. Connect FleetBold to find tolls from the GPS you '
+                  'already have, and let Fleetwire bill tolls and violations on your renter\'s invoice.\n\n'
+                  'Portal: owner.myeztoll.com',
+            'es': 'MyEZToll con las herramientas que ya usa. Conecte FleetBold para encontrar peajes con el GPS '
+                  'que ya tiene, y deje que Fleetwire cobre peajes y multas en la factura de su arrendatario.\n\n'
+                  'Portal: owner.myeztoll.com',
+        },
+    },
     'tesla': {
         'episodes': [46, 47, 48, 49, 50],
         'privacy': 'public',

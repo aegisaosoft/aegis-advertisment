@@ -147,6 +147,292 @@ def y_mapper(shot, lang, en_h, lang_h):
     return mapped
 
 
+def load_boxes(lang):
+    """The element boxes a capture recorded (capture-screenshots.js --boxes), {shot: {path: rect}}."""
+    for root in SHOT_DIRS:
+        p = os.path.join(root, lang, '_boxes.json')
+        if os.path.exists(p):
+            return json.load(io.open(p, encoding='utf-8'))
+    return {}
+
+
+class BoxMap(object):
+    """Moves a rectangle or a point written against the English capture onto another language's capture.
+
+    The coordinates in the series files were measured by hand on the English (and Spanish) screenshots.
+    Another language moves every control: a longer label widens a button and pushes its neighbours, and
+    Persian and Urdu lay the whole page out right to left. Both captures recorded where each element is,
+    keyed by its DOM path, and the path names the same control in both languages. So a ring is matched
+    to the element(s) it surrounds on the English capture and redrawn around the same element(s) on the
+    target one, keeping its padding; a point keeps its place inside the smallest element that holds it.
+    """
+
+    def __init__(self, en, other, rtl):
+        self.en, self.to, self.rtl = en, other, rtl
+        self.common = [p for p in en if p in other]
+
+    @staticmethod
+    def _area(r):
+        return max(0.0, r[2]) * max(0.0, r[3])
+
+    @staticmethod
+    def _inter(a, b):
+        x0, y0 = max(a[0], b[0]), max(a[1], b[1])
+        x1, y1 = min(a[0] + a[2], b[0] + b[2]), min(a[1] + a[3], b[1] + b[3])
+        return max(0.0, x1 - x0) * max(0.0, y1 - y0)
+
+    def _rel(self, outer, r, target):
+        """r expressed inside `outer`, re-expressed inside `target`; mirrored for a right-to-left target."""
+        rx = (r[0] - outer[0]) / outer[2] if outer[2] else 0.0
+        ry = (r[1] - outer[1]) / outer[3] if outer[3] else 0.0
+        rw = r[2] / outer[2] if outer[2] else 0.0
+        rh = r[3] / outer[3] if outer[3] else 0.0
+        if self.rtl:
+            rx = 1.0 - rx - rw
+        return (target[0] + rx * target[2], target[1] + ry * target[3], rw * target[2], rh * target[3])
+
+    def rect(self, r):
+        r = tuple(r)
+        ra = self._area(r)
+        if not ra or not self.common:
+            return None
+        # One element that is the ring's own target: the ring is it, padded.
+        best, score = None, 0.0
+        for p in self.common:
+            e = self.en[p]
+            i = self._inter(r, e)
+            if i:
+                iou = i / (ra + self._area(e) - i)
+                if iou > score:
+                    best, score = p, iou
+        if best and score >= 0.6:
+            return self._rel(self.en[best], r, self.to[best])
+        # A ring over a group (a row of buttons, a block of fields): the elements it encloses.
+        inside = [p for p in self.common
+                  if self._area(self.en[p]) >= 0.02 * ra
+                  and self._inter(r, self.en[p]) >= 0.8 * self._area(self.en[p])]
+        if inside:
+            def union(rs):
+                x0 = min(q[0] for q in rs); y0 = min(q[1] for q in rs)
+                x1 = max(q[0] + q[2] for q in rs); y1 = max(q[1] + q[3] for q in rs)
+                return (x0, y0, x1 - x0, y1 - y0)
+            ue, ut = union([self.en[p] for p in inside]), union([self.to[p] for p in inside])
+            return self._rel(ue, r, ut)
+        # Neither: hold its place inside the smallest element around it.
+        holder = self._holder(r[0] + r[2] / 2, r[1] + r[3] / 2, 0.0)
+        return self._rel(self.en[holder], r, self.to[holder]) if holder else None
+
+    def _holder(self, x, y, min_area):
+        found, size = None, None
+        for p in self.common:
+            e = self.en[p]
+            a = self._area(e)
+            if a >= min_area and e[0] <= x <= e[0] + e[2] and e[1] <= y <= e[1] + e[3]:
+                if size is None or a < size:
+                    found, size = p, a
+        return found
+
+    def point(self, x, y, min_area=0.0):
+        holder = self._holder(x, y, min_area)
+        if not holder:
+            return None
+        e, t = self.en[holder], self.to[holder]
+        rx = (x - e[0]) / e[2] if e[2] else 0.5
+        ry = (y - e[1]) / e[3] if e[3] else 0.5
+        if self.rtl:
+            rx = 1.0 - rx
+        return (t[0] + rx * t[2], t[1] + ry * t[3])
+
+
+# The English capture the boxes were recorded on. It is a fresh capture, not the one the series
+# coordinates were measured on (that one has no boxes, and the account's data has moved since), so
+# a coordinate first finds its own place on this capture by matching the picture (RefMatch).
+REF_DIR = os.path.join(HERE, 'shots', '_ref', 'en')
+
+
+class RefMatch(object):
+    """Moves a point on the English capture the series was written against onto the reference capture.
+
+    The two show the same screen, but a card added to the dashboard or a different number of rows moves
+    everything below it. A patch of the old picture around the point is looked up in the new one.
+    """
+
+    def __init__(self, old_path, new_path):
+        import cv2
+        self.cv2 = cv2
+        self.old = cv2.imread(old_path, cv2.IMREAD_GRAYSCALE)
+        self.new = cv2.imread(new_path, cv2.IMREAD_GRAYSCALE)
+        self.marks = self._anchors()
+
+    def _anchors(self):
+        """(old y, new y) pixel pairs from patches that match in exactly one place.
+
+        Both captures are left-to-right and the same width, so a control moves up or down, never
+        sideways: each patch is searched in a narrow band around its own x. A patch that also matches a
+        second place (a table row looks like the next row) is dropped — matched one query at a time, such
+        patches put rings on the wrong row. What is left is one vertical mapping for the whole screen.
+        """
+        cv2 = self.cv2
+        oh, ow = self.old.shape
+        nh, nw = self.new.shape
+        pw, ph = 420, 150
+        found = []
+        for fy in [i / 60.0 for i in range(1, 60)]:
+            for fx in (0.2, 0.4, 0.6, 0.8):
+                px, py = int(fx * ow), int(fy * oh)
+                x0, y0 = max(0, px - pw // 2), max(0, py - ph // 2)
+                patch = self.old[y0:y0 + ph, x0:x0 + pw]
+                if patch.shape != (ph, pw) or patch.std() < 8 or ph > nh:
+                    continue
+                slack = int(0.015 * nw)
+                sx0 = max(0, x0 - slack)
+                band = self.new[:, sx0:min(nw, x0 + pw + slack)]
+                if band.shape[1] < pw:
+                    continue
+                res = cv2.matchTemplate(band, patch, cv2.TM_CCOEFF_NORMED)
+                _, best, _, loc = cv2.minMaxLoc(res)
+                if best < 0.85:
+                    continue
+                masked = res.copy()
+                masked[max(0, loc[1] - ph // 2):loc[1] + ph // 2, :] = -1
+                second = masked.max() if masked.size else -1
+                if best - second < 0.1:
+                    continue
+                found.append((y0 + ph / 2.0, loc[1] + ph / 2.0))
+        found.sort()
+        # Keep the longest run that rises in both pictures; an anchor out of order is a false match.
+        best_run = []
+        for i in range(len(found)):
+            run = [found[i]]
+            for p in found[i + 1:]:
+                if p[1] >= run[-1][1]:
+                    run.append(p)
+            if len(run) > len(best_run):
+                best_run = run
+        return best_run
+
+    def _y(self, y):
+        oh = self.old.shape[0]
+        nh = self.new.shape[0]
+        py = y * oh
+        m = self.marks
+        if not m:
+            return None
+        if py <= m[0][0]:
+            out = py + (m[0][1] - m[0][0])
+        elif py >= m[-1][0]:
+            out = py + (m[-1][1] - m[-1][0])
+        else:
+            i = max(j for j in range(len(m) - 1) if m[j][0] <= py)
+            span = m[i + 1][0] - m[i][0]
+            u = (py - m[i][0]) / span if span else 0.0
+            out = m[i][1] + u * (m[i + 1][1] - m[i][1])
+        return out / float(nh)
+
+    def _x(self, x):
+        return x * self.old.shape[1] / float(self.new.shape[1])
+
+    def _find(self, px, py, pw, ph, near_y):
+        """Top-left pixel of the old patch (px, py, pw, ph) on the new capture, or None.
+
+        The anchors only move things up or down; a column added to a table moves its neighbours
+        sideways. So the patch under the ring itself is looked up across the whole width, in a band
+        around the height the anchors predict, and kept only if it matches in one place.
+        """
+        cv2 = self.cv2
+        oh, ow = self.old.shape
+        nh, nw = self.new.shape
+        px, py = max(0, int(px)), max(0, int(py))
+        pw, ph = min(int(pw), ow - px), min(int(ph), oh - py)
+        if pw < 60 or ph < 24:
+            return None
+        patch = self.old[py:py + ph, px:px + pw]
+        if patch.std() < 8 or pw > nw:
+            return None
+        slack = int(0.08 * nh)
+        by0 = max(0, int(near_y) - slack)
+        by1 = min(nh, int(near_y) + ph + slack)
+        band = self.new[by0:by1, :]
+        if band.shape[0] < ph:
+            return None
+        res = cv2.matchTemplate(band, patch, cv2.TM_CCOEFF_NORMED)
+        _, best, _, loc = cv2.minMaxLoc(res)
+        if best < 0.8:
+            return None
+        masked = res.copy()
+        masked[max(0, loc[1] - ph // 2):loc[1] + ph // 2 + 1,
+               max(0, loc[0] - pw // 2):loc[0] + pw // 2 + 1] = -1
+        if best - masked.max() < 0.05:
+            return None
+        return loc[0], by0 + loc[1]
+
+    def point(self, x, y):
+        ny = self._y(y)
+        if ny is None:
+            return None
+        oh, ow = self.old.shape
+        nh, nw = self.new.shape
+        pw, ph = 360, 140
+        hit = self._find(x * ow - pw / 2, y * oh - ph / 2, pw, ph, ny * nh - ph / 2)
+        if hit:
+            return ((hit[0] + pw / 2.0) / nw, (hit[1] + ph / 2.0) / nh)
+        return (self._x(x), ny)
+
+    def rect(self, r):
+        oh, ow = self.old.shape
+        nh, nw = self.new.shape
+        # Controls keep their size between the two captures: move the ring's top, keep its pixel
+        # height (mapping the bottom too squeezes a ring to a line where rows were added or dropped).
+        y0 = self._y(r[1])
+        if y0 is None:
+            return None
+        h = r[3] * oh / float(nh)
+        # The ring's top part (a column's header, a whole button) is what identifies it.
+        px, py, pw = r[0] * ow, r[1] * oh, r[2] * ow
+        for ph in (min(r[3] * oh, 240), min(r[3] * oh, 110)):
+            hit = self._find(px, py, pw, ph, y0 * nh)
+            if hit:
+                return (hit[0] / float(nw), hit[1] / float(nh), r[2] * ow / float(nw), h)
+        return (self._x(r[0]), y0, r[2] * ow / float(nw), h)
+
+
+class LangMap(object):
+    """Old English coordinates → the reference capture (RefMatch) → this language (BoxMap)."""
+
+    def __init__(self, ref, bm):
+        self.ref, self.bm = ref, bm
+
+    def rect(self, r):
+        on_ref = self.ref.rect(r)
+        return self.bm.rect(on_ref) if on_ref else None
+
+    def point(self, x, y, min_area=0.0):
+        on_ref = self.ref.point(x, y)
+        return self.bm.point(on_ref[0], on_ref[1], min_area) if on_ref else None
+
+
+def box_maps(ep, lang):
+    """{shot: LangMap} for the shots both the English reference and this language recorded boxes for."""
+    # English is what the coordinates were written on. Spanish shares them, and only a Spanish screen
+    # captured again since (one with recorded boxes) has to be mapped.
+    if lang == 'en':
+        return {}
+    ref_file = os.path.join(REF_DIR, '_boxes.json')
+    if not os.path.exists(ref_file):
+        return {}
+    en, other = json.load(io.open(ref_file, encoding='utf-8')), load_boxes(lang)
+    out = {}
+    for b in ep.beats:
+        if b.shot in en and b.shot in other and b.shot not in out:
+            ref = RefMatch(shot_file('en', b.shot), os.path.join(REF_DIR, b.shot + '.png'))
+            out[b.shot] = LangMap(ref, BoxMap(en[b.shot], other[b.shot], lang in model.RTL))
+    return out
+
+
+def _r4(v):
+    return round(min(1.0, max(0.0, v)), 4)
+
+
 def track(lang, ep, clips, starts, total):
     """One mp3 with every clip at its own second, rather than a concatenation.
 
@@ -190,6 +476,8 @@ def build(ep, lang):
         clips.append(path)
         durs.append(duration(path))
 
+    maps = box_maps(ep, lang)
+
     # ---------------------------------------------------------------- timeline
     beats, cues, t = [], [], TITLE_HOLD
     for i, b in enumerate(ep.beats):
@@ -197,6 +485,22 @@ def build(ep, lang):
         cam, cam_here = pick(b.cam, lang)
         point, point_here = pick(b.point, lang)
         ring, ring_here = pick(b.ring, lang)
+        bm = maps.get(b.shot)
+        if bm:
+            # Measured boxes beat the height ratio: they follow the target capture's own layout.
+            if ring and not ring_here:
+                moved = bm.rect(ring)
+                if moved:
+                    ring, ring_here = tuple(_r4(v) for v in moved), True
+            if point and not point_here:
+                moved = bm.point(point[0], point[1])
+                if moved:
+                    point, point_here = (_r4(moved[0]), _r4(moved[1])), True
+            # A camera close enough to matter follows what it looks at; a wide one stays put.
+            if not cam_here and cam[2] > 1.05:
+                moved = bm.point(cam[0], cam[1], 0.01)
+                if moved:
+                    cam, cam_here = (_r4(moved[0]), _r4(moved[1]), cam[2]), True
         cam_y = cam[1] if cam_here else my(cam[1])
         cues.append({'t': t + LEAD, 'end': t + LEAD + durs[i] + CAPTION_TAIL,
                      'text': b.text[lang]})
@@ -273,14 +577,18 @@ def build(ep, lang):
 
 
 def main(argv):
-    langs = [a for a in argv if a in ('en', 'es')] or ['en', 'es']
+    langs = [a for a in argv if a in model.LANGS] or list(model.LANGS)
     nums = [int(a) for a in argv if a.isdigit()]
     series = [e for e in episodes.SERIES if not nums or e.num in nums]
-    grand = 0.0
+    grand, files = 0.0, 0
     for lang in langs:
         for ep in series:
+            # Only the languages the episode was written or translated into.
+            if lang not in ep.langs:
+                continue
             grand += build(ep, lang)
-    print('\n%d files, %.1f minutes of finished video' % (len(series) * len(langs), grand / 60))
+            files += 1
+    print('\n%d files, %.1f minutes of finished video' % (files, grand / 60))
 
 
 if __name__ == '__main__':
