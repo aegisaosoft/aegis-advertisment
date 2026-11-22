@@ -37,7 +37,7 @@ MODEL = m.tts.V3 if LANG in m.tts.V3_ONLY else m.tts.MODEL
 if LANG in LN.LINES:
     # v3 ignores SSML breaks; the question mark carries the pause there.
     _L = [l.replace('{B}', '' if MODEL == m.tts.V3 else BRK).replace('  ', ' ') for l in LN.LINES[LANG]]
-    PARTS = [(0.96, _L[:4]), ({'zh': 1.15, 'fa': 1.18, 'ur': 1.18}.get(LANG, 1.06), _L[4:])]
+    PARTS = [(0.96, _L[:4]), ({'zh': 1.15, 'ja': 1.1, 'fa': 1.18, 'ur': 1.18}.get(LANG, 1.06), _L[4:])]
     m.MAX[:] = [5.5] * 8 + [4.5]
 else:
     PARTS = PARTS_ES if LANG == 'es' else PARTS_EN
@@ -102,7 +102,7 @@ def run(part, takes=3):
         lens = [e - s for s, e in spans]
         over = sum(max(0, l + 0.12 - m.MAX[base + i]) for i, l in enumerate(lens))
         # A clipped or skipped phrase comes back far too short for its text.
-        wide = [len(ln.replace(BRK, '')) * (2.5 if LANG == 'zh' else 1) for ln in lines]
+        wide = [len(ln.replace(BRK, '')) * (2.5 if LANG in ('zh', 'ja') else 1) for ln in lines]
         over += 10 * sum(1 for i, l in enumerate(lens) if l < 0.035 * wide[i])
         print('part %d take %d: %s over=%.2f' % (part, t, ' '.join('%.2f' % l for l in lens), over))
         if prev is None or over < prev[0]:

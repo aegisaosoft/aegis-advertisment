@@ -32,7 +32,111 @@ TAIL_ES = ('Gratis para el dueño de la flota: sin suscripción, sin costo de in
            'https://myeztoll.com\n\n'
            'Aegis AO Soft LLC. Vendido y operado bajo licencia por Aegis AG Soft LLC.')
 
+TAIL_NB = ('Gratis for flåteeiere: ingen abonnement, ingen oppstart, ingenting per bil. '
+           'Du får hele bompengebeløpet tilbake, pluss en andel av tillegget leietakeren betaler.\n\n'
+           'https://myeztoll.com\n\n'
+           'Aegis AO Soft LLC. Solgt og drevet på lisens av Aegis AG Soft LLC.')
+
+TAIL_IT = ('Gratis per chi gestisce una flotta: nessun abbonamento, nessuna attivazione, niente per '
+           'veicolo. Ti torna tutto il pedaggio, più una quota della commissione che paga il cliente.\n\n'
+           'https://myeztoll.com\n\n'
+           'Aegis AO Soft LLC. Venduto e gestito su licenza da Aegis AG Soft LLC.')
+
+TAIL_JA = ('車両オーナーは無料です。月額料金なし、初期費用なし、台数課金なし。通行料は全額戻り、'
+           '借り手が支払う手数料の一部も受け取れます。\n\n'
+           'https://myeztoll.com\n\n'
+           'Aegis AO Soft LLC。Aegis AG Soft LLC がライセンスに基づき販売・運営しています。')
+
 VIDEOS = {
+    # Italian and Japanese cuts of both films (2026-11-22, with the it/ja site and portal).
+    'it': {
+        'file': os.path.join(ROOT, 'myeztoll-frank-mike-it.mp4'),
+        'captions': os.path.join(ROOT, 'myeztoll-frank-mike-it.vtt'),
+        'lang': 'it',
+        'title': 'Frank e Mike: due flotte a noleggio, stessi pedaggi, risultati opposti | MyEZToll',
+        'description': (
+            'Due flotte a noleggio. Stessa strada, stesse autostrade, stessi clienti.\n\n'
+            'Frank paga ogni pedaggio che le sue auto attraversano e ogni multa che arriva quando '
+            "l'auto è già tornata, spesso scaduta e con la mora.\n\n"
+            "Gli addebiti di Mike vanno a MyEZToll. Ognuno viene collegato al noleggio aperto in "
+            'quel minuto e addebitato sulla carta del cliente, più la nostra commissione. Mike '
+            'recupera tutto il pedaggio, e una quota della commissione.\n\n' + TAIL_IT),
+        'tags': ['myeztoll', 'pedaggi', 'noleggio auto', 'flotta a noleggio', 'gestione flotta',
+                 'multe', 'E-ZPass', 'SunPass', 'Turo', 'software noleggio auto'],
+    },
+    'toonbee-it': {
+        'file': os.path.join(ROOT, 'myeztoll-toonbee-it.mp4'),
+        'captions': os.path.join(ROOT, 'myeztoll-toonbee-it.vtt'),
+        'lang': 'it',
+        'title': 'Le quattro e dodici: il conto del pedaggio che arriva a te | MyEZToll',
+        'description': (
+            'Martedì, le quattro e dodici del pomeriggio. Una delle tue auto passa a un casello. '
+            'Tre settimane dopo arriva il conto, intestato a te, e il cliente è sparito da tempo.\n\n'
+            "Il gestore del pedaggio sa quando l'auto è passata. La prenotazione sa chi guidava. "
+            'MyEZToll unisce le due cose e addebita sulla carta del cliente, invece di farti '
+            'pagare.\n\n' + TAIL_IT),
+        'tags': ['myeztoll', 'pedaggi', 'noleggio auto', 'flotta a noleggio', 'gestione flotta',
+                 'multe', 'E-ZPass', 'SunPass', 'cliente', 'software noleggio auto'],
+    },
+    'ja': {
+        'file': os.path.join(ROOT, 'myeztoll-frank-mike-ja.mp4'),
+        'captions': os.path.join(ROOT, 'myeztoll-frank-mike-ja.vtt'),
+        'lang': 'ja',
+        'title': 'フランクとマイク：同じ通行料、正反対の結果 | MyEZToll',
+        'description': (
+            '二つのレンタカー会社。同じ通り、同じ道路、同じ借り手。\n\n'
+            'フランクは自社の車が通った通行料も、車が戻ってから届く違反通知も、すべて自腹で払います。'
+            '多くは期限切れで、延滞金までついています。\n\n'
+            'マイクの請求は MyEZToll に届きます。一件ずつ、その時刻に開いていた予約に結びつけられ、'
+            '借り手が登録したカードに手数料込みで請求されます。マイクには通行料が全額戻り、'
+            '手数料の一部も入ります。\n\n' + TAIL_JA),
+        'tags': ['myeztoll', '通行料', 'レンタカー', 'フリート管理', '違反金', 'E-ZPass',
+                 'SunPass', 'Turo', 'カーシェア', 'レンタカーソフト'],
+    },
+    'toonbee-ja': {
+        'file': os.path.join(ROOT, 'myeztoll-toonbee-ja.mp4'),
+        'captions': os.path.join(ROOT, 'myeztoll-toonbee-ja.vtt'),
+        'lang': 'ja',
+        'title': '四時十二分：あなたに届く通行料の請求書 | MyEZToll',
+        'description': (
+            '火曜日、午後四時十二分。あなたの車の一台が料金所を通過します。'
+            '三週間後、あなた宛てに請求書が届く頃には、借り手はもういません。\n\n'
+            '料金所側は車が通った時刻を知っています。予約は誰が運転していたかを知っています。'
+            'MyEZToll が両者を結びつけ、あなたの代わりに借り手のカードに請求します。\n\n' + TAIL_JA),
+        'tags': ['myeztoll', '通行料', 'レンタカー', 'フリート管理', '違反金', 'E-ZPass',
+                 'SunPass', '借り手', 'カーシェア', 'レンタカーソフト'],
+    },
+    # Norwegian cuts of both films (2026-11-21, Norway pilot outreach). The Four-Twelve film
+    # is built in ../toonbee; it is published from here so the channel has one uploader.
+    'nb': {
+        'file': os.path.join(ROOT, 'myeztoll-frank-mike-nb.mp4'),
+        'captions': os.path.join(ROOT, 'myeztoll-frank-mike-nb.vtt'),
+        'lang': 'no',
+        'title': 'Frank og Mike: to utleieflåter, samme bompenger, motsatt resultat | MyEZToll',
+        'description': (
+            'To utleieflåter. Samme gate, samme veier, samme leietakere.\n\n'
+            'Frank betaler for hver bompassering bilene hans kjører gjennom, og for hver bot som '
+            'kommer etter at bilen er levert tilbake, ofte forfalt og med gebyr på toppen.\n\n'
+            'Mikes passeringer går til MyEZToll. Hver av dem kobles til leieforholdet som var åpent '
+            'i det minuttet, og faktureres leietakeren, med vårt tillegg. Mike får hele beløpet '
+            'tilbake, og en andel av tillegget.\n\n' + TAIL_NB),
+        'tags': ['myeztoll', 'bompenger', 'AutoPASS', 'bilutleie', 'leiebil', 'utleieflåte',
+                 'flåtestyring', 'bompassering', 'bøter', 'bildeling'],
+    },
+    'toonbee-nb': {
+        'file': os.path.join(ROOT, 'myeztoll-toonbee-nb.mp4'),
+        'captions': os.path.join(ROOT, 'myeztoll-toonbee-nb.vtt'),
+        'lang': 'no',
+        'title': 'Tolv over fire: bompengeregningen som havner hos deg | MyEZToll',
+        'description': (
+            'Tirsdag, tolv over fire. En av bilene dine kjører gjennom en bomstasjon. '
+            'Tre uker senere kommer regningen, i ditt navn, og da er leietakeren for lengst borte.\n\n'
+            'Bomselskapet vet når bilen passerte. Bookingen vet hvem som kjørte. MyEZToll kobler de '
+            'to sammen og trekker beløpet fra leietakerens kort, i stedet for at du betaler det selv.\n\n'
+            + TAIL_NB),
+        'tags': ['myeztoll', 'bompenger', 'AutoPASS', 'bilutleie', 'leiebil', 'utleieflåte',
+                 'flåtestyring', 'bompassering', 'bøter', 'leietaker'],
+    },
     'en': {
         'file': os.path.join(ROOT, 'myeztoll-frank-mike-en.mp4'),
         'captions': os.path.join(ROOT, 'myeztoll-frank-mike-en.vtt'),

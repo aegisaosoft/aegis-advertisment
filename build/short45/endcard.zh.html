@@ -2,7 +2,7 @@
 <title>End card (ZH)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@600;700&family=Noto+Sans+SC:wght@700;900&family=Noto+Sans+Armenian:wght@700;900&family=Noto+Sans+Georgian:wght@700;900&family=Noto+Naskh+Arabic:wght@700&family=Noto+Nastaliq+Urdu:wght@700&family=Roboto+Mono:wght@500;700&family=Source+Sans+3:wght@700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@600;700&family=Noto+Sans+SC:wght@700;900&family=Noto+Sans+JP:wght@700;900&family=Noto+Sans+Armenian:wght@700;900&family=Noto+Sans+Georgian:wght@700;900&family=Noto+Naskh+Arabic:wght@700&family=Noto+Nastaliq+Urdu:wght@700&family=Roboto+Mono:wght@500;700&family=Source+Sans+3:wght@700;900&display=swap">
 
 <style>
 /*
@@ -81,9 +81,19 @@ body{
 .lang-ur{--display:'Noto Nastaliq Urdu','Noto Naskh Arabic',serif;
          --body:'Noto Nastaliq Urdu','Noto Naskh Arabic',serif}
 
+/* Japanese: kana and kanji in the Japanese face — Noto Sans SC would draw the shared
+   kanji in their Chinese forms. Full-height glyphs need a little more leading. */
+.lang-ja{--display:'Noto Sans JP','Anton',sans-serif;
+         --body:'Noto Sans JP','Source Sans 3',sans-serif}
+.lang-ja .slogan{font-size:10cqh;line-height:1.2}
+
 /* Armenian and Georgian capitals are wider than Latin ones and their letterforms are
    rounder, so the slogan is set a little smaller to keep the two lines inside the frame. */
 .lang-hy .slogan,.lang-ka .slogan{font-size:9.5cqh;line-height:1.06}
+
+/* Norwegian "å" carries its ring above the cap height: at .94 it lands on the line above
+   and on the rule. Open the leading and push the slogan off the rule. */
+.lang-nb .slogan{line-height:1.14;padding-top:1.6cqh}
 
 /* Arabic script hangs below the line and Nastaliq climbs steeply from right to left;
    at the Latin line-height the descenders of one line cut into the next. */

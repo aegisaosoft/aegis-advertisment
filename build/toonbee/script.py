@@ -287,9 +287,75 @@ UZ = [
     "Yoʻqotishni bas qiling. Daromad topishni boshlang.",
 ]
 
+# Norwegian bokmål, du-form, added 2026-11-21 for the Norway pilot outreach. The picture's
+# figures and US networks stay as in every other cut. "Tolv over fire" is how Norwegians say
+# 16:12; the bill in line eight keeps the same twelve. MyEZToll's own fee is "tillegg", as on
+# the Norwegian closing card, and the last line is that card's slogan ("Slutt med tap": the
+# v3 voice reads "tape" as the English word).
+NB = [
+    "Tirsdag. Tolv over fire på ettermiddagen. En av bilene dine kjører gjennom en bomstasjon. "
+    "Ingen betaler. Ikke ennå.",
+    "Tre uker senere kommer regningen, i ditt navn.",
+    "Da er leietakeren borte, depositumet tilbake og leieforholdet avsluttet.",
+    "Så du betaler, og kaller det en driftskostnad.",
+    "Det samme skjer med bøter, drivstoff og skader.",
+    "Men bomselskapene visste det. E-ZPass, SunPass, trettien nettverk over hele landet.",
+    "Og bookingen visste hvem som kjørte. MyEZToll kobler de to og trekker beløpet fra leietakerens kort.",
+    "En liten flåte. Én uke. Fire hundre og tolv dollar, og du skulle ha betalt dem.",
+    "Så hva koster plattformen flåten din?",
+    "Ingenting: ingen abonnement, ingen oppstart, intet per bil.",
+    "Å koble til GPS-en du allerede har, er også gratis.",
+    "Det eneste som koster, er vår egen telematikk.",
+    "Du betaler ingenting. Hele bompengebeløpet tilbake, pluss en andel av tillegget vårt.",
+    "Slutt med tap. Begynn å tjene.",
+]
+
+# Italian, added 2026-11-22. Informal "tu" throughout, as the Spanish of the second film is;
+# "quattro e dodici" in line one returns as "Quattrocentododici" in line eight. The price
+# list in line ten is word for word what the drawn card of scene 10 says.
+IT = [
+    "Martedì. Le quattro e dodici del pomeriggio. Una delle tue auto passa a un casello. "
+    "Nessuno paga. Non ancora.",
+    "Tre settimane dopo arriva il conto, intestato a te.",
+    "A quel punto il cliente è sparito, deposito reso, noleggio chiuso.",
+    "Così paghi tu, e lo chiami un costo del mestiere.",
+    "Lo stesso succede con multe, carburante e danni.",
+    "Ma i gestori dei pedaggi lo sapevano. E-ZPass, SunPass: trentuno reti, da costa a costa.",
+    "E la prenotazione sapeva chi guidava. MyEZToll unisce le due cose e addebita sulla carta del cliente.",
+    "Una piccola flotta. Una settimana. Quattrocentododici dollari, e toccava a te pagarli.",
+    "Allora, quanto costa davvero la piattaforma alla tua flotta?",
+    "Niente: nessun abbonamento, nessuna attivazione, niente per veicolo.",
+    "Anche collegare il GPS che hai già è gratis.",
+    "L'unica cosa a pagamento è il nostro hardware telematico.",
+    "Non paghi nulla. Il pedaggio ti torna tutto, più una quota della nostra commissione.",
+    "Smetti di perdere. Inizia a guadagnare.",
+]
+
+# Japanese, added 2026-11-22. Polite です/ます. Written against the length of the v3
+# reading rather than a character count — about six characters a second — so it is
+# shorter than a translation of the English. 四時十二分 in line one returns as 四百十二ドル
+# in line eight; numerals are kanji, which v3 reads right (multilingual_v2 does not).
+JA = [
+    "火曜日、午後四時十二分。あなたの車の一台が料金所を通過します。誰も払いません。今のところは。",
+    "三週間後、あなた宛てに請求書が届きます。",
+    "借り手はもういません。保証金も返金済み、契約も終了です。",
+    "だから自分で払い、経費だと割り切ります。",
+    "違反金、燃料、車の傷でも同じことが起きます。",
+    "でも料金所側は知っていました。E-ZPass、SunPass、全米三十一のネットワーク。",
+    "予約は運転者を知っていました。MyEZTollが両者を結びつけ、借り手のカードに請求します。",
+    "小さなレンタカー会社。一週間。四百十二ドル。払うのはあなたのはずでした。",
+    "では、このサービスの費用はいくらでしょう？",
+    "ゼロです。月額料金なし、初期費用なし、台数課金なし。",
+    "今お使いのGPSをつなぐのも無料です。",
+    "有料なのは、当社のテレマティクス機器だけです。",
+    "負担はゼロ。通行料は全額戻り、当社手数料の一部も受け取れます。",
+    "もう損はさせません。さあ、稼ぎましょう。",
+]
+
 LANGS = {'en': EN, 'es': ES, 'ru': RU, 'de': DE, 'fr': FR, 'pt': PT,
          'uk': UK, 'tr': TR, 'zh': ZH,
-         'hy': HY, 'ka': KA, 'fa': FA, 'ur': UR, 'uz': UZ}
+         'hy': HY, 'ka': KA, 'fa': FA, 'ur': UR, 'uz': UZ, 'nb': NB,
+         'it': IT, 'ja': JA}
 
 # The one language nobody reads aloud. Its captions are timed off the English
 # narration, so it needs no clips, no voice and no place in the recording tools.

@@ -163,6 +163,8 @@ def write_srt(path, lines, timing):
 
 
 # --- captions -------------------------------------------------------------
+# CJK full stops (。！？) and commas (、，：；) are seams like their Latin
+# counterparts; without them a Japanese or Chinese card was cut mid-word ("四百十 / 二ドル").
 # Two rows of about forty characters is what a viewer reads without effort and what
 # every player has room for, so a spoken line longer than that becomes several cues.
 
@@ -258,8 +260,8 @@ def wrap(text):
             # A row that ends where the sentence does reads at a glance; one that
             # splits "setup fee" or "four hundred twelve" does not, so mid-phrase
             # breaks cost far more than an uneven pair of rows.
-            seam = 0.0 if re.search(r'[.!?]$', words[end - 1]) else (
-                6.0 if re.search(r'[,;:\u2014]$', words[end - 1]) else 90.0)
+            seam = 0.0 if re.search(r'[.!?。！？]$', words[end - 1]) else (
+                6.0 if re.search(r'[,;:\u2014\u3001\uff0c\uff1a\uff1b]$', words[end - 1]) else 90.0)
             walk(end, left - 1, taken + [end], cost + (width(row) - target) ** 2 + seam)
 
     walk(0, rows, [], 0.0)
@@ -303,9 +305,9 @@ def split_line(pieces, target, max_chars):
             if size > max_chars and end - start > 1:
                 continue
             tail = pieces[end - 1]
-            if re.search(r'[.!?][\u2019")\u00bb]*\s*$', tail):
+            if re.search(r'[.!?\u3002\uff01\uff1f][\u2019")\u00bb]*\s*$', tail):
                 seam = 0.0
-            elif re.search(r'[,;:\u2014]\s*$', tail) or end == n:
+            elif re.search(r'[,;:\u2014\u3001\uff0c\uff1a\uff1b]\s*$', tail) or end == n:
                 seam = 6.0
             else:
                 seam = 26.0
@@ -336,7 +338,7 @@ def cues(lines, words_path, tail=0.25, beat=0.85, bounds=None):
         # Audible pauses come first: they are breaks the viewer already hears.
         groups, at = [], 0
         for i in range(len(pieces) - 1):
-            sentence = re.search(r'[.!?][\u2019")\u00bb]*\s*$', pieces[i]) is not None
+            sentence = re.search(r'[.!?\u3002\uff01\uff1f][\u2019")\u00bb]*\s*$', pieces[i]) is not None
             if sentence and words[i + 1][1] - words[i][2] > beat:
                 groups.append((at, i + 1))
                 at = i + 1

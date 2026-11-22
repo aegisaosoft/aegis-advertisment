@@ -31,8 +31,11 @@ def head_silence(path):
     out = subprocess.run([FF, '-hide_banner', '-i', path, '-af',
                           'silencedetect=noise=-40dB:d=0.05', '-f', 'null', '-'],
                          capture_output=True, text=True).stderr
-    first = re.search(r'silence_start: (0(?:\.\d+)?)\s', out)
-    if not first:
+    # Only a silence the clip *opens* with is leading silence. The old pattern took any
+    # pause that began before 1 s — a breath after "Martedì," at 0.63 s — and trimmed
+    # the clip to its end, cutting the first word off the line.
+    first = re.search(r'silence_start: (-?[0-9.]+)', out)
+    if not first or float(first.group(1)) > 0.02:
         return 0.0
     end = re.search(r'silence_end: ([0-9.]+)', out)
     return float(end.group(1)) if end and float(end.group(1)) < 1.0 else 0.0

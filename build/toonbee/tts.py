@@ -30,7 +30,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # reads the letters as if they were something else.
 MODEL = 'eleven_multilingual_v2'
 V3 = 'eleven_v3'
-V3_ONLY = ('hy', 'ka', 'fa', 'ur')
+V3_ONLY = ('hy', 'ka', 'fa', 'ur', 'nb',  # Norwegian is not among multilingual_v2's languages
+           # Japanese is, but multilingual_v2 misreads kanji numerals (四百十二ドル came back
+           # as "私100食", 四時十二分 as 二時十五分) in every voice tried; v3 read them right.
+           'ja')
 # Four more narrators than the film started with, all native speakers taken from the
 # shared library — a library voice costs one of thirty free slots, not money. Chosen
 # female throughout because both cuts that already exist are read by a woman.
@@ -58,6 +61,14 @@ VOICES = {
     'ka': ('Kateryna', 'X1WtgMmQUBwtiAPn4j1P'),
     'fa': ('Noushin', 'NZiuR1C6kVMSWHG27sIM'),
     'ur': ('Reva', 'UT6USLtoAlXHj5k4sOLY'),
+    # Norwegian (bokmål), added 2026-11-21 for the Norway pilot outreach: the most used
+    # native Oslo female narrator in the shared library, read through v3.
+    'nb': ('Mia Starset', 'uNsWM1StCcpydKYOjKyu'),
+    # Italian and Japanese, added 2026-11-22, each the winner of an eight-voice shootout
+    # (same lines -> Scribe back -> share of script words): Aida 100 % on multilingual_v2;
+    # Akari 98 % on v3 and among the fastest readers, which the fixed scenes need.
+    'it': ('Aida', 'QttbagfgqUCm9K0VgUyT'),
+    'ja': ('Akari', 'EkK6wL8GaH8IgBZTTDGJ'),
 }
 SETTINGS = {'stability': 0.45, 'similarity_boost': 0.75, 'style': 0.15, 'use_speaker_boost': True}
 

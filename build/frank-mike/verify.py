@@ -7,13 +7,13 @@ V = os.path.join(HERE, 'audio')
 STT_OUT = os.path.join(HERE, 'takes', 'stt'); os.makedirs(STT_OUT, exist_ok=True)
 STT = r'C:\aegis-aa\aegis-advertisment\build\toonbee\stt.py'
 CODE = {'ru': 'ru', 'uk': 'uk', 'de': 'de', 'fr': 'fr', 'pt': 'pt', 'tr': 'tr', 'zh': 'zh',
-        'hy': 'hy', 'ka': 'ka', 'fa': 'fa', 'ur': 'ur'}
+        'hy': 'hy', 'ka': 'ka', 'fa': 'fa', 'ur': 'ur', 'nb': 'no', 'it': 'it', 'ja': 'ja'}
 
 
 def toks(s, lang):
     s = unicodedata.normalize('NFC', s.replace('{B}', '')).lower()
     s = ''.join(c if (c.isalnum() or c in '\u200c') else ' ' for c in s)
-    if lang == 'zh':
+    if lang in ('zh', 'ja'):  # no spaces between words: score per character
         return [c for c in s if c.strip()]
     return s.replace('\u200c', '').split()
 
