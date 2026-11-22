@@ -12,21 +12,23 @@
 # Captions come last because they are measured off the finished narration.
 set -e
 HERE=$(dirname "$0")
-ROOT=C:/aegis-aa/aegis-advertisment
+# The checkout this script lives in (a worktree builds into itself). The ToonBee export
+# is not in git: SOURCE= points at it when this checkout has no copy.
+ROOT=${ROOT:-$(cd "$HERE/../.." && pwd)}
 FF=D:/ffmpeg/bin/ffmpeg.exe
 LANG_=$1
 [ -n "$LANG_" ] || { echo "usage: sh build_film.sh <lang>"; exit 1; }
 
-SOURCE="$ROOT/Stop Losing Revenue.mp4"
+SOURCE=${SOURCE:-"$ROOT/Stop Losing Revenue.mp4"}
 TRACK="$HERE/$LANG_.wav"
 CARD="$ROOT/build/short45/endcard.$LANG_.png"
 FILM="$ROOT/myeztoll-toonbee-$LANG_.mp4"
 BODY="$HERE/body.$LANG_.mp4"
 
-# Uzbek is the one cut with no narration of its own: no model speaks it, so the film
-# keeps the export's English voice and everything a viewer reads — captions, price
-# list, closing card — is Uzbek.
-case "$LANG_" in uz) DUBBED=no ;; *) DUBBED=yes ;; esac
+# A language in script.SUBTITLED has no narration of its own: the film keeps the export's
+# English voice and everything a viewer reads is in that language. (Uzbek was the one
+# such cut until eleven_v4 learned it; the set is empty now.)
+DUBBED=$(cd "$HERE" && python -c "import script; print('no' if '$LANG_' in script.SUBTITLED else 'yes')")
 
 for f in "$SOURCE" "$CARD" "$HERE/pricecard.$LANG_.mp4"; do
   [ -f "$f" ] || { echo "missing: $f"; exit 1; }

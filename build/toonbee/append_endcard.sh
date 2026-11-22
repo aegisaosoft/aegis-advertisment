@@ -16,7 +16,7 @@ set -e
 FF=D:/ffmpeg/bin/ffmpeg.exe
 IN=$1
 OUT=$2
-CARD=${3:-C:/aegis-aa/aegis-advertisment/build/short45/endcard.png}
+CARD=${3:-$(dirname "$0")/../short45/endcard.png}
 HOLD=3.4          # long enough to read the address, short enough not to stall
 FADE=0.8          # cross-fade into the card
 LEN=$("$FF" -hide_banner -i "$IN" 2>&1 | sed -n 's/.*Duration: \([0-9:.]*\).*/\1/p' \

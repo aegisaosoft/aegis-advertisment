@@ -34,6 +34,25 @@ V3_ONLY = ('hy', 'ka', 'fa', 'ur', 'nb',  # Norwegian is not among multilingual_
            # Japanese is, but multilingual_v2 misreads kanji numerals (四百十二ドル came back
            # as "私100食", 四時十二分 as 二時十五分) in every voice tried; v3 read them right.
            'ja')
+# Uzbek is spoken by no model before v4 (check_models.py, 2026-11-22: eleven_v4 and
+# eleven_v4_turbo only). v4 takes no style or speaker boost, so those settings are left out.
+V4 = 'eleven_v4'
+V4_ONLY = ('uz',)
+
+
+def model_for(lang):
+    """The model a language is recorded with: v4 or v3 where the default cannot speak it."""
+    return V4 if lang in V4_ONLY else V3 if lang in V3_ONLY else MODEL
+
+
+def settings_for(model, **extra):
+    """SETTINGS minus what the model refuses."""
+    vs = dict(SETTINGS, **extra)
+    if model == V4:
+        vs.pop('style', None); vs.pop('use_speaker_boost', None)
+    return vs
+
+
 # Four more narrators than the film started with, all native speakers taken from the
 # shared library — a library voice costs one of thirty free slots, not money. Chosen
 # female throughout because both cuts that already exist are read by a woman.
@@ -69,6 +88,10 @@ VOICES = {
     # Akari 98 % on v3 and among the fastest readers, which the fixed scenes need.
     'it': ('Aida', 'QttbagfgqUCm9K0VgUyT'),
     'ja': ('Akari', 'EkK6wL8GaH8IgBZTTDGJ'),
+    # Uzbek, added 2026-11-22 on eleven_v4: Dilzoda is the one female native Uzbek voice in
+    # the shared library ("Javohir" is tagged female but is a man). Eight-voice shootout on
+    # v4 (lines 1, 8, 13 -> Scribe uz): every voice 98-100 %, so the native one wins on vowels.
+    'uz': ('Dilzoda', 'dQR1p9Ft6NUixxE7xn1l'),
 }
 SETTINGS = {'stability': 0.45, 'similarity_boost': 0.75, 'style': 0.15, 'use_speaker_boost': True}
 
@@ -94,7 +117,8 @@ def key():
 def speak(voice_id, text, model=MODEL):
     req = urllib.request.Request(
         'https://api.elevenlabs.io/v1/text-to-speech/%s?output_format=mp3_44100_128' % voice_id,
-        data=json.dumps({'text': text, 'model_id': model, 'voice_settings': SETTINGS}).encode(),
+        data=json.dumps({'text': text, 'model_id': model,
+                         'voice_settings': settings_for(model)}).encode(),
         method='POST')
     req.add_header('xi-api-key', key())
     req.add_header('Content-Type', 'application/json')
@@ -154,7 +178,7 @@ if __name__ == '__main__':
                  % (lang, script.SUBTITLED[lang]))
     lines = script.LANGS[lang]
     name, voice_id = VOICES[lang]
-    model = V3 if lang in V3_ONLY else MODEL
+    model = model_for(lang)
     folder = os.path.join(HERE, 'audio', lang)
     os.makedirs(folder, exist_ok=True)
 

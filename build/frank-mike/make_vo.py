@@ -6,7 +6,8 @@ readings. What flow.py still borrows from here is `speak`-free: tts, MAX, OUT an
 """
 import io, json, os, ssl, subprocess, sys, urllib.request, urllib.error
 
-sys.path.insert(0, r'C:\aegis-aa\aegis-advertisment\build\toonbee')
+# The toonbee folder of this same checkout: a worktree must not borrow the main copy's tts.py.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'toonbee'))
 import tts  # key(), VOICES, SETTINGS, MODEL
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'audio')
@@ -37,9 +38,9 @@ ES = ["Dos flotas de alquiler. La misma calle.",
       "MyEZToll. Deja de perder. Empieza a ganar."]
 
 
-def speak(voice_id, text, speed, prev, nxt):
-    vs = dict(tts.SETTINGS, speed=speed)
-    body = {'text': text, 'model_id': tts.MODEL, 'voice_settings': vs}
+def speak(voice_id, text, speed, prev, nxt, model=tts.MODEL):
+    vs = tts.settings_for(model, speed=speed)
+    body = {'text': text, 'model_id': model, 'voice_settings': vs}
     if prev: body['previous_text'] = prev
     if nxt: body['next_text'] = nxt
     req = urllib.request.Request(
@@ -66,7 +67,8 @@ def trim(src, dst):
 
 def run(lang, lines, takes=5):
     name, vid = tts.VOICES[lang]
-    print('%s - %s %s (%s)' % (lang.upper(), name, vid, tts.MODEL))
+    model = tts.model_for(lang)
+    print('%s - %s %s (%s)' % (lang.upper(), name, vid, model))
     for i, text in enumerate(lines):
         prev = lines[i - 1].replace(BRK, '') if i else None
         nxt = lines[i + 1].replace(BRK, '') if i + 1 < len(lines) else None
@@ -74,7 +76,7 @@ def run(lang, lines, takes=5):
         best = None
         for t in range(takes):
             raw = os.path.join(RAW, '%s_%02d_t%d.mp3' % (lang, i + 1, t))
-            io.open(raw, 'wb').write(speak(vid, text, SPEED[i], prev, nxt))
+            io.open(raw, 'wb').write(speak(vid, text, SPEED[i], prev, nxt, model))
             tmp = dst + '.t%d.wav' % t
             d = trim(raw, tmp)
             if best is None or (d <= MAX[i] and (best[0] > MAX[i] or d > best[0])) or \

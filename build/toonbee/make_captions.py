@@ -23,7 +23,7 @@ import align
 import script
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = r'C:\aegis-aa\aegis-advertisment'
+OUT = os.path.normpath(os.path.join(HERE, '..', '..'))   # the checkout this lives in
 
 lang = sys.argv[1] if len(sys.argv) > 1 else 'en'
 lines = script.LANGS[lang]

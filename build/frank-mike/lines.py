@@ -167,14 +167,14 @@ LINES = {
            "マイクには全額と手数料の一部が戻ります。コストは？{B}ゼロ。",
            "フランクも、あなたと同じ疑問を抱いています。",
            "MyEZToll。もう損はさせません。さあ、稼ぎましょう。"],
-    # Subtitles only, over the English narration (no model speaks Uzbek).
+    # Narrated since 2026-11-22 by Dilzoda on eleven_v4 (before that: captions over en).
     'uz': ["Ikki ijara avtoparki. Bitta koʻcha.",
            "Frankning haftasi: bir uyum jarimalar, hammasining muddati oʻtgan,",
            "yoʻl toʻlovlari hisobidan avtomatik yechiladi,",
            "va bularning hammasi uning choʻntagidan.",
            "Maykning haftasi? Mashina qaytib keladi.",
-           "MyEZToll har bir yoʻl toʻlovi va jarimani oʻz vaqtida topadi va haydovchidan undiradi, ustiga komissiya.",
-           "Mayk hammasini qaytarib oladi, ustiga oʻsha komissiyadan ulush. Uning xarajati? {B} Nol.",
+           "MyEZToll har bir toʻlov va jarimani vaqtida topadi, haydovchidan komissiya bilan undiradi.",
+           "Mayk hammasini qaytarib oladi, ustiga komissiyadan ulush. Uning xarajati? {B} Nol.",
            "Frank ham siz bilan bir xil savolni beryapti.",
            "MyEZToll. Yoʻqotishni bas qiling. Daromad topishni boshlang."],
 }

@@ -22,7 +22,9 @@ def fold(word):
     """
     text = unicodedata.normalize('NFD', word.lower())
     text = ''.join(c for c in text if unicodedata.category(c) != 'Mn')
-    return ''.join(c for c in text if c.isalnum())
+    # The Uzbek letters ʻ and ʼ are modifier letters, so isalnum() keeps them, while
+    # Scribe writes the same sound with an ASCII apostrophe, which it drops: toʻrt vs to'rt.
+    return ''.join(c for c in text if c.isalnum() and c not in 'ʻʼ')
 
 
 # A Han character is a word on its own, and so is each kana and Hangul syllable.

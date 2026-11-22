@@ -1,0 +1,1766 @@
+{
+ "language_code": "uzb",
+ "language_probability": 1.0,
+ "text": "Seshanba, kunduzi soat to'rt o'n ikki. Mashinangizdan biri to'lov punktidan o'tadi. Hech kim to'lamaydi. Hali emas. Uch hafta o'tib, hisob sizning nomingizga keladi. Ijarachi allaqachon ketgan. Garov qaytarilgan. Ijara yopilgan. Siz to'laysiz va buni biznes xarajati deb ataysiz. Jarimalar, yoqilg'i va shikastlar bilan ham xuddi shunday. Ammo yo'l to'lovi agentliklari bilardi. E-ZPass, SunPass, mamlakat bo'ylab o'ttiz bitta tarmoq. Biron esa kim rulda ekanini bilardi. MyEasyToll ikkisini bog'lab, ijarachi kartasidan yechadi. Kichik avtopark. Bir hafta. To'rt yuz o'n ikki dollar. Va to'laydigan siz edingiz. Xo'sh, platforma avtoparkingizga qanchaga tushadi? Hech narsaga. Obuna, ulanish to'lovi, mashina uchun to'lov yo'q. Allaqachon foydalanayotgan GPSingizni ulash ham bepul. Faqat bitta narsa pullik. O'zimizning uskunamiz. Siz hech narsa to'lamaysiz. To'lov to'liq qaytadi. Ustiga komissiyadan ulush. Yo'qotishni bas qiling. Daromad topishni boshlang. [kegel]",
+ "words": [
+  {
+   "text": "Seshanba,",
+   "start": 0.24,
+   "end": 0.88,
+   "type": "word",
+   "logprob": -0.1082018390447451
+  },
+  {
+   "text": " ",
+   "start": 0.88,
+   "end": 1.32,
+   "type": "spacing",
+   "logprob": -0.0021365690045058727
+  },
+  {
+   "text": "kunduzi",
+   "start": 1.32,
+   "end": 1.88,
+   "type": "word",
+   "logprob": -0.0013124395294913224
+  },
+  {
+   "text": " ",
+   "start": 1.88,
+   "end": 2.12,
+   "type": "spacing",
+   "logprob": -0.05519833043217659
+  },
+  {
+   "text": "soat",
+   "start": 2.12,
+   "end": 2.48,
+   "type": "word",
+   "logprob": -0.02759988047131401
+  },
+  {
+   "text": " ",
+   "start": 2.48,
+   "end": 2.66,
+   "type": "spacing",
+   "logprob": -0.0004748170613311231
+  },
+  {
+   "text": "to'rt",
+   "start": 2.66,
+   "end": 2.98,
+   "type": "word",
+   "logprob": -0.06825791394803674
+  },
+  {
+   "text": " ",
+   "start": 2.98,
+   "end": 3.08,
+   "type": "spacing",
+   "logprob": -0.0008887869771569967
+  },
+  {
+   "text": "o'n",
+   "start": 3.08,
+   "end": 3.2,
+   "type": "word",
+   "logprob": -0.010626461395683387
+  },
+  {
+   "text": " ",
+   "start": 3.2,
+   "end": 3.24,
+   "type": "spacing",
+   "logprob": -0.04503285884857178
+  },
+  {
+   "text": "ikki.",
+   "start": 3.24,
+   "end": 3.58,
+   "type": "word",
+   "logprob": -0.07261081337928772
+  },
+  {
+   "text": " ",
+   "start": 3.58,
+   "end": 3.58,
+   "type": "spacing",
+   "logprob": -0.025969581678509712
+  },
+  {
+   "text": "Mashinangizdan",
+   "start": 4.2,
+   "end": 5.04,
+   "type": "word",
+   "logprob": -0.008712805246302326
+  },
+  {
+   "text": " ",
+   "start": 5.04,
+   "end": 5.14,
+   "type": "spacing",
+   "logprob": -0.00013982271775603294
+  },
+  {
+   "text": "biri",
+   "start": 5.14,
+   "end": 5.38,
+   "type": "word",
+   "logprob": -0.00013982271775603294
+  },
+  {
+   "text": " ",
+   "start": 5.38,
+   "end": 5.48,
+   "type": "spacing",
+   "logprob": -0.0002585315378382802
+  },
+  {
+   "text": "to'lov",
+   "start": 5.48,
+   "end": 5.74,
+   "type": "word",
+   "logprob": -0.0515978306842347
+  },
+  {
+   "text": " ",
+   "start": 5.74,
+   "end": 5.82,
+   "type": "spacing",
+   "logprob": -0.00369687145575881
+  },
+  {
+   "text": "punktidan",
+   "start": 5.82,
+   "end": 6.32,
+   "type": "word",
+   "logprob": -0.0020754335677742753
+  },
+  {
+   "text": " ",
+   "start": 6.32,
+   "end": 6.36,
+   "type": "spacing",
+   "logprob": -1.5497195136049413e-06
+  },
+  {
+   "text": "o'tadi.",
+   "start": 6.36,
+   "end": 6.74,
+   "type": "word",
+   "logprob": -4.5706853029514605e-05
+  },
+  {
+   "text": " ",
+   "start": 6.74,
+   "end": 6.74,
+   "type": "spacing",
+   "logprob": -0.0010596857173368335
+  },
+  {
+   "text": "Hech",
+   "start": 7.2,
+   "end": 7.4,
+   "type": "word",
+   "logprob": -0.0005539821577258408
+  },
+  {
+   "text": " ",
+   "start": 7.4,
+   "end": 7.48,
+   "type": "spacing",
+   "logprob": -0.00013600854435935616
+  },
+  {
+   "text": "kim",
+   "start": 7.48,
+   "end": 7.6,
+   "type": "word",
+   "logprob": -0.00013600854435935616
+  },
+  {
+   "text": " ",
+   "start": 7.6,
+   "end": 7.68,
+   "type": "spacing",
+   "logprob": -3.0874729418428615e-05
+  },
+  {
+   "text": "to'lamaydi.",
+   "start": 7.68,
+   "end": 8.28,
+   "type": "word",
+   "logprob": -0.023178150087253678
+  },
+  {
+   "text": " ",
+   "start": 8.28,
+   "end": 8.7,
+   "type": "spacing",
+   "logprob": -0.0002406545972917229
+  },
+  {
+   "text": "Hali",
+   "start": 8.7,
+   "end": 8.92,
+   "type": "word",
+   "logprob": -0.00015376690498669632
+  },
+  {
+   "text": " ",
+   "start": 8.92,
+   "end": 8.94,
+   "type": "spacing",
+   "logprob": -0.00020108585886191577
+  },
+  {
+   "text": "emas.",
+   "start": 8.94,
+   "end": 9.36,
+   "type": "word",
+   "logprob": -0.00016091637079966857
+  },
+  {
+   "text": " ",
+   "start": 9.36,
+   "end": 9.36,
+   "type": "spacing",
+   "logprob": -0.008005083538591862
+  },
+  {
+   "text": "Uch",
+   "start": 10.58,
+   "end": 10.74,
+   "type": "word",
+   "logprob": -0.008005083538591862
+  },
+  {
+   "text": " ",
+   "start": 10.74,
+   "end": 10.8,
+   "type": "spacing",
+   "logprob": -0.0032239388674497604
+  },
+  {
+   "text": "hafta",
+   "start": 10.8,
+   "end": 11.16,
+   "type": "word",
+   "logprob": -0.0032239388674497604
+  },
+  {
+   "text": " ",
+   "start": 11.16,
+   "end": 11.22,
+   "type": "spacing",
+   "logprob": -5.328513361746445e-05
+  },
+  {
+   "text": "o'tib,",
+   "start": 11.22,
+   "end": 11.66,
+   "type": "word",
+   "logprob": -0.012408213181818914
+  },
+  {
+   "text": " ",
+   "start": 11.66,
+   "end": 11.82,
+   "type": "spacing",
+   "logprob": -0.00010072677832795307
+  },
+  {
+   "text": "hisob",
+   "start": 11.82,
+   "end": 12.2,
+   "type": "word",
+   "logprob": -6.348781316773966e-05
+  },
+  {
+   "text": " ",
+   "start": 12.2,
+   "end": 12.28,
+   "type": "spacing",
+   "logprob": -0.0014152044896036386
+  },
+  {
+   "text": "sizning",
+   "start": 12.28,
+   "end": 12.62,
+   "type": "word",
+   "logprob": -0.0006082873165464012
+  },
+  {
+   "text": " ",
+   "start": 12.62,
+   "end": 12.66,
+   "type": "spacing",
+   "logprob": -0.01239536888897419
+  },
+  {
+   "text": "nomingizga",
+   "start": 12.66,
+   "end": 13.22,
+   "type": "word",
+   "logprob": -0.0038040766750782494
+  },
+  {
+   "text": " ",
+   "start": 13.22,
+   "end": 13.3,
+   "type": "spacing",
+   "logprob": -8.439661905867979e-05
+  },
+  {
+   "text": "keladi.",
+   "start": 13.3,
+   "end": 13.72,
+   "type": "word",
+   "logprob": -4.9657472248197466e-05
+  },
+  {
+   "text": " ",
+   "start": 13.72,
+   "end": 13.72,
+   "type": "spacing",
+   "logprob": -0.0029825749807059765
+  },
+  {
+   "text": "Ijarachi",
+   "start": 16.58,
+   "end": 17.12,
+   "type": "word",
+   "logprob": -0.0030812263867119327
+  },
+  {
+   "text": " ",
+   "start": 17.12,
+   "end": 17.2,
+   "type": "spacing",
+   "logprob": -0.20221638679504395
+  },
+  {
+   "text": "allaqachon",
+   "start": 17.2,
+   "end": 17.72,
+   "type": "word",
+   "logprob": -0.08132774577061355
+  },
+  {
+   "text": " ",
+   "start": 17.72,
+   "end": 17.8,
+   "type": "spacing",
+   "logprob": -2.539125671319198e-05
+  },
+  {
+   "text": "ketgan.",
+   "start": 17.8,
+   "end": 18.28,
+   "type": "word",
+   "logprob": -0.03221321305008067
+  },
+  {
+   "text": " ",
+   "start": 18.28,
+   "end": 18.28,
+   "type": "spacing",
+   "logprob": -0.020574716851115227
+  },
+  {
+   "text": "Garov",
+   "start": 18.76,
+   "end": 19.04,
+   "type": "word",
+   "logprob": -0.01234659440433461
+  },
+  {
+   "text": " ",
+   "start": 19.04,
+   "end": 19.14,
+   "type": "spacing",
+   "logprob": -0.00031585473334416747
+  },
+  {
+   "text": "qaytarilgan.",
+   "start": 19.14,
+   "end": 19.88,
+   "type": "word",
+   "logprob": -0.0007532155298880147
+  },
+  {
+   "text": " ",
+   "start": 19.88,
+   "end": 20.36,
+   "type": "spacing",
+   "logprob": -0.2582777440547943
+  },
+  {
+   "text": "Ijara",
+   "start": 20.36,
+   "end": 20.68,
+   "type": "word",
+   "logprob": -0.10331560371614615
+  },
+  {
+   "text": " ",
+   "start": 20.68,
+   "end": 20.7,
+   "type": "spacing",
+   "logprob": -6.437280717364047e-06
+  },
+  {
+   "text": "yopilgan.",
+   "start": 20.7,
+   "end": 21.32,
+   "type": "word",
+   "logprob": -0.00029598816205280955
+  },
+  {
+   "text": " ",
+   "start": 21.32,
+   "end": 21.32,
+   "type": "spacing",
+   "logprob": -2.1457441107486375e-05
+  },
+  {
+   "text": "Siz",
+   "start": 22.68,
+   "end": 22.9,
+   "type": "word",
+   "logprob": -2.1457441107486375e-05
+  },
+  {
+   "text": " ",
+   "start": 22.9,
+   "end": 22.96,
+   "type": "spacing",
+   "logprob": -1.549708758830093e-05
+  },
+  {
+   "text": "to'laysiz",
+   "start": 22.96,
+   "end": 23.6,
+   "type": "word",
+   "logprob": -0.011277427845925558
+  },
+  {
+   "text": " ",
+   "start": 23.6,
+   "end": 23.9,
+   "type": "spacing",
+   "logprob": -0.00014649749209638685
+  },
+  {
+   "text": "va",
+   "start": 23.9,
+   "end": 24.08,
+   "type": "word",
+   "logprob": -0.00014649749209638685
+  },
+  {
+   "text": " ",
+   "start": 24.08,
+   "end": 24.18,
+   "type": "spacing",
+   "logprob": -0.0002277830062666908
+  },
+  {
+   "text": "buni",
+   "start": 24.18,
+   "end": 24.6,
+   "type": "word",
+   "logprob": -9.279708865506109e-05
+  },
+  {
+   "text": " ",
+   "start": 24.6,
+   "end": 24.78,
+   "type": "spacing",
+   "logprob": -0.002776222536340356
+  },
+  {
+   "text": "biznes",
+   "start": 24.78,
+   "end": 25.16,
+   "type": "word",
+   "logprob": -0.002776222536340356
+  },
+  {
+   "text": " ",
+   "start": 25.16,
+   "end": 25.22,
+   "type": "spacing",
+   "logprob": -0.005492121446877718
+  },
+  {
+   "text": "xarajati",
+   "start": 25.22,
+   "end": 25.72,
+   "type": "word",
+   "logprob": -0.012797585692169378
+  },
+  {
+   "text": " ",
+   "start": 25.72,
+   "end": 25.78,
+   "type": "spacing",
+   "logprob": -0.0036406919825822115
+  },
+  {
+   "text": "deb",
+   "start": 25.78,
+   "end": 25.92,
+   "type": "word",
+   "logprob": -0.0036406919825822115
+  },
+  {
+   "text": " ",
+   "start": 25.92,
+   "end": 26.0,
+   "type": "spacing",
+   "logprob": -0.0006790239713154733
+  },
+  {
+   "text": "ataysiz.",
+   "start": 26.0,
+   "end": 26.58,
+   "type": "word",
+   "logprob": -0.0015284707031852918
+  },
+  {
+   "text": " ",
+   "start": 26.58,
+   "end": 26.58,
+   "type": "spacing",
+   "logprob": -0.0037703870330005884
+  },
+  {
+   "text": "Jarimalar,",
+   "start": 28.7,
+   "end": 29.4,
+   "type": "word",
+   "logprob": -0.0017718777290610887
+  },
+  {
+   "text": " ",
+   "start": 29.4,
+   "end": 29.74,
+   "type": "spacing",
+   "logprob": -0.00021443451987579465
+  },
+  {
+   "text": "yoqilg'i",
+   "start": 29.74,
+   "end": 30.4,
+   "type": "word",
+   "logprob": -0.02156913395083393
+  },
+  {
+   "text": " ",
+   "start": 30.4,
+   "end": 30.52,
+   "type": "spacing",
+   "logprob": -7.152531907195225e-06
+  },
+  {
+   "text": "va",
+   "start": 30.52,
+   "end": 30.7,
+   "type": "word",
+   "logprob": -7.152531907195225e-06
+  },
+  {
+   "text": " ",
+   "start": 30.7,
+   "end": 30.76,
+   "type": "spacing",
+   "logprob": -0.012707922607660294
+  },
+  {
+   "text": "shikastlar",
+   "start": 30.76,
+   "end": 31.28,
+   "type": "word",
+   "logprob": -0.0051318398298462855
+  },
+  {
+   "text": " ",
+   "start": 31.28,
+   "end": 31.36,
+   "type": "spacing",
+   "logprob": -7.629103492945433e-05
+  },
+  {
+   "text": "bilan",
+   "start": 31.36,
+   "end": 31.58,
+   "type": "word",
+   "logprob": -7.629103492945433e-05
+  },
+  {
+   "text": " ",
+   "start": 31.58,
+   "end": 31.64,
+   "type": "spacing",
+   "logprob": -1.6689286894688848e-06
+  },
+  {
+   "text": "ham",
+   "start": 31.64,
+   "end": 31.94,
+   "type": "word",
+   "logprob": -1.6689286894688848e-06
+  },
+  {
+   "text": " ",
+   "start": 31.94,
+   "end": 32.02,
+   "type": "spacing",
+   "logprob": -0.0028994923923164606
+  },
+  {
+   "text": "xuddi",
+   "start": 32.02,
+   "end": 32.34,
+   "type": "word",
+   "logprob": -0.0007020006552920677
+  },
+  {
+   "text": " ",
+   "start": 32.34,
+   "end": 32.38,
+   "type": "spacing",
+   "logprob": -0.00012408917245920748
+  },
+  {
+   "text": "shunday.",
+   "start": 32.38,
+   "end": 32.82,
+   "type": "word",
+   "logprob": -0.0006732602740697757
+  },
+  {
+   "text": " ",
+   "start": 32.82,
+   "end": 32.82,
+   "type": "spacing",
+   "logprob": -0.05274469405412674
+  },
+  {
+   "text": "Ammo",
+   "start": 34.66,
+   "end": 35.08,
+   "type": "word",
+   "logprob": -0.05274469405412674
+  },
+  {
+   "text": " ",
+   "start": 35.08,
+   "end": 35.22,
+   "type": "spacing",
+   "logprob": -0.0006107610533945262
+  },
+  {
+   "text": "yo'l",
+   "start": 35.22,
+   "end": 35.42,
+   "type": "word",
+   "logprob": -0.001609194645396883
+  },
+  {
+   "text": " ",
+   "start": 35.42,
+   "end": 35.46,
+   "type": "spacing",
+   "logprob": -0.00019333878299221396
+  },
+  {
+   "text": "to'lovi",
+   "start": 35.46,
+   "end": 35.9,
+   "type": "word",
+   "logprob": -0.0005340460806369915
+  },
+  {
+   "text": " ",
+   "start": 35.9,
+   "end": 35.96,
+   "type": "spacing",
+   "logprob": -0.0013213959755375981
+  },
+  {
+   "text": "agentliklari",
+   "start": 35.96,
+   "end": 36.62,
+   "type": "word",
+   "logprob": -0.0006032598466845229
+  },
+  {
+   "text": " ",
+   "start": 36.62,
+   "end": 36.64,
+   "type": "spacing",
+   "logprob": -0.0004409771354403347
+  },
+  {
+   "text": "bilardi.",
+   "start": 36.64,
+   "end": 37.08,
+   "type": "word",
+   "logprob": -0.001308041075390065
+  },
+  {
+   "text": " ",
+   "start": 37.08,
+   "end": 37.66,
+   "type": "spacing",
+   "logprob": -0.4343668222427368
+  },
+  {
+   "text": "E-ZPass,",
+   "start": 37.66,
+   "end": 38.4,
+   "type": "word",
+   "logprob": -0.17052996064251147
+  },
+  {
+   "text": " ",
+   "start": 38.4,
+   "end": 38.68,
+   "type": "spacing",
+   "logprob": -0.0017995130037888885
+  },
+  {
+   "text": "SunPass,",
+   "start": 38.68,
+   "end": 39.28,
+   "type": "word",
+   "logprob": -0.002060778919258155
+  },
+  {
+   "text": " ",
+   "start": 39.28,
+   "end": 39.74,
+   "type": "spacing",
+   "logprob": -0.005793920252472162
+  },
+  {
+   "text": "mamlakat",
+   "start": 39.74,
+   "end": 40.18,
+   "type": "word",
+   "logprob": -0.002275732578707945
+  },
+  {
+   "text": " ",
+   "start": 40.18,
+   "end": 40.22,
+   "type": "spacing",
+   "logprob": -8.022463589441031e-05
+  },
+  {
+   "text": "bo'ylab",
+   "start": 40.22,
+   "end": 40.62,
+   "type": "word",
+   "logprob": -0.000549744045461661
+  },
+  {
+   "text": " ",
+   "start": 40.62,
+   "end": 40.68,
+   "type": "spacing",
+   "logprob": -2.2411095415009186e-05
+  },
+  {
+   "text": "o'ttiz",
+   "start": 40.68,
+   "end": 41.02,
+   "type": "word",
+   "logprob": -0.0001356287969732269
+  },
+  {
+   "text": " ",
+   "start": 41.02,
+   "end": 41.08,
+   "type": "spacing",
+   "logprob": -3.099436753473128e-06
+  },
+  {
+   "text": "bitta",
+   "start": 41.08,
+   "end": 41.4,
+   "type": "word",
+   "logprob": -0.00032709136044104523
+  },
+  {
+   "text": " ",
+   "start": 41.4,
+   "end": 41.44,
+   "type": "spacing",
+   "logprob": -0.0006123098428361118
+  },
+  {
+   "text": "tarmoq.",
+   "start": 41.44,
+   "end": 41.92,
+   "type": "word",
+   "logprob": -0.00027580371904280455
+  },
+  {
+   "text": " ",
+   "start": 41.92,
+   "end": 41.92,
+   "type": "spacing",
+   "logprob": -0.0713401585817337
+  },
+  {
+   "text": "Biron",
+   "start": 43.06,
+   "end": 43.4,
+   "type": "word",
+   "logprob": -0.014500789763405918
+  },
+  {
+   "text": " ",
+   "start": 43.4,
+   "end": 43.46,
+   "type": "spacing",
+   "logprob": -0.0023328252136707306
+  },
+  {
+   "text": "esa",
+   "start": 43.46,
+   "end": 43.92,
+   "type": "word",
+   "logprob": -0.0023328252136707306
+  },
+  {
+   "text": " ",
+   "start": 43.92,
+   "end": 43.98,
+   "type": "spacing",
+   "logprob": -8.237022848334163e-05
+  },
+  {
+   "text": "kim",
+   "start": 43.98,
+   "end": 44.16,
+   "type": "word",
+   "logprob": -8.237022848334163e-05
+  },
+  {
+   "text": " ",
+   "start": 44.16,
+   "end": 44.24,
+   "type": "spacing",
+   "logprob": -0.015951404348015785
+  },
+  {
+   "text": "rulda",
+   "start": 44.24,
+   "end": 44.5,
+   "type": "word",
+   "logprob": -0.009571271762024481
+  },
+  {
+   "text": " ",
+   "start": 44.5,
+   "end": 44.54,
+   "type": "spacing",
+   "logprob": -4.005352093372494e-05
+  },
+  {
+   "text": "ekanini",
+   "start": 44.54,
+   "end": 44.92,
+   "type": "word",
+   "logprob": -0.00016025424702093005
+  },
+  {
+   "text": " ",
+   "start": 44.92,
+   "end": 44.96,
+   "type": "spacing",
+   "logprob": -1.2040065485052764e-05
+  },
+  {
+   "text": "bilardi.",
+   "start": 44.96,
+   "end": 45.44,
+   "type": "word",
+   "logprob": -0.0001879000337794423
+  },
+  {
+   "text": " ",
+   "start": 45.44,
+   "end": 45.44,
+   "type": "spacing",
+   "logprob": -2.825220326485578e-05
+  },
+  {
+   "text": "MyEasyToll",
+   "start": 46.14,
+   "end": 47.06,
+   "type": "word",
+   "logprob": -0.13941925606968653
+  },
+  {
+   "text": " ",
+   "start": 47.06,
+   "end": 47.16,
+   "type": "spacing",
+   "logprob": -0.0019614521879702806
+  },
+  {
+   "text": "ikkisini",
+   "start": 47.16,
+   "end": 47.64,
+   "type": "word",
+   "logprob": -0.0005668433184951027
+  },
+  {
+   "text": " ",
+   "start": 47.64,
+   "end": 47.68,
+   "type": "spacing",
+   "logprob": -0.0005009111482650042
+  },
+  {
+   "text": "bog'lab,",
+   "start": 47.68,
+   "end": 48.12,
+   "type": "word",
+   "logprob": -0.0004929244769300567
+  },
+  {
+   "text": " ",
+   "start": 48.12,
+   "end": 48.32,
+   "type": "spacing",
+   "logprob": -0.0010037152096629143
+  },
+  {
+   "text": "ijarachi",
+   "start": 48.32,
+   "end": 48.76,
+   "type": "word",
+   "logprob": -0.012180416986666387
+  },
+  {
+   "text": " ",
+   "start": 48.76,
+   "end": 48.8,
+   "type": "spacing",
+   "logprob": -0.013370023109018803
+  },
+  {
+   "text": "kartasidan",
+   "start": 48.8,
+   "end": 49.38,
+   "type": "word",
+   "logprob": -0.00566675430018222
+  },
+  {
+   "text": " ",
+   "start": 49.38,
+   "end": 49.44,
+   "type": "spacing",
+   "logprob": -0.006958773359656334
+  },
+  {
+   "text": "yechadi.",
+   "start": 49.44,
+   "end": 49.88,
+   "type": "word",
+   "logprob": -0.0010277119813508762
+  },
+  {
+   "text": " ",
+   "start": 49.88,
+   "end": 49.88,
+   "type": "spacing",
+   "logprob": -0.007190657779574394
+  },
+  {
+   "text": "Kichik",
+   "start": 51.16,
+   "end": 51.48,
+   "type": "word",
+   "logprob": -0.001347712749823889
+  },
+  {
+   "text": " ",
+   "start": 51.48,
+   "end": 51.64,
+   "type": "spacing",
+   "logprob": -0.0003326578007545322
+  },
+  {
+   "text": "avtopark.",
+   "start": 51.64,
+   "end": 52.28,
+   "type": "word",
+   "logprob": -0.004698071703185431
+  },
+  {
+   "text": " ",
+   "start": 52.28,
+   "end": 52.28,
+   "type": "spacing",
+   "logprob": -7.199982064776123e-05
+  },
+  {
+   "text": "Bir",
+   "start": 52.72,
+   "end": 52.82,
+   "type": "word",
+   "logprob": -7.199982064776123e-05
+  },
+  {
+   "text": " ",
+   "start": 52.82,
+   "end": 52.92,
+   "type": "spacing",
+   "logprob": -0.0025739893317222595
+  },
+  {
+   "text": "hafta.",
+   "start": 52.92,
+   "end": 53.32,
+   "type": "word",
+   "logprob": -0.0027632346221556268
+  },
+  {
+   "text": " ",
+   "start": 53.32,
+   "end": 53.32,
+   "type": "spacing",
+   "logprob": -0.00020132421923335642
+  },
+  {
+   "text": "To'rt",
+   "start": 53.92,
+   "end": 54.12,
+   "type": "word",
+   "logprob": -0.0012303614232223481
+  },
+  {
+   "text": " ",
+   "start": 54.12,
+   "end": 54.16,
+   "type": "spacing",
+   "logprob": -5.578839045483619e-05
+  },
+  {
+   "text": "yuz",
+   "start": 54.16,
+   "end": 54.3,
+   "type": "word",
+   "logprob": -0.0002486303613598769
+  },
+  {
+   "text": " ",
+   "start": 54.3,
+   "end": 54.4,
+   "type": "spacing",
+   "logprob": -5.709961988031864e-05
+  },
+  {
+   "text": "o'n",
+   "start": 54.4,
+   "end": 54.5,
+   "type": "word",
+   "logprob": -0.003551313110316793
+  },
+  {
+   "text": " ",
+   "start": 54.5,
+   "end": 54.54,
+   "type": "spacing",
+   "logprob": -0.009353742934763432
+  },
+  {
+   "text": "ikki",
+   "start": 54.54,
+   "end": 54.74,
+   "type": "word",
+   "logprob": -0.009353742934763432
+  },
+  {
+   "text": " ",
+   "start": 54.74,
+   "end": 54.82,
+   "type": "spacing",
+   "logprob": -0.014362647198140621
+  },
+  {
+   "text": "dollar.",
+   "start": 54.82,
+   "end": 55.18,
+   "type": "word",
+   "logprob": -0.013397597574761935
+  },
+  {
+   "text": " ",
+   "start": 55.18,
+   "end": 55.7,
+   "type": "spacing",
+   "logprob": -0.001022531185299158
+  },
+  {
+   "text": "Va",
+   "start": 55.7,
+   "end": 55.78,
+   "type": "word",
+   "logprob": -0.001022531185299158
+  },
+  {
+   "text": " ",
+   "start": 55.78,
+   "end": 55.86,
+   "type": "spacing",
+   "logprob": -4.172316494077677e-06
+  },
+  {
+   "text": "to'laydigan",
+   "start": 55.86,
+   "end": 56.4,
+   "type": "word",
+   "logprob": -0.00048037010207157107
+  },
+  {
+   "text": " ",
+   "start": 56.4,
+   "end": 56.52,
+   "type": "spacing",
+   "logprob": -4.565611743601039e-05
+  },
+  {
+   "text": "siz",
+   "start": 56.52,
+   "end": 56.68,
+   "type": "word",
+   "logprob": -4.565611743601039e-05
+  },
+  {
+   "text": " ",
+   "start": 56.68,
+   "end": 56.74,
+   "type": "spacing",
+   "logprob": -0.002294528530910611
+  },
+  {
+   "text": "edingiz.",
+   "start": 56.74,
+   "end": 57.28,
+   "type": "word",
+   "logprob": -0.000593658831913757
+  },
+  {
+   "text": " ",
+   "start": 57.28,
+   "end": 57.28,
+   "type": "spacing",
+   "logprob": -0.0017025275155901909
+  },
+  {
+   "text": "Xo'sh,",
+   "start": 58.38,
+   "end": 58.72,
+   "type": "word",
+   "logprob": -0.03961876359608141
+  },
+  {
+   "text": " ",
+   "start": 58.72,
+   "end": 59.06,
+   "type": "spacing",
+   "logprob": -0.005443511996418238
+  },
+  {
+   "text": "platforma",
+   "start": 59.06,
+   "end": 59.82,
+   "type": "word",
+   "logprob": -0.004838770048447966
+  },
+  {
+   "text": " ",
+   "start": 59.82,
+   "end": 59.9,
+   "type": "spacing",
+   "logprob": -2.312633478140924e-05
+  },
+  {
+   "text": "avtoparkingizga",
+   "start": 59.9,
+   "end": 60.94,
+   "type": "word",
+   "logprob": -0.0008565765541182676
+  },
+  {
+   "text": " ",
+   "start": 60.94,
+   "end": 61.08,
+   "type": "spacing",
+   "logprob": -0.001122083282098174
+  },
+  {
+   "text": "qanchaga",
+   "start": 61.08,
+   "end": 61.44,
+   "type": "word",
+   "logprob": -0.04571004145236657
+  },
+  {
+   "text": " ",
+   "start": 61.44,
+   "end": 61.5,
+   "type": "spacing",
+   "logprob": -6.425174069590867e-05
+  },
+  {
+   "text": "tushadi?",
+   "start": 61.5,
+   "end": 61.92,
+   "type": "word",
+   "logprob": -5.11541538230631e-05
+  },
+  {
+   "text": " ",
+   "start": 61.92,
+   "end": 61.94,
+   "type": "spacing",
+   "logprob": -0.0003513672563713044
+  },
+  {
+   "text": "Hech",
+   "start": 64.4,
+   "end": 64.64,
+   "type": "word",
+   "logprob": -0.00017592204670791034
+  },
+  {
+   "text": " ",
+   "start": 64.64,
+   "end": 64.68,
+   "type": "spacing",
+   "logprob": -0.0014417502097785473
+  },
+  {
+   "text": "narsaga.",
+   "start": 64.68,
+   "end": 65.2,
+   "type": "word",
+   "logprob": -0.0007289645119499255
+  },
+  {
+   "text": " ",
+   "start": 65.2,
+   "end": 65.2,
+   "type": "spacing",
+   "logprob": -0.02282443456351757
+  },
+  {
+   "text": "Obuna,",
+   "start": 65.68,
+   "end": 66.2,
+   "type": "word",
+   "logprob": -0.007765617858240148
+  },
+  {
+   "text": " ",
+   "start": 66.2,
+   "end": 66.46,
+   "type": "spacing",
+   "logprob": -0.08923225104808807
+  },
+  {
+   "text": "ulanish",
+   "start": 66.46,
+   "end": 66.9,
+   "type": "word",
+   "logprob": -0.013023671492971647
+  },
+  {
+   "text": " ",
+   "start": 66.9,
+   "end": 66.94,
+   "type": "spacing",
+   "logprob": -4.124556289752945e-05
+  },
+  {
+   "text": "to'lovi,",
+   "start": 66.94,
+   "end": 67.44,
+   "type": "word",
+   "logprob": -0.00023814999030946638
+  },
+  {
+   "text": " ",
+   "start": 67.44,
+   "end": 67.7,
+   "type": "spacing",
+   "logprob": -0.0008737798780202866
+  },
+  {
+   "text": "mashina",
+   "start": 67.7,
+   "end": 68.08,
+   "type": "word",
+   "logprob": -0.0005108999916306597
+  },
+  {
+   "text": " ",
+   "start": 68.08,
+   "end": 68.1,
+   "type": "spacing",
+   "logprob": -0.00015662873920518905
+  },
+  {
+   "text": "uchun",
+   "start": 68.1,
+   "end": 68.36,
+   "type": "word",
+   "logprob": -0.00015662873920518905
+  },
+  {
+   "text": " ",
+   "start": 68.36,
+   "end": 68.44,
+   "type": "spacing",
+   "logprob": -9.858122211880982e-05
+  },
+  {
+   "text": "to'lov",
+   "start": 68.44,
+   "end": 68.72,
+   "type": "word",
+   "logprob": -0.00039652637860854156
+  },
+  {
+   "text": " ",
+   "start": 68.72,
+   "end": 68.84,
+   "type": "spacing",
+   "logprob": -0.0006831934442743659
+  },
+  {
+   "text": "yo'q.",
+   "start": 68.84,
+   "end": 69.12,
+   "type": "word",
+   "logprob": -0.0002806682344271394
+  },
+  {
+   "text": " ",
+   "start": 69.12,
+   "end": 69.12,
+   "type": "spacing",
+   "logprob": -0.0958813726902008
+  },
+  {
+   "text": "Allaqachon",
+   "start": 70.46,
+   "end": 71.0,
+   "type": "word",
+   "logprob": -0.028799231317225348
+  },
+  {
+   "text": " ",
+   "start": 71.0,
+   "end": 71.08,
+   "type": "spacing",
+   "logprob": -0.0003871168300975114
+  },
+  {
+   "text": "foydalanayotgan",
+   "start": 71.08,
+   "end": 72.0,
+   "type": "word",
+   "logprob": -0.0020780538810868166
+  },
+  {
+   "text": " ",
+   "start": 72.0,
+   "end": 72.18,
+   "type": "spacing",
+   "logprob": -0.00025388356880284846
+  },
+  {
+   "text": "GPSingizni",
+   "start": 72.18,
+   "end": 73.18,
+   "type": "word",
+   "logprob": -0.03793606603721855
+  },
+  {
+   "text": " ",
+   "start": 73.18,
+   "end": 73.2,
+   "type": "spacing",
+   "logprob": -0.0019507441902533174
+  },
+  {
+   "text": "ulash",
+   "start": 73.2,
+   "end": 73.52,
+   "type": "word",
+   "logprob": -0.0008056887178099714
+  },
+  {
+   "text": " ",
+   "start": 73.52,
+   "end": 73.56,
+   "type": "spacing",
+   "logprob": -5.245195097813848e-06
+  },
+  {
+   "text": "ham",
+   "start": 73.56,
+   "end": 73.74,
+   "type": "word",
+   "logprob": -5.245195097813848e-06
+  },
+  {
+   "text": " ",
+   "start": 73.74,
+   "end": 73.84,
+   "type": "spacing",
+   "logprob": -0.0029709271620959044
+  },
+  {
+   "text": "bepul.",
+   "start": 73.84,
+   "end": 74.3,
+   "type": "word",
+   "logprob": -0.0010046537475621637
+  },
+  {
+   "text": " ",
+   "start": 74.3,
+   "end": 74.3,
+   "type": "spacing",
+   "logprob": -0.007142131216824055
+  },
+  {
+   "text": "Faqat",
+   "start": 76.38,
+   "end": 76.68,
+   "type": "word",
+   "logprob": -0.0030829737428575755
+  },
+  {
+   "text": " ",
+   "start": 76.68,
+   "end": 76.8,
+   "type": "spacing",
+   "logprob": -2.3841855067985307e-07
+  },
+  {
+   "text": "bitta",
+   "start": 76.8,
+   "end": 77.12,
+   "type": "word",
+   "logprob": -4.429694963050679e-05
+  },
+  {
+   "text": " ",
+   "start": 77.12,
+   "end": 77.16,
+   "type": "spacing",
+   "logprob": -1.7762025890988298e-05
+  },
+  {
+   "text": "narsa",
+   "start": 77.16,
+   "end": 77.5,
+   "type": "word",
+   "logprob": -0.00022582301498914604
+  },
+  {
+   "text": " ",
+   "start": 77.5,
+   "end": 77.52,
+   "type": "spacing",
+   "logprob": -0.010669095441699028
+  },
+  {
+   "text": "pullik.",
+   "start": 77.52,
+   "end": 77.94,
+   "type": "word",
+   "logprob": -0.10807724403447797
+  },
+  {
+   "text": " ",
+   "start": 77.94,
+   "end": 77.94,
+   "type": "spacing",
+   "logprob": -4.076874756719917e-05
+  },
+  {
+   "text": "O'zimizning",
+   "start": 78.44,
+   "end": 79.02,
+   "type": "word",
+   "logprob": -0.01336128038581757
+  },
+  {
+   "text": " ",
+   "start": 79.02,
+   "end": 79.06,
+   "type": "spacing",
+   "logprob": -0.12632738053798676
+  },
+  {
+   "text": "uskunamiz.",
+   "start": 79.06,
+   "end": 79.82,
+   "type": "word",
+   "logprob": -0.025455757873061202
+  },
+  {
+   "text": " ",
+   "start": 79.82,
+   "end": 79.82,
+   "type": "spacing",
+   "logprob": -4.684815212385729e-05
+  },
+  {
+   "text": "Siz",
+   "start": 82.42,
+   "end": 82.66,
+   "type": "word",
+   "logprob": -4.684815212385729e-05
+  },
+  {
+   "text": " ",
+   "start": 82.66,
+   "end": 82.76,
+   "type": "spacing",
+   "logprob": -0.00018654513405635953
+  },
+  {
+   "text": "hech",
+   "start": 82.76,
+   "end": 83.06,
+   "type": "word",
+   "logprob": -0.00018654513405635953
+  },
+  {
+   "text": " ",
+   "start": 83.06,
+   "end": 83.1,
+   "type": "spacing",
+   "logprob": -1.811964830267243e-05
+  },
+  {
+   "text": "narsa",
+   "start": 83.1,
+   "end": 83.4,
+   "type": "word",
+   "logprob": -6.627787588513457e-05
+  },
+  {
+   "text": " ",
+   "start": 83.4,
+   "end": 83.42,
+   "type": "spacing",
+   "logprob": -2.9802276912960224e-06
+  },
+  {
+   "text": "to'lamaysiz.",
+   "start": 83.42,
+   "end": 84.14,
+   "type": "word",
+   "logprob": -0.0006141994828681163
+  },
+  {
+   "text": " ",
+   "start": 84.14,
+   "end": 84.46,
+   "type": "spacing",
+   "logprob": -2.586808113846928e-05
+  },
+  {
+   "text": "To'lov",
+   "start": 84.46,
+   "end": 84.72,
+   "type": "word",
+   "logprob": -0.00021725777514802758
+  },
+  {
+   "text": " ",
+   "start": 84.72,
+   "end": 84.86,
+   "type": "spacing",
+   "logprob": -2.622600959512056e-06
+  },
+  {
+   "text": "to'liq",
+   "start": 84.86,
+   "end": 85.14,
+   "type": "word",
+   "logprob": -0.0027137065692386386
+  },
+  {
+   "text": " ",
+   "start": 85.14,
+   "end": 85.2,
+   "type": "spacing",
+   "logprob": -0.0037016223650425673
+  },
+  {
+   "text": "qaytadi.",
+   "start": 85.2,
+   "end": 85.66,
+   "type": "word",
+   "logprob": -0.00209414716300671
+  },
+  {
+   "text": " ",
+   "start": 85.66,
+   "end": 85.98,
+   "type": "spacing",
+   "logprob": -0.0019883401691913605
+  },
+  {
+   "text": "Ustiga",
+   "start": 85.98,
+   "end": 86.46,
+   "type": "word",
+   "logprob": -0.0010050180126199848
+  },
+  {
+   "text": " ",
+   "start": 86.46,
+   "end": 86.5,
+   "type": "spacing",
+   "logprob": -0.022320711985230446
+  },
+  {
+   "text": "komissiyadan",
+   "start": 86.5,
+   "end": 87.1,
+   "type": "word",
+   "logprob": -0.007774028211618618
+  },
+  {
+   "text": " ",
+   "start": 87.1,
+   "end": 87.2,
+   "type": "spacing",
+   "logprob": -0.00025233422638848424
+  },
+  {
+   "text": "ulush.",
+   "start": 87.2,
+   "end": 87.56,
+   "type": "word",
+   "logprob": -0.00015086415805853903
+  },
+  {
+   "text": " ",
+   "start": 87.56,
+   "end": 87.56,
+   "type": "spacing",
+   "logprob": -0.0002796259068418294
+  },
+  {
+   "text": "Yo'qotishni",
+   "start": 88.38,
+   "end": 88.98,
+   "type": "word",
+   "logprob": -0.00016479075363597738
+  },
+  {
+   "text": " ",
+   "start": 88.98,
+   "end": 89.08,
+   "type": "spacing",
+   "logprob": -0.006591008976101875
+  },
+  {
+   "text": "bas",
+   "start": 89.08,
+   "end": 89.3,
+   "type": "word",
+   "logprob": -0.006591008976101875
+  },
+  {
+   "text": " ",
+   "start": 89.3,
+   "end": 89.36,
+   "type": "spacing",
+   "logprob": -0.00017093151109293103
+  },
+  {
+   "text": "qiling.",
+   "start": 89.36,
+   "end": 89.66,
+   "type": "word",
+   "logprob": -0.00046663694644978804
+  },
+  {
+   "text": " ",
+   "start": 89.66,
+   "end": 89.66,
+   "type": "spacing",
+   "logprob": -0.0021045696921646595
+  },
+  {
+   "text": "Daromad",
+   "start": 90.24,
+   "end": 90.72,
+   "type": "word",
+   "logprob": -0.016778027040085623
+  },
+  {
+   "text": " ",
+   "start": 90.72,
+   "end": 90.76,
+   "type": "spacing",
+   "logprob": -0.00037281715776771307
+  },
+  {
+   "text": "topishni",
+   "start": 90.76,
+   "end": 91.18,
+   "type": "word",
+   "logprob": -0.0001676259727219076
+  },
+  {
+   "text": " ",
+   "start": 91.18,
+   "end": 91.26,
+   "type": "spacing",
+   "logprob": -0.003274794900789857
+  },
+  {
+   "text": "boshlang.",
+   "start": 91.26,
+   "end": 91.76,
+   "type": "word",
+   "logprob": -0.0018532262151388244
+  },
+  {
+   "text": " ",
+   "start": 91.76,
+   "end": 91.76,
+   "type": "spacing",
+   "logprob": -0.201457679271698
+  },
+  {
+   "text": "[kegel]",
+   "start": 91.76,
+   "end": 93.8,
+   "type": "audio_event",
+   "logprob": -0.8307881871859043
+  }
+ ],
+ "transcription_id": "BJydBriUTwngYNPt4CbX",
+ "audio_duration_secs": 94.155
+}

@@ -16,10 +16,11 @@
 set -e
 FF=D:/ffmpeg/bin/ffmpeg.exe
 HERE=$(dirname "$0")
+ROOT=${ROOT:-$(cd "$HERE/../.." && pwd)}   # the checkout this script lives in
 LANG_=${1:-en}
-FILM="C:/aegis-aa/aegis-advertisment/myeztoll-toonbee-$LANG_.mp4"
+FILM="$ROOT/myeztoll-toonbee-$LANG_.mp4"
 CARD="$HERE/pricecard.$LANG_.mp4"
-OUT="C:/aegis-aa/aegis-advertisment/build/toonbee/spliced.$LANG_.mp4"
+OUT="$HERE/spliced.$LANG_.mp4"
 
 # All four numbers were measured frame by frame off the export. The film dissolves
 # into this shot and out of it rather than cutting, and the lettering being covered is

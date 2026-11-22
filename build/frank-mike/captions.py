@@ -4,8 +4,8 @@
     python captions.py <text lang> [voice lang] [--srt]      (WebVTT by default)
 
 Line n of <text lang> is shown while <voice lang>'s clip n plays, on the same timeline
-build.sh lays the narration on. The voice defaults to the text's own language; Uzbek is
-read over the English narration and zh-Hant over the zh one.
+build.sh lays the narration on. The voice defaults to the text's own language; zh-Hant is
+read over the zh narration (Uzbek has its own since 2026-11-22, eleven_v4).
 """
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -13,7 +13,7 @@ sys.path.insert(0, HERE)
 import lines
 from timeline import layout, starts
 
-VOICE_OF = {'uz': 'en', 'zh-Hant': 'zh'}
+VOICE_OF = {'zh-Hant': 'zh'}
 
 
 def ts(s, sep):
