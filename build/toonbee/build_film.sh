@@ -56,7 +56,8 @@ python "$HERE/make_captions.py" "$LANG_"
 case "$LANG_" in
   ru) TAG=rus ;; de) TAG=deu ;; fr) TAG=fra ;; pt) TAG=por ;; es) TAG=spa ;;
   uk) TAG=ukr ;; tr) TAG=tur ;; zh) TAG=zho ;;
-  hy) TAG=hye ;; ka) TAG=kat ;; fa) TAG=fas ;; ur) TAG=urd ;; uz) TAG=uzb ;;
+  hy) TAG=hye ;; ka) TAG=kat ;; fa) TAG=fas ;; ur) TAG=urd ;; uz) TAG=uzb ;; nb) TAG=nob ;;
+  it) TAG=ita ;; ja) TAG=jpn ;;
   *) TAG=eng ;;
 esac
 "$FF" -y -hide_banner -loglevel error -i "$FILM" -i "$ROOT/myeztoll-toonbee-$LANG_.srt" \

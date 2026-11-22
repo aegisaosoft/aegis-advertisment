@@ -1,4 +1,34 @@
 {
- "en": {"captions": true, "video": "RMXxUK1Wn8A"},
- "es": {"captions": true, "video": "I_5-dJ-vQG4"}
+ "en": {
+  "captions": true,
+  "video": "RMXxUK1Wn8A"
+ },
+ "es": {
+  "captions": true,
+  "video": "I_5-dJ-vQG4"
+ },
+ "it": {
+  "captions": true,
+  "video": "CSMmOMNYD3w"
+ },
+ "ja": {
+  "captions": true,
+  "video": "wILKyA914TQ"
+ },
+ "nb": {
+  "captions": true,
+  "video": "rnI0aGkmtqM"
+ },
+ "toonbee-it": {
+  "captions": true,
+  "video": "bi3baPt6WVU"
+ },
+ "toonbee-ja": {
+  "captions": true,
+  "video": "M2NSV-nnbo0"
+ },
+ "toonbee-nb": {
+  "captions": true,
+  "video": "ouAhApkT7mE"
+ }
 }

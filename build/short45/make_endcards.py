@@ -95,6 +95,27 @@ CARDS = {
                  '    <b>پورا ٹول</b> آپ کا — ساتھ <i>ہماری فیس کا ایک حصہ</i>۔'),
         'note': 'Right to left, and in Nastaliq, which is what Urdu is read in.',
     },
+    'nb': {
+        'title': 'End card (NB)',
+        'slogan': 'Slutt med tap.<br><em>Begynn å tjene.</em>',
+        'free': ('Gratis for flåteeiere.<br>\n'
+                 '    Du får <b>hele bompengebeløpet</b> — pluss <i>en andel av tillegget vårt</i>.'),
+        'note': 'Norwegian bokmål, du-form, as in the narration.',
+    },
+    'it': {
+        'title': 'End card (IT)',
+        'slogan': 'Smetti di perdere.<br><em>Inizia a guadagnare.</em>',
+        'free': ('Gratis per chi gestisce una flotta.<br>\n'
+                 '    Ricevi <b>tutto il pedaggio</b> — più <i>una quota della nostra commissione</i>.'),
+        'note': 'Italian, informal tu, as in the narration.',
+    },
+    'ja': {
+        'title': 'End card (JA)',
+        'slogan': 'もう損はさせません。<br><em>さあ、稼ぎましょう。</em>',
+        'free': ('車両オーナーは無料。<br>\n'
+                 '    <b>通行料は全額</b>戻り、さらに<i>当社手数料の一部</i>も受け取れます。'),
+        'note': 'Japanese, polite desu/masu, as in the narration; set in Noto Sans JP.',
+    },
     'uz': {
         'title': 'End card (UZ)',
         'slogan': 'Yoʻqotishni bas qiling.<br><em>Daromad topishni boshlang.</em>',

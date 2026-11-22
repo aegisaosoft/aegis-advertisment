@@ -2,7 +2,7 @@
 <title>Scene 10 — the price list</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@600;700&family=Noto+Sans+SC:wght@700;900&family=Noto+Sans+Armenian:wght@700;900&family=Noto+Sans+Georgian:wght@700;900&family=Noto+Naskh+Arabic:wght@700&family=Noto+Nastaliq+Urdu:wght@700&family=Source+Sans+3:wght@600;700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@600;700&family=Noto+Sans+SC:wght@700;900&family=Noto+Sans+JP:wght@700;900&family=Noto+Sans+Armenian:wght@700;900&family=Noto+Sans+Georgian:wght@700;900&family=Noto+Naskh+Arabic:wght@700&family=Noto+Nastaliq+Urdu:wght@700&family=Source+Sans+3:wght@600;700;900&display=swap">
 
 <style>
 /*
@@ -81,7 +81,9 @@ body{
          --body:'Noto Naskh Arabic','Source Sans 3',sans-serif}
 .lang-ur{--display:'Noto Nastaliq Urdu','Noto Naskh Arabic',serif;
          --body:'Noto Nastaliq Urdu','Noto Naskh Arabic',serif}
-.lang-hy .label,.lang-ka .label,.lang-fa .label,.lang-ur .label{
+.lang-ja{--display:'Noto Sans JP','Anton',sans-serif;
+         --body:'Noto Sans JP','Source Sans 3',sans-serif}
+.lang-hy .label,.lang-ka .label,.lang-fa .label,.lang-ur .label,.lang-ja .label{
   text-transform:none;letter-spacing:0}
 /* Nastaliq is drawn on a steep diagonal and needs the room, or a two-line label
    collides with itself. */
@@ -137,6 +139,36 @@ var COPY = {
       { text: 'Без подписки', at: 0.82 },
       { text: 'Без платы за подключение', at: 1.68 },
       { text: 'Без платы за машину', at: 2.88 }
+    ]
+  },
+  nb: {
+    // Scribe on audio/nb/10.mp3 (no lead silence) + the 0.16 s lead assemble.py adds.
+    head: 'Ingenting.',
+    at: 0.24,
+    items: [
+      { text: 'Ingen abonnement', at: 1.42 },
+      { text: 'Ingen oppstart', at: 2.72 },
+      { text: 'Intet per bil', at: 3.96 }
+    ]
+  },
+  // it and ja: word stamps off the assembled track (it.words.json / ja.words.json),
+  // minus 64.2 s, the start of scene 10.
+  it: {
+    head: 'Niente.',
+    at: 0.24,
+    items: [
+      { text: 'Nessun abbonamento', at: 0.96 },
+      { text: 'Nessuna attivazione', at: 2.30 },
+      { text: 'Niente per veicolo', at: 3.76 }
+    ]
+  },
+  ja: {
+    head: 'ゼロ。',
+    at: 0.24,
+    items: [
+      { text: '月額料金なし', at: 1.44 },
+      { text: '初期費用なし', at: 3.04 },
+      { text: '台数課金なし', at: 4.42 }
     ]
   },
   de: {
