@@ -33,10 +33,12 @@ PARTS_ES = [
 m.MAX[:] = [3.0, 5.5, 5.5, 5.5, 3.4, 5.5, 5.5, 3.2, 4.0]
 LANG = sys.argv[1] if len(sys.argv) > 1 else 'en'
 import lines as LN
-MODEL = m.tts.V3 if LANG in m.tts.V3_ONLY else m.tts.MODEL
+MODEL = m.tts.model_for(LANG)
+# v3 and v4 read SSML literally or not at all, so neither gets the <break> tag.
+NO_SSML = MODEL in (m.tts.V3, m.tts.V4)
 if LANG in LN.LINES:
-    # v3 ignores SSML breaks; the question mark carries the pause there.
-    _L = [l.replace('{B}', '' if MODEL == m.tts.V3 else BRK).replace('  ', ' ') for l in LN.LINES[LANG]]
+    # v3/v4 ignore SSML breaks; the question mark carries the pause there.
+    _L = [l.replace('{B}', '' if NO_SSML else BRK).replace('  ', ' ') for l in LN.LINES[LANG]]
     PARTS = [(0.96, _L[:4]), ({'zh': 1.15, 'ja': 1.1, 'fa': 1.18, 'ur': 1.18}.get(LANG, 1.06), _L[4:])]
     m.MAX[:] = [5.5] * 8 + [4.5]
 else:
@@ -46,7 +48,7 @@ VID = m.tts.VOICES[LANG][1]
 
 def speak(text, speed, prev_ids, prev_text):
     body = {'text': text, 'model_id': MODEL,
-            'voice_settings': dict(m.tts.SETTINGS, speed=speed)}
+            'voice_settings': m.tts.settings_for(MODEL, speed=speed)}
     if MODEL == m.tts.V3:
         body['voice_settings']['stability'] = 0.5  # v3 accepts 0 / 0.5 / 1 only
     elif prev_ids: body['previous_request_ids'] = prev_ids

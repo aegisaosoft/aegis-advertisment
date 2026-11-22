@@ -266,24 +266,23 @@ UR = [
     "نقصان اٹھانا بند کریں۔ کمانا شروع کریں۔",
 ]
 
-# Uzbek is read by nobody: no ElevenLabs model speaks it, so this text is never
-# recorded. It is a subtitle track over the English narration, and the lines are
-# therefore written to be *read* inside the English line's own seconds rather than
-# spoken inside the scene's. Latin script, which is what Uzbekistan writes today.
+# Uzbek, Latin script, which is what Uzbekistan writes today. Until 2026-11-22 no model
+# spoke it and this was a subtitle track over the English narration; eleven_v4 reads it
+# (tts.V4_ONLY), so it is narrated now and written against room() like every other cut.
 UZ = [
     "Seshanba. Kunduzi soat toʻrt oʻn ikki. Mashinangizdan biri toʻlov punktidan oʻtadi. Hech kim toʻlamaydi. Hali emas.",
     "Uch hafta oʻtib, hisob sizning nomingizga keladi.",
     "Ijarachi allaqachon ketgan, garov qaytarilgan, ijara yopilgan.",
     "Siz toʻlaysiz va buni biznes xarajati deb ataysiz.",
     "Jarimalar, yoqilgʻi va shikastlar bilan ham xuddi shunday.",
-    "Ammo yoʻl toʻlovi agentliklari bilardi. E-ZPass, SunPass — butun mamlakat boʻylab oʻttiz bitta tarmoq.",
-    "Bron esa kim rulda boʻlganini bilardi. MyEZToll ikkisini bogʻlaydi va ijarachining kartasidan yechadi.",
+    "Ammo yoʻl toʻlovi agentliklari bilardi. E-ZPass, SunPass — mamlakat boʻylab oʻttiz bitta tarmoq.",
+    "Bron esa kim rulda ekanini bilardi. MyEZToll ikkisini bogʻlab, ijarachi kartasidan yechadi.",
     "Kichik avtopark. Bir hafta. Toʻrt yuz oʻn ikki dollar — va toʻlaydigan siz edingiz.",
     "Xoʻsh, platforma avtoparkingizga qanchaga tushadi?",
-    "Hech narsaga: obuna yoʻq, ulanish toʻlovi yoʻq, mashina uchun toʻlov yoʻq.",
+    "Hech narsaga: obuna, ulanish toʻlovi, mashina uchun toʻlov yoʻq.",
     "Allaqachon foydalanayotgan GPS’ingizni ulash ham bepul.",
     "Faqat bitta narsa pullik — oʻzimizning uskunamiz.",
-    "Siz hech narsa toʻlamaysiz. Toʻlov toʻliq sizga qaytadi, ustiga komissiyamizning bir qismi.",
+    "Siz hech narsa toʻlamaysiz. Toʻlov toʻliq qaytadi, ustiga komissiyadan ulush.",
     "Yoʻqotishni bas qiling. Daromad topishni boshlang.",
 ]
 
@@ -357,9 +356,9 @@ LANGS = {'en': EN, 'es': ES, 'ru': RU, 'de': DE, 'fr': FR, 'pt': PT,
          'hy': HY, 'ka': KA, 'fa': FA, 'ur': UR, 'uz': UZ, 'nb': NB,
          'it': IT, 'ja': JA}
 
-# The one language nobody reads aloud. Its captions are timed off the English
-# narration, so it needs no clips, no voice and no place in the recording tools.
-SUBTITLED = {'uz': 'en'}
+# Languages nobody reads aloud: captions timed off another language's narration, with no
+# clips, voice or place in the recording tools. Empty since Uzbek got its own voice (v4).
+SUBTITLED = {}
 
 for _code, _lines in LANGS.items():
     assert len(_lines) == len(SCENES), '%s has %d lines, not %d' % (_code, len(_lines), len(SCENES))

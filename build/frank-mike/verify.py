@@ -5,13 +5,15 @@ import lines
 HERE = os.path.dirname(os.path.abspath(__file__))
 V = os.path.join(HERE, 'audio')
 STT_OUT = os.path.join(HERE, 'takes', 'stt'); os.makedirs(STT_OUT, exist_ok=True)
-STT = r'C:\aegis-aa\aegis-advertisment\build\toonbee\stt.py'
+STT = os.path.join(HERE, '..', 'toonbee', 'stt.py')
 CODE = {'ru': 'ru', 'uk': 'uk', 'de': 'de', 'fr': 'fr', 'pt': 'pt', 'tr': 'tr', 'zh': 'zh',
-        'hy': 'hy', 'ka': 'ka', 'fa': 'fa', 'ur': 'ur', 'nb': 'no', 'it': 'it', 'ja': 'ja'}
+        'hy': 'hy', 'ka': 'ka', 'fa': 'fa', 'ur': 'ur', 'nb': 'no', 'it': 'it', 'ja': 'ja', 'uz': 'uz'}
 
 
 def toks(s, lang):
     s = unicodedata.normalize('NFC', s.replace('{B}', '')).lower()
+    if lang == 'uz':  # script writes toʻrt / maʼno, Scribe writes to'rt / ma'no
+        s = ''.join(c for c in s if c not in "ʻʼ'‘’")
     s = ''.join(c if (c.isalnum() or c in '\u200c') else ' ' for c in s)
     if lang in ('zh', 'ja'):  # no spaces between words: score per character
         return [c for c in s if c.strip()]

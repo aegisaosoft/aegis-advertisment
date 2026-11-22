@@ -5,14 +5,14 @@
 #
 #   sh build.sh <lang>
 #
-# uz  = English narration, Uzbek card and captions (no speech model speaks Uzbek).
+# uz  = its own narration since 2026-11-22 (eleven_v4, Dilzoda); it used to borrow en.
 # zh-Hant = the zh narration, Traditional card and captions.
 # The shots are the generator's exports; SHOTS is where they were downloaded to.
 set -e
 L=$1; HERE=$(cd "$(dirname "$0")" && pwd); A=$HERE/audio
 SHOTS=${SHOTS:-/d/Downloads}
 C=$HERE/../short45; OUTDIR=$HERE/../..
-VO=$L; [ "$L" = uz ] && VO=en; [ "$L" = zh-Hant ] && VO=zh
+VO=$L; [ "$L" = zh-Hant ] && VO=zh
 case $L in en) CARD=$C/endcard.png ;; es) CARD=$C/endcard.es-tu.png ;; *) CARD=$C/endcard.$L.png ;; esac
 [ -f "$CARD" ] || { echo "no card for $L"; exit 1; }
 eval "$(python "$HERE/timeline.py" $VO --sh)"   # STARTS SHOT_D CARD_D TOTAL

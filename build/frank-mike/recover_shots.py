@@ -15,7 +15,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUTDIR = os.path.join(HERE, '..', '..')
 DST = os.path.join(HERE, 'shots'); os.makedirs(DST, exist_ok=True)
 CLIPS = "3682351749 3439427426 328671585 559783562 2827546893 2568051098 3979775174 920882951".split()
-# Cuts whose narration has its own audio (uz and zh-Hant reuse en and zh).
+# Cuts whose narration has its own audio (zh-Hant reuses zh). uz has its own since
+# 2026-11-22, but cuts built before that carry the en timing, so it is not a source here.
 LANGS = ['en', 'es', 'ru', 'de', 'fr', 'pt', 'uk', 'tr', 'zh', 'hy', 'ka', 'fa', 'ur']
 
 best = {}
