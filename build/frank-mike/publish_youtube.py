@@ -16,7 +16,9 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
-sys.path.insert(0, os.path.join(ROOT, 'build', 'tutorials'))
+# The channel's OAuth files (client_secret.json, .youtube-token.json) are not in git and live
+# next to the tutorial publisher of the main checkout; YT_PUBLISHER points a worktree at it.
+sys.path.insert(0, os.environ.get('YT_PUBLISHER') or os.path.join(ROOT, 'build', 'tutorials'))
 
 STATE = os.path.join(ROOT, 'frank-mike-youtube.json')
 CATEGORY_AUTOS = '2'
@@ -46,6 +48,11 @@ TAIL_JA = ('車両オーナーは無料です。月額料金なし、初期費�
            '借り手が支払う手数料の一部も受け取れます。\n\n'
            'https://myeztoll.com\n\n'
            'Aegis AO Soft LLC。Aegis AG Soft LLC がライセンスに基づき販売・運営しています。')
+
+TAIL_UZ = ('Avtopark egalari uchun bepul: obuna yoʻq, ulanish toʻlovi yoʻq, mashina uchun toʻlov yoʻq. '
+           'Yoʻl toʻlovi sizga toʻliq qaytadi, ustiga ijarachidan olinadigan komissiyadan ulush ham.\n\n'
+           'https://myeztoll.com\n\n'
+           'Aegis AO Soft LLC. Aegis AG Soft LLC tomonidan litsenziya asosida sotiladi va boshqariladi.')
 
 VIDEOS = {
     # Italian and Japanese cuts of both films (2026-11-22, with the it/ja site and portal).
@@ -122,6 +129,37 @@ VIDEOS = {
             'tilbake, og en andel av tillegget.\n\n' + TAIL_NB),
         'tags': ['myeztoll', 'bompenger', 'AutoPASS', 'bilutleie', 'leiebil', 'utleieflåte',
                  'flåtestyring', 'bompassering', 'bøter', 'bildeling'],
+    },
+    # Uzbek cuts of both films (2026-11-22): narrated in Uzbek since eleven_v4 speaks it.
+    'uz': {
+        'file': os.path.join(ROOT, 'myeztoll-frank-mike-uz.mp4'),
+        'captions': os.path.join(ROOT, 'myeztoll-frank-mike-uz.vtt'),
+        'lang': 'uz',
+        'title': 'Frank va Mayk: ikki ijara avtoparki, bir xil yoʻl toʻlovlari, teskari natija | MyEZToll',
+        'description': (
+            'Ikki ijara avtoparki. Bitta koʻcha, bir xil yoʻllar, bir xil ijarachilar.\n\n'
+            'Frank mashinalari oʻtgan har bir pullik yoʻl uchun va mashina qaytarilgandan keyin '
+            'keladigan har bir jarima uchun oʻzi toʻlaydi, koʻpincha muddati oʻtgan va penyasi bilan.\n\n'
+            'Maykning oʻtishlari MyEZTollga boradi. Har biri oʻsha daqiqada ochiq boʻlgan ijaraga '
+            'bogʻlanadi va bizning komissiyamiz bilan birga haydovchiga hisoblanadi. Mayk butun '
+            'summani qaytarib oladi, ustiga komissiyadan ulush ham.\n\n' + TAIL_UZ),
+        'tags': ['myeztoll', 'yoʻl toʻlovi', 'E-ZPass', 'avtomobil ijarasi', 'ijara avtoparki',
+                 'avtopark boshqaruvi', 'jarimalar', 'Turo', 'rental fleet', 'tolls'],
+    },
+    'toonbee-uz': {
+        'file': os.path.join(ROOT, 'myeztoll-toonbee-uz.mp4'),
+        'captions': os.path.join(ROOT, 'myeztoll-toonbee-uz.vtt'),
+        'lang': 'uz',
+        'title': 'Toʻrt oʻn ikki: sizga kelib tushadigan yoʻl toʻlovi hisobi | MyEZToll',
+        'description': (
+            'Seshanba, soat toʻrtdan oʻn ikki daqiqa oʻtganda. Mashinalaringizdan biri pullik yoʻl '
+            'punktidan oʻtadi. Uch haftadan keyin hisob sizning nomingizga keladi, ijarachi esa '
+            'allaqachon ketib boʻlgan.\n\n'
+            'Yoʻl operatori mashina qachon oʻtganini biladi. Bron kim haydaganini biladi. MyEZToll '
+            'ikkalasini bogʻlaydi va summani siz toʻlash oʻrniga ijarachining kartasidan yechadi.\n\n'
+            + TAIL_UZ),
+        'tags': ['myeztoll', 'yoʻl toʻlovi', 'E-ZPass', 'SunPass', 'avtomobil ijarasi',
+                 'ijara avtoparki', 'avtopark boshqaruvi', 'jarimalar', 'rental fleet', 'tolls'],
     },
     'toonbee-nb': {
         'file': os.path.join(ROOT, 'myeztoll-toonbee-nb.mp4'),
@@ -234,7 +272,12 @@ def main(argv):
     import publish
     from googleapiclient.http import MediaFileUpload
 
+    # Only what still has to go up is checked: the masters are gitignored, so a fresh
+    # checkout holds just the cuts built in it, not the ones already on the channel.
+    done = load_state()
     for key, v in VIDEOS.items():
+        if done.get(key, {}).get('video') and done[key].get('captions'):
+            continue
         bad = problems(v)
         if bad:
             sys.exit('%s: %s' % (key, ', '.join(bad)))
