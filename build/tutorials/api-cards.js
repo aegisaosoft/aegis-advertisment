@@ -44,7 +44,9 @@ const argVal = (name, dflt) => {
 };
 const ONLY = argVal('only', '').split(',').filter(Boolean);
 const SHOTS = path.join(__dirname, 'shots');
-const CATALOG = path.join(__dirname, 'api', 'catalog.prod.json');
+// --catalog=api/catalog.local.json renders from a snapshot of a local build — only for a function that is not on
+// prod yet; refresh catalog.prod.json and re-render from it before anything is published.
+const CATALOG = path.resolve(__dirname, argVal('catalog', path.join('api', 'catalog.prod.json')));
 const SWAGGER = 'https://owner.myeztoll.com/api/partner/v1/index/index.html';
 
 const CHROME = [
@@ -89,6 +91,9 @@ X-Owner-Id: 7f0c…
   { name: 'api-03-owners', fn: 'GET /owners?page=&pageSize=', hl: { owner: '"ownerId"', paging: '"hasMore"' } },
   { name: 'api-04-car', fn: 'POST /cars', hl: { ext: '"externalId"', id: '"id"' } },
   { name: 'api-05-transponder', fn: 'GET/POST /cars/{id}/transponders', hl: { num: '"transponderNumber"' } },
+  { name: 'api-05b-toll-accounts', fn: 'GET /toll-accounts?page=&pageSize=',
+    hl: { login: '"login"', pw: '"hasPassword"' } },
+  { name: 'api-05c-toll-account-delete', fn: 'DELETE /toll-accounts/{accountId}', hl: { removed: '"removed"' } },
   { name: 'api-06-driver', fn: 'POST /drivers', hl: { ext: '"externalId"', dl: '"driverLicenseId"' } },
   { name: 'api-07-booking', fn: 'POST /bookings',
     hl: { car: '"carExternalId"', renter: '"renterExternalId"', status: '"statusName"' } },

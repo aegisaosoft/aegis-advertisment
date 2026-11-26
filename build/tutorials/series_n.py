@@ -2,7 +2,7 @@
 """Episodes 41-45 — the Partner API, with examples. FOR PARTNERS (E.audience = 'partner').
 
   41  your key and the first call      — the reference, X-Api-Key, integrations, the envelope, paging
-  42  cars, drivers and bookings       — your own ids, transponders, card check, card link
+  42  cars, drivers and bookings       — your own ids, transponders, toll accounts, card check, card link
   43  tolls and fines                  — the money fields, renterCharge, reading every page
   44  GPS and webhooks                 — positions, mileage, webhooks and the signature check
   45  your charges and disputes        — POST /charges, POST /disputes, the evidence package
@@ -207,6 +207,22 @@ EP42 = E(
           shot='api-05-transponder', cam=look(box('api-05-transponder', 'req'), 1.2),
           ring=box('api-05-transponder', 'req'),
           label_en='Transponders', label_es='Transpondedores'),
+
+        B(en='GET /toll-accounts lists the logins we use at each toll agency to fetch tolls. Passwords never '
+             'come back. hasPassword only says one is on file.',
+          es='GET /toll-accounts lista los accesos a las agencias con los que obtenemos los peajes del '
+             'propietario. Las contraseñas nunca se devuelven. hasPassword solo indica que hay una guardada.',
+          shot='api-05b-toll-accounts', cam=look(box('api-05b-toll-accounts', 'res'), 1.2),
+          ring=join(line('api-05b-toll-accounts', 'login'), line('api-05b-toll-accounts', 'pw')),
+          label_en='Toll accounts', label_es='Cuentas de peaje'),
+
+        B(en='DELETE removes one. We stop signing in with it and wipe its credentials, but every toll '
+             'already found through it stays, with its agency, its charges and its invoices.',
+          es='DELETE elimina una. Dejamos de iniciar sesión con ella y borramos sus credenciales, pero '
+             'cada peaje ya encontrado con ella se conserva, con su agencia, sus cobros y sus facturas.',
+          shot='api-05c-toll-account-delete', cam=look(box('api-05c-toll-account-delete', 'req'), 1.25),
+          ring=line('api-05c-toll-account-delete', 'removed'),
+          label_en='Remove a toll account', label_es='Eliminar una cuenta de peaje'),
 
         B(en='POST /drivers adds a driver, with licence photos if you have them. Sending the same '
              'email again updates the driver instead of adding a second one.',
